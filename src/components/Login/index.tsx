@@ -18,8 +18,11 @@ const Login: React.FC<LoginProps> = ({ setSession }: LoginProps) => {
   React.useEffect(() => {
     electron.ipcRenderer.on('CONNECT_RESP', (_, params) => {
       setLoading(false);
-      console.log('CONNECTED', params);
-      setSession(params?.uuid);
+      if (params?.status === 'CONNECTED') {
+        console.log('CONNECTED', params);
+        setSession(params?.uuid);
+      }
+      // TODO else show error message
     });
   }, []);
   const send = () => {

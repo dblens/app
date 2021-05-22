@@ -148,4 +148,4 @@ ipcMain.on('connect', (_, params) => {
     });
 });
 
-ipcMain.on('SQL_EXECUTE', sqlExecute);
+ipcMain.handle('SQL_EXECUTE', sqlExecute);

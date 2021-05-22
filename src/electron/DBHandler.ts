@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { BrowserWindow } from 'electron';
-import { IpcMainEvent } from 'electron/main';
+import { IpcMainInvokeEvent } from 'electron/main';
 import { Client, ClientBase } from 'pg';
 
 const connections: Record<
@@ -21,6 +21,7 @@ export const connectDB = ({
     connectionString,
   });
   client.connect((err) => {
+    console.log('CONNECT_RESP', err, !!err);
     if (err) {
       if (window)
         window.webContents.send('CONNECT_RESP', { status: 'FAILED', uuid });
@@ -33,21 +34,22 @@ export const connectDB = ({
   });
 };
 
-export const sqlExecute = (
-  _: IpcMainEvent,
+export const sqlExecute = async (
+  _: IpcMainInvokeEvent,
   { uuid = '', sql = 'SELECT NOW();' } = {}
 ) => {
-  console.log(JSON.stringify(connections, null, 2));
-  if (connections?.[uuid]) {
-    const { client, window } = connections?.[uuid];
-    client.query(sql, (err, res) => {
-      console.log(err, res);
-      window.webContents.send('SQL_EXECUTE_RESP', {
-        status: 'SUCCESS',
-        result: res?.rows ?? [],
-      });
+  try {
+    console.error('>>>', uuid, connections, uuid in connections);
 
-      // client.end();
-    });
+    if (connections?.[uuid]) {
+      const { client } = connections?.[uuid];
+      const { rows } = await client.query(sql);
+      return { status: 'SUCCESS', result: rows ?? [] };
+    }
+  } catch (e) {
+    console.error(e);
+    return { status: 'FAILED', error: e };
   }
+  console.error('>>>');
+  return { status: 'FAILED' };
 };
