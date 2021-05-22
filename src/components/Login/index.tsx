@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React from 'react';
 import electron from 'electron';
 import { v4 as uuidv4 } from 'uuid';
@@ -5,17 +6,17 @@ import { v4 as uuidv4 } from 'uuid';
 // import icon from '../../assets/icon.svg';
 
 interface LoginProps {
-  setSession: () => void;
+  setSession: (v: string) => void;
 }
 
-const Login: React.FC<LoginProps> = ({ setSession }) => {
+const Login: React.FC<LoginProps> = ({ setSession }: LoginProps) => {
   const [connectionString, setConnectionString] = React.useState<string>(
     'postgresql://postgres:postgrespassword@127.0.0.1/postgres'
   );
   const [loading, setLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    electron.ipcRenderer.on('CONNECT_RESP', (event, params) => {
+    electron.ipcRenderer.on('CONNECT_RESP', (_, params) => {
       setLoading(false);
       console.log('CONNECTED', params);
       setSession(params?.uuid);
@@ -36,33 +37,19 @@ const Login: React.FC<LoginProps> = ({ setSession }) => {
   };
   return (
     <div>
-      <div className="Hello">
-        {/* <img width="200px" alt="icon" src={icon} /> */}
-      </div>
-      <h1>electron-react-boilerplate</h1>
+      <h1>DB View</h1>
       <input
+        width={150}
         value={connectionString}
         onChange={(e) => setConnectionString(e?.target?.value)}
-      ></input>
+      />
       <div className="Hello">
         <button type="button" onClick={send} disabled={loading}>
           <span role="img" aria-label="books">
-            📚
+            ⚡️
           </span>
           Connect DB
         </button>
-        <a
-          href="https://github.com/sponsors/electron-react-boilerplate"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="books">
-              🙏
-            </span>
-            Donate
-          </button>
-        </a>
       </div>
     </div>
   );

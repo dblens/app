@@ -1,10 +1,22 @@
-import { Client } from 'pg';
+/* eslint-disable no-console */
+import { BrowserWindow } from 'electron';
+import { IpcMainEvent } from 'electron/main';
+import { Client, ClientBase } from 'pg';
 
-const connections = {};
-const connectionStringDef =
-  'postgresql://postgres:postgrespassword@127.0.0.1/postgres';
+const connections: Record<
+  string,
+  { client: ClientBase; window: BrowserWindow }
+> = {};
 
-export const connectDB = ({ window, uuid, connectionString }) => {
+export const connectDB = ({
+  window,
+  uuid,
+  connectionString,
+}: {
+  window: BrowserWindow;
+  uuid: string;
+  connectionString: string;
+}) => {
   const client = new Client({
     connectionString,
   });
@@ -22,15 +34,13 @@ export const connectDB = ({ window, uuid, connectionString }) => {
 };
 
 export const sqlExecute = (
-  event,
+  _: IpcMainEvent,
   { uuid = '', sql = 'SELECT NOW();' } = {}
 ) => {
-  // console.log(params);
   console.log(JSON.stringify(connections, null, 2));
   if (connections?.[uuid]) {
     const { client, window } = connections?.[uuid];
     client.query(sql, (err, res) => {
-      console.log('>>>>>TTTT');
       console.log(err, res);
       window.webContents.send('SQL_EXECUTE_RESP', {
         status: 'SUCCESS',

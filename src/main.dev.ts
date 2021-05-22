@@ -134,25 +134,11 @@ app.on('activate', () => {
 });
 
 console.log('>><');
-ipcMain.on('ping', (event, params) => {
-  console.log('Test');
-  // client.query('SELECT NOW()', (err, res) => {
-  //   console.log('>>>>>TTTT');
-  //   console.log(err, res);
-  // });
-});
-
-// const pool = new Pool({
-//   connectionString,
+// ipcMain.on('ping', (event: IpcMainEvent, params: any) => {
+//   console.log('Test');
 // });
-// pool.query('SELECT NOW()', (err, res) => {
-//   console.log(err, res);
-//   pool.end();
-// });
-const connectionString =
-  'postgresql://postgres:postgrespassword@127.0.0.1/postgres';
 
-ipcMain.on('connect', (event, params) => {
+ipcMain.on('connect', (_, params) => {
   console.log('connect');
   console.log(JSON.stringify({ params }, null, 2));
   if (mainWindow)
@@ -163,14 +149,3 @@ ipcMain.on('connect', (event, params) => {
 });
 
 ipcMain.on('SQL_EXECUTE', sqlExecute);
-
-// const client = new Client({
-//   connectionString,
-// });
-// client.connect();
-// console.log('>>>>>TTTTAA');
-// client.query('SELECT NOW()', (err, res) => {
-//   console.log('>>>>>TTTT');
-//   console.log(err, res);
-//   // client.end();
-// });

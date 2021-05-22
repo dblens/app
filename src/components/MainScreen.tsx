@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import electron from 'electron';
+import { IpcRendererEvent } from 'electron/main';
 
 const MainScreen = ({ session = '' }) => {
   const [state, setstate] = useState();
   const [sql, setSql] = useState('SELECT NOW()');
   useEffect(() => {
-    electron.ipcRenderer.on('SQL_EXECUTE_RESP', (event, params) => {
-      console.log('RESPONDED', params);
-      if (params?.status === 'SUCCESS') {
-        setstate(params?.result);
+    electron.ipcRenderer.on(
+      'SQL_EXECUTE_RESP',
+      (_: IpcRendererEvent, params) => {
+        if (params?.status === 'SUCCESS') {
+          setstate(params?.result);
+        }
       }
-    });
+    );
   }, []);
   const post = () =>
     electron.ipcRenderer.send(
@@ -28,7 +31,9 @@ const MainScreen = ({ session = '' }) => {
       Connected
       <br />
       <input value={sql} onChange={(e) => setSql(e?.target?.value)} />
-      <button onClick={post}>Test</button>
+      <button onClick={post} type="button">
+        Test
+      </button>
       <br />
       <pre>{state && JSON.stringify(state, null, 2)}</pre>
     </div>
