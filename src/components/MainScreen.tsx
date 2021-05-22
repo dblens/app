@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import electron from 'electron';
+import utils from './utils/utils';
 
 const MainScreen = ({ session = '' }) => {
   const [state, setstate] = useState();
@@ -8,15 +8,7 @@ const MainScreen = ({ session = '' }) => {
 
   const post = async () => {
     setLoading(true);
-    const { status, result } = await electron.ipcRenderer.invoke(
-      'SQL_EXECUTE',
-      {
-        sql,
-        test: 'test',
-        uuid: session,
-      },
-      10
-    );
+    const { status, result } = await utils.executeSQL(sql, session);
     setLoading(false);
     if (status === 'SUCCESS') {
       setstate(result);
