@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import electron from 'electron';
-import { IpcRendererEvent } from 'electron/main';
 
 const MainScreen = ({ session = '' }) => {
   const [state, setstate] = useState();
@@ -12,7 +11,7 @@ const MainScreen = ({ session = '' }) => {
     const { status, result } = await electron.ipcRenderer.invoke(
       'SQL_EXECUTE',
       {
-        query: sql,
+        sql,
         test: 'test',
         uuid: session,
       },
@@ -22,16 +21,24 @@ const MainScreen = ({ session = '' }) => {
     if (status === 'SUCCESS') {
       setstate(result);
     }
-    console.log(result);
   };
 
   return (
-    <div>
-      Connected
+    <div className="p-4 w-full">
+      <p className="text-green-600">Connected</p>
       <br />
-      <input value={sql} onChange={(e) => setSql(e?.target?.value)} />
+      <textarea
+        className="w-full"
+        value={sql}
+        onChange={(e) => setSql(e?.target?.value)}
+      />
       <br />
-      <button onClick={post} type="button" disabled={loading}>
+      <button
+        onClick={post}
+        type="button"
+        disabled={loading}
+        className="bg-gray-700 p-2 text-gray-200 hover:bg-gray-800 hover:text-gray-100"
+      >
         {loading ? 'loading...' : 'Test'}
       </button>
       <br />
