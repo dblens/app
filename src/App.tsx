@@ -1,58 +1,33 @@
-import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import electron from 'electron';
-import icon from '../assets/icon.svg';
+import React, { useState } from 'react';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
+
 import './App.global.css';
-
-const Hello = () => {
-  const [pgUrl, setPgUrl] = React.useState<string>();
-
-  React.useEffect(() => {
-    electron.ipcRenderer.on('connected', (event, params) => {
-      console.log('CONNECTED', event, params);
-    });
-  }, []);
-  const send = () => {
-    console.log('>>');
-    electron.ipcRenderer.send('ping', 'a string', 10);
-    if (pgUrl) electron.ipcRenderer.send('connect', pgUrl, 10);
-  };
-  return (
-    <div>
-      <div className="Hello">
-        <img width="200px" alt="icon" src={icon} />
-      </div>
-      <h1>electron-react-boilerplate</h1>
-      <input onChange={(e) => setPgUrl(e?.target?.value)}></input>
-      <div className="Hello">
-        <button type="button" onClick={send}>
-          <span role="img" aria-label="books">
-            📚
-          </span>
-          Read our docs
-        </button>
-        <a
-          href="https://github.com/sponsors/electron-react-boilerplate"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <button type="button">
-            <span role="img" aria-label="books">
-              🙏
-            </span>
-            Donate
-          </button>
-        </a>
-      </div>
-    </div>
-  );
-};
+import Login from './components/Login';
+import MainScreen from './components/MainScreen';
 
 export default function App() {
+  const [session, setSession] = useState<string>();
   return (
     <Router>
       <Switch>
-        <Route path="/" component={Hello} />
+        <Route
+          path="/"
+          render={() => {
+            console.log(session);
+            // <Redirect to="/dashboard" />
+            return session ? (
+              <MainScreen {...{ session }} />
+            ) : (
+              <Login {...{ setSession }} />
+            );
+          }}
+        />
+        <Route path="/dashboard" render={() => <h1>Test</h1>} />
       </Switch>
     </Router>
   );

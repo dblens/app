@@ -14,7 +14,7 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import { Pool, Client } from 'pg';
+import { connectDB, sqlExecute } from './electron/DBHandler';
 
 import MenuBuilder from './menu';
 
@@ -142,8 +142,6 @@ ipcMain.on('ping', (event, params) => {
   // });
 });
 
-const connectionString =
-  'postgresql://postgres:postgrespassword@127.0.0.1/postgres';
 // const pool = new Pool({
 //   connectionString,
 // });
@@ -151,21 +149,21 @@ const connectionString =
 //   console.log(err, res);
 //   pool.end();
 // });
+const connectionString =
+  'postgresql://postgres:postgrespassword@127.0.0.1/postgres';
+
 ipcMain.on('connect', (event, params) => {
   console.log('connect');
   console.log(JSON.stringify({ params }, null, 2));
-  const client = new Client({
-    connectionString,
-  });
-  client.connect((err) => {
-    if (err) {
-      console.error('connection error', err.stack);
-    } else {
-      console.log('connected');
-      if(mainWindow)mainWindow.webContents.send('connected', {'SAVED': 'File Saved'});
-    }
-  });
+  if (mainWindow)
+    connectDB({
+      ...params,
+      window: mainWindow,
+    });
 });
+
+ipcMain.on('SQL_EXECUTE', sqlExecute);
+
 // const client = new Client({
 //   connectionString,
 // });
