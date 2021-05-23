@@ -1,9 +1,16 @@
 import React, { useState } from 'react';
+import DbSession from '../sessions/DbSession';
 import SqlExecuter from './SqlExecuter';
 
+interface MainScreenProps {
+  session: DbSession;
+}
 // TODO move session to context/env for better access
 // select screen based on the sidebar selection
-const MainScreen: React.FC<{ session: string }> = ({ session = '' }) => {
+
+const MainScreen: React.FC<MainScreenProps> = ({
+  session,
+}: MainScreenProps) => {
   const [selectedTab, setSelectedTab] = useState('SQL');
 
   return (
@@ -19,7 +26,7 @@ const MainScreen: React.FC<{ session: string }> = ({ session = '' }) => {
           className={`h-20 ${selectedTab === 'SQL' && 'bg-blue-200'}`}
           onClick={() => setSelectedTab('SQL')}
         >
-          SQL{' '}
+          SQL
         </button>
         <button
           type="button"

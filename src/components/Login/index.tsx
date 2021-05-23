@@ -2,11 +2,13 @@
 import React from 'react';
 import electron from 'electron';
 import { v4 as uuidv4 } from 'uuid';
+import DbSession from '../../sessions/DbSession';
+import PgSession from '../../sessions/PgSession';
 
 // import icon from '../../assets/icon.svg';
 
 interface LoginProps {
-  setSession: (v: string) => void;
+  setSession: (v: DbSession) => void;
 }
 
 const Login: React.FC<LoginProps> = ({ setSession }: LoginProps) => {
@@ -20,7 +22,7 @@ const Login: React.FC<LoginProps> = ({ setSession }: LoginProps) => {
       setLoading(false);
       if (params?.status === 'CONNECTED') {
         console.log('CONNECTED', params);
-        setSession(params?.uuid);
+        setSession(new PgSession(params?.uuid));
       }
       // TODO else show error message
     });

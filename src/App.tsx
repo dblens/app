@@ -9,9 +9,10 @@ import {
 import './App.global.css';
 import Login from './components/Login';
 import MainScreen from './components/MainScreen';
+import DbSession from './sessions/DbSession';
 
 export default function App() {
-  const [session, setSession] = useState<string>();
+  const [session, setSession] = useState<DbSession>();
   return (
     <Router>
       <Switch>

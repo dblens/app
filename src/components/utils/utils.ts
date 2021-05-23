@@ -1,7 +1,11 @@
 import electron from 'electron';
+import { SqlExecReponseType } from '../../sessions/DbSession';
 
-const executeSQL = async (sql: string, session: string) => {
-  const { status, result } = await electron.ipcRenderer.invoke(
+const executeSQL = async (
+  sql: string,
+  session: string
+): Promise<SqlExecReponseType> => {
+  const response = await electron.ipcRenderer.invoke(
     'SQL_EXECUTE',
     {
       sql,
@@ -10,7 +14,7 @@ const executeSQL = async (sql: string, session: string) => {
     },
     10
   );
-  return { status, result };
+  return response as SqlExecReponseType;
 };
 
 export default {

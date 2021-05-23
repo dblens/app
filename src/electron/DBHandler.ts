@@ -44,7 +44,7 @@ export const sqlExecute = async (
     if (connections?.[uuid]) {
       const { client } = connections?.[uuid];
       const { rows } = await client.query(sql);
-      return { status: 'SUCCESS', result: rows ?? [] };
+      return { status: 'SUCCESS', rows: rows ?? [] };
     }
   } catch (e) {
     console.error(e);

@@ -1,18 +1,28 @@
+import { QueryResultRow } from 'pg';
 import React, { useState } from 'react';
-import utils from './utils/utils';
+import DbSession from '../sessions/DbSession';
 
-const SqlExecuter = ({ session = '' }) => {
-  const [state, setstate] = useState();
+const SqlExecuter = ({ session }: { session: DbSession }) => {
+  const [state, setstate] = useState<string | QueryResultRow>();
   const [loading, setLoading] = useState<boolean>(false);
   const [sql, setSql] = useState('SELECT NOW()');
 
   const post = async () => {
     setLoading(true);
-    const { status, result } = await utils.executeSQL(sql, session);
-    setLoading(false);
-    if (status === 'SUCCESS') {
-      setstate(result);
-    }
+    session
+      .executeSQL(sql)
+      .then(({ status, rows }) => {
+        setLoading(false);
+        // eslint-disable-next-line no-console
+        console.log(rows);
+        if (status === 'SUCCESS') setstate(rows);
+        return true;
+      })
+      .catch((e) => {
+        setLoading(false);
+        // eslint-disable-next-line no-console
+        console.error(e);
+      });
   };
 
   return (
