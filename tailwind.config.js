@@ -1,5 +1,9 @@
 module.exports = {
   theme: {},
-  variants: {},
+  variants: {
+    extend: {
+      backgroundColor: ['even'],
+    },
+  },
   plugins: [],
 };
