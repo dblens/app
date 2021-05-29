@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import DbSession from '../sessions/DbSession';
 import SqlExecuter from './SqlExecuter';
+import TableScreen from './TableScreen/TableScreen';
 
 interface MainScreenProps {
   session: DbSession;
@@ -23,22 +24,30 @@ const MainScreen: React.FC<MainScreenProps> = ({
         </button>
         <button
           type="button"
-          className={`h-20 ${selectedTab === 'SQL' && 'bg-blue-200'}`}
+          className={`h-20 ${selectedTab === 'SQL' && 'bg-blue-300'}`}
           onClick={() => setSelectedTab('SQL')}
         >
           SQL
         </button>
         <button
           type="button"
-          className={`h-20 text-xs ${selectedTab === 'TABLE' && 'bg-blue-200'}`}
+          className={`h-20 text-xs ${selectedTab === 'TABLE' && 'bg-blue-300'}`}
           onClick={() => setSelectedTab('TABLE')}
         >
           Tables/Views
         </button>
+        <button
+          type="button"
+          className={`h-20 text-xs ${selectedTab === 'TEST' && 'bg-blue-300'}`}
+          onClick={() => setSelectedTab('TEST')}
+        >
+          Test
+        </button>
       </div>
       <div className="bg-gray-100 w-11/12 flex flex-row">
         {selectedTab === 'SQL' && <SqlExecuter session={session} />}
-        {selectedTab === 'TABLE' && <div>Test</div>}
+        {selectedTab === 'TABLE' && <TableScreen />}
+        {selectedTab === 'TEST' && <div>Test</div>}
       </div>
     </div>
   );
