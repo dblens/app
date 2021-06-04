@@ -1,5 +1,5 @@
 import utils from '../components/utils/utils';
-import DbSession, { SqlExecReponseType } from './DbSession';
+import DbSession, { SqlExecReponseType, TableType } from './DbSession';
 
 class PgSession implements DbSession {
   id: string;
@@ -11,6 +11,43 @@ class PgSession implements DbSession {
   executeSQL = (sql: string): Promise<SqlExecReponseType> =>
     new Promise<SqlExecReponseType>((resolve, reject) => {
       utils.executeSQL(sql, this.id).then(resolve).catch(reject);
+    });
+
+  getDBSchemas = (): Promise<string[]> =>
+    new Promise<string[]>((resolve, reject) => {
+      const sql = `SELECT schema_name
+      FROM information_schema.schemata
+      WHERE "schema_name" NOT LIKE 'pg_%';`;
+      utils
+        .executeSQL(sql, this.id)
+        .then((data) => {
+          if (data?.rows && Array.isArray(data?.rows)) {
+            const allSchamas = data?.rows
+              .filter((i) => !!i?.schema_name)
+              .map((i) => i.schema_name);
+            return resolve(allSchamas);
+          }
+          return reject(new Error('Failed to parse the schemas'));
+        })
+        .catch(reject);
+    });
+
+  getAllTables = (schema: string): Promise<TableType[]> =>
+    new Promise<TableType[]>((resolve, reject) => {
+      const sql = `SELECT * FROM information_schema.tables
+      WHERE table_schema = '${schema}'`;
+      utils
+        .executeSQL(sql, this.id)
+        .then((data) => {
+          if (data?.rows && Array.isArray(data?.rows)) {
+            const allSchamas = data?.rows.filter(
+              (i) => !!i?.table_name
+            ) as TableType[];
+            return resolve(allSchamas);
+          }
+          return reject(new Error('Failed to parse the schemas'));
+        })
+        .catch(reject);
     });
 
   // TODO

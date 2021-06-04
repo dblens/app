@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import DbSession from '../sessions/DbSession';
 import SqlExecuter from './SqlExecuter';
+import TableScreen from './TableScreen';
 
 interface MainScreenProps {
   session: DbSession;
@@ -11,11 +12,11 @@ interface MainScreenProps {
 const MainScreen: React.FC<MainScreenProps> = ({
   session,
 }: MainScreenProps) => {
-  const [selectedTab, setSelectedTab] = useState('SQL');
+  const [selectedTab, setSelectedTab] = useState('TABLE');
 
   return (
     <div className="w-screen h-screen flex text-gray-800">
-      <div className="bg-gray-800 text-gray-100 w-1/12 pt-8 flex flex-col ">
+      <div className="bg-gray-800 text-gray-100 w-12 pt-8 flex flex-col ">
         <button type="button">
           <span role="img" aria-label="app-icon" className="pl-6">
             ⚡️
@@ -23,22 +24,26 @@ const MainScreen: React.FC<MainScreenProps> = ({
         </button>
         <button
           type="button"
-          className={`h-20 ${selectedTab === 'SQL' && 'bg-blue-200'}`}
+          className={`text-xs h-20 ${
+            selectedTab === 'SQL' && 'bg-blue-200 text-blue-900'
+          }`}
           onClick={() => setSelectedTab('SQL')}
         >
           SQL
         </button>
         <button
           type="button"
-          className={`h-20 text-xs ${selectedTab === 'TABLE' && 'bg-blue-200'}`}
+          className={`text-xs h-20 ${
+            selectedTab === 'TABLE' && 'bg-blue-200 text-blue-900'
+          }`}
           onClick={() => setSelectedTab('TABLE')}
         >
-          Tables/Views
+          Tables
         </button>
       </div>
-      <div className="bg-gray-100 w-11/12 flex flex-row">
+      <div className="bg-gray-100 w-full flex flex-row">
         {selectedTab === 'SQL' && <SqlExecuter session={session} />}
-        {selectedTab === 'TABLE' && <div>Test</div>}
+        {selectedTab === 'TABLE' && <TableScreen session={session} />}
       </div>
     </div>
   );
