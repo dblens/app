@@ -14,12 +14,19 @@ interface DbSession {
   executeSQL: (sql: string) => Promise<SqlExecReponseType>;
   getDBSchemas: () => Promise<string[]>;
   getAllTables: (schema: string) => Promise<TableType[]>;
-  getTableData: (
-    schema: string,
-    table: string,
-    offset: number,
-    pagenumber: number
-  ) => Promise<unknown>;
+  getTableData: ({
+    schema,
+    table,
+    offset,
+    pagenumber,
+    size,
+  }: {
+    schema: string;
+    table: string;
+    offset: number;
+    pagenumber: number;
+    size: number;
+  }) => Promise<{ status: string; rows: Record<string, unknown>[] }>;
 }
 
 export default DbSession;

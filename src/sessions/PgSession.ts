@@ -54,14 +54,21 @@ class PgSession implements DbSession {
         .catch(reject);
     });
 
-  getTableData = (
-    schema: string,
-    table: string
-    // offset: number,
-    // pagenumber: number
-  ): Promise<TableDataType[]> =>
+  getTableData = ({
+    schema,
+    table,
+    offset,
+    pagenumber,
+    size = 50,
+  }: {
+    schema: string;
+    table: string;
+    offset: number;
+    pagenumber: number;
+    size: number;
+  }): Promise<TableDataType[]> =>
     new Promise<TableDataType[]>((resolve, reject) => {
-      const sql = `SELECT * FROM "${schema}"."${table}"`;
+      const sql = `SELECT * FROM "${schema}"."${table}" LIMIT ${size}`;
       // console.log('>>>', sql);
       utils
         .executeSQL(sql, this.id)
