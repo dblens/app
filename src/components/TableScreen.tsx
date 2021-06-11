@@ -49,10 +49,10 @@ const TableList = ({
 }: TableListProps) => {
   console.log(selectedTable);
   return (
-    <div className=" text-gray-200 overflow-auto h-full flex flex-col">
+    <div className=" overflow-auto h-full flex flex-col">
       {tables?.map((t) => (
         <button
-          className={`pl-4 pr-4 text-left hover:bg-gray-400 hover:text-gray-800 cursor-pointer ${
+          className={`pl-4 pr-4 text-xs text-left text-gray-200  hover:bg-gray-400 hover:text-gray-800 cursor-pointer ${
             selectedTable === t?.table_name && 'hover:bg-blue-400 bg-blue-400'
           }`}
           key={t?.table_name}
@@ -62,6 +62,30 @@ const TableList = ({
           {t?.table_name}
         </button>
       ))}
+    </div>
+  );
+};
+
+const TableComp = ({
+  session,
+  selectedSchema,
+  selectedTable,
+}: {
+  session: DbSession;
+  selectedSchema: string;
+  selectedTable: string;
+}) => {
+  useEffect(() => {
+    session
+      .getTableData(selectedSchema, selectedTable, 0, 10)
+      .then(console.log)
+      .catch(console.error);
+  }, [selectedSchema, selectedTable]);
+  return (
+    <div className="flex-1 m-auto w-full text-center">
+      <span role="img" aria-label="under construction label">
+        🚧 Under Construction
+      </span>
     </div>
   );
 };
@@ -89,7 +113,7 @@ const TableScreen = ({ session }: { session: DbSession }) => {
     }
   }, [selectedSchema, session]);
   return (
-    <div className="flex w-full">
+    <div className="flex w-ful">
       <div className="h-full bg-gray-700 w-60">
         <div className="m-4 pt-2 flex">
           <span className="text-gray-200 pr-2">Schema</span>
@@ -97,15 +121,14 @@ const TableScreen = ({ session }: { session: DbSession }) => {
             {...{ schemas: schemaList, selectedSchema, setSelectedSchema }}
           />
         </div>
-        <h2 className="text-gray-200 font-thin p-2 ">Tables</h2>
+        <h2 className="text-gray-200 pl-2 font-bold text-xs border-gray-400 border">
+          TABLES
+        </h2>
         <TableList {...{ tables, selectedTable, setSelectedTable }} />
       </div>
-
-      <div className="flex-1 m-auto w-full text-center">
-        <span role="img" aria-label="under construction label">
-          🚧 Under Construction
-        </span>
-      </div>
+      <TableComp
+        {...{ session, selectedTable, selectedSchema, selectedTable }}
+      />
     </div>
   );
 };

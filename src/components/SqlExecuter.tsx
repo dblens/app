@@ -14,8 +14,9 @@ const SqlExecuter = ({ session }: { session: DbSession }) => {
       .then(({ status, rows }) => {
         setLoading(false);
         // eslint-disable-next-line no-console
-        console.log(rows);
+        console.log(status, rows);
         if (status === 'SUCCESS') setstate(rows);
+        else setstate({ status });
         return true;
       })
       .catch((e) => {

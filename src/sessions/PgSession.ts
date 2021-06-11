@@ -1,5 +1,9 @@
 import utils from '../components/utils/utils';
-import DbSession, { SqlExecReponseType, TableType } from './DbSession';
+import DbSession, {
+  SqlExecReponseType,
+  TableDataType,
+  TableType,
+} from './DbSession';
 
 class PgSession implements DbSession {
   id: string;
@@ -46,6 +50,24 @@ class PgSession implements DbSession {
             return resolve(allSchamas);
           }
           return reject(new Error('Failed to parse the schemas'));
+        })
+        .catch(reject);
+    });
+
+  getTableData = (
+    schema: string,
+    table: string
+    // offset: number,
+    // pagenumber: number
+  ): Promise<TableDataType[]> =>
+    new Promise<TableDataType[]>((resolve, reject) => {
+      const sql = `SELECT * FROM "${schema}"."${table}"`;
+      // console.log('>>>', sql);
+      utils
+        .executeSQL(sql, this.id)
+        .then((data) => {
+          const tableData = data as unknown;
+          return resolve(tableData as TableDataType[]);
         })
         .catch(reject);
     });
