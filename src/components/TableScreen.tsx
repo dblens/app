@@ -101,11 +101,7 @@ const TableComp = ({
           pagenumber: 1,
           size: 50,
         });
-
-        if (
-          columnNames?.status === 'SUCCESS' &&
-          tableRows?.status === 'SUCCESS'
-        ) {
+        if (columnNames?.status === 'SUCCESS') {
           setTableData({
             tableData: tableRows?.rows,
             columnNames: columnNames?.rows,
@@ -200,8 +196,14 @@ const TableScreen = ({
               />
 
               <SideHeader title="TABLES" />
-              {selectedTable && (
-                <TableList {...{ tables, selectedTable, setSelectedTable }} />
+              {tables && (
+                <TableList
+                  {...{
+                    tables,
+                    selectedTable: selectedTable || tables?.[0]?.table_name,
+                    setSelectedTable,
+                  }}
+                />
               )}
             </>
           )}

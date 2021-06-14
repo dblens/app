@@ -8,7 +8,7 @@ const TableCell = ({ value }: { value: unknown }) => {
     displaytext = value;
   }
   return (
-    <td className="border-l border-b border-gray-600 px-2">
+    <td className="border-l border-b border-gray-600 px-2 break-all">
       {(displaytext ?? '') as string}
     </td>
   );
