@@ -7,7 +7,11 @@ const TableCell = ({ value }: { value: unknown }) => {
   } else {
     displaytext = value;
   }
-  return <td>{(displaytext ?? '') as string}</td>;
+  return (
+    <td className="border-l border-b border-gray-600 px-2">
+      {(displaytext ?? '') as string}
+    </td>
+  );
 };
 
 export default TableCell;

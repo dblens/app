@@ -1,5 +1,6 @@
 import utils from '../components/utils/utils';
 import DbSession, {
+  ColumnName,
   SqlExecReponseType,
   TableDataType,
   TableType,
@@ -21,7 +22,7 @@ class PgSession implements DbSession {
     new Promise<string[]>((resolve, reject) => {
       const sql = `SELECT schema_name
       FROM information_schema.schemata
-      WHERE "schema_name" NOT LIKE 'pg_%';`;
+      WHERE "schema_name" NOT LIKE 'pg_%' AND schema_name <> 'information_schema';`;
       utils
         .executeSQL(sql, this.id)
         .then((data) => {
@@ -79,6 +80,31 @@ class PgSession implements DbSession {
         .catch(reject);
     });
 
+  getColumnNames = ({
+    schema,
+    table,
+  }: {
+    schema: string;
+    table: string;
+  }): Promise<{ status: string; rows: ColumnName[] }> =>
+    new Promise<{ status: string; rows: ColumnName[] }>((resolve, reject) => {
+      const sql = `SELECT
+      column_name,
+      data_type
+    FROM
+      INFORMATION_SCHEMA.COLUMNS
+    WHERE
+      TABLE_NAME = '${table}'
+      AND table_schema = '${schema}';`;
+
+      utils
+        .executeSQL(sql, this.id)
+        .then((data) => {
+          const columnNames = data as unknown;
+          return resolve(columnNames as { status: string; rows: ColumnName[] });
+        })
+        .catch(reject);
+    });
   // TODO
   // getTableList = (): Promise<SqlExecReponseType> =>{}
   // getTableData = (schema,tablename,offset,size): Promise<SqlExecReponseType> =>{}

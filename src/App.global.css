@@ -39,3 +39,8 @@ a:hover {
   opacity: 1;
   text-decoration: none;
 }
+
+.autoscroll:hover {
+  overflow: auto;
+  margin-right: -10px;
+}

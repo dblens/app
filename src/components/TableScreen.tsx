@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import DbSession, { TableType } from '../sessions/DbSession';
+import DbSession, { ColumnName, TableType } from '../sessions/DbSession';
 import SideHeader from './atoms/SideHeader';
 import TableCell from './atoms/TableCell';
+import SqlExecuter from './SqlExecuter';
 
 interface SchemaListProps {
   schemas: string[];
-  selectedSchema: string;
+  selectedSchema?: string;
   setSelectedSchema: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 const Schemalist: React.FC<SchemaListProps> = ({
@@ -16,7 +17,7 @@ const Schemalist: React.FC<SchemaListProps> = ({
   return (
     <div className="relative inline-block w-full text-gray-700">
       <select
-        className="w-full text-xs placeholder-gray-600 border  appearance-none focus:shadow-outline"
+        className="w-full p-1 text-xs placeholder-gray-600 border  appearance-none focus:shadow-outline"
         placeholder="Regular input"
         value={selectedSchema}
         onChange={(e) => setSelectedSchema(e.target.value)}
@@ -37,7 +38,9 @@ const Schemalist: React.FC<SchemaListProps> = ({
     </div>
   );
 };
-
+Schemalist.defaultProps = {
+  selectedSchema: 'false',
+};
 interface TableListProps {
   tables: TableType[];
   selectedTable: string;
@@ -49,9 +52,8 @@ const TableList = ({
   selectedTable,
   setSelectedTable,
 }: TableListProps) => {
-  console.log(selectedTable);
   return (
-    <div className=" overflow-auto h-full max-h-full flex flex-col">
+    <div className="autoscroll h-full max-h-full flex flex-col">
       {tables?.map((t) => (
         <button
           className={`pl-4 pr-4 text-xs text-left text-gray-200  hover:bg-gray-400 hover:text-gray-800 cursor-pointer ${
@@ -77,51 +79,79 @@ const TableComp = ({
   selectedSchema: string | undefined;
   selectedTable: string;
 }) => {
-  const [tableData, setTableData] = useState<Record<string, unknown>[]>([]);
+  const [tableData, setTableData] = useState<{
+    tableData?: Record<string, unknown>[];
+    columnNames?: ColumnName[];
+  }>({});
 
   useEffect(() => {
-    if (selectedSchema)
-      session
-        .getTableData({
+    const loadData = async () => {
+      let tableRows;
+      let columnNames;
+      if (selectedSchema) {
+        columnNames = await session.getColumnNames({
+          schema: selectedSchema,
+          table: selectedTable,
+        });
+
+        tableRows = await session.getTableData({
           schema: selectedSchema,
           table: selectedTable,
           offset: 0,
           pagenumber: 1,
           size: 50,
-        })
-        .then((data) => {
-          // eslint-disable-next-line promise/always-return
-          if (data?.status === 'SUCCESS') {
-            setTableData(data?.rows);
-          }
-        })
-        .catch(console.error);
+        });
+
+        if (
+          columnNames?.status === 'SUCCESS' &&
+          tableRows?.status === 'SUCCESS'
+        ) {
+          setTableData({
+            tableData: tableRows?.rows,
+            columnNames: columnNames?.rows,
+          });
+        }
+      }
+    };
+    loadData();
   }, [selectedSchema, selectedTable, session]);
+
   useEffect(() => {
-    console.log(tableData);
+    console.log({ tableData });
   }, [tableData]);
 
-  const columnNames = Object.keys(tableData?.[0] ?? []);
   return (
-    <div className="w-full overflow-y-auto overflow-x-auto">
-      <table className="w-full overflow-y-auto overflow-x-auto">
-        <tr>
-          {columnNames.map((colName) => (
-            <th key={colName}>{colName}</th>
+    <div className="w-full h-full max-h-full  bg-gray-800 border-l border-gray-300 text-gray-300 text-sm overflow-auto">
+      <table className="w-full table-fixed border border-gray-500">
+        <tr className="bg-gray-900">
+          {tableData?.columnNames?.map(({ column_name: colName = '' }) => (
+            <th
+              key={colName}
+              className={`p-3 px-4 border border-gray-500 ${colName}`}
+            >
+              {colName}
+            </th>
           ))}
         </tr>
-        {tableData.map((row, ix) => (
-          <tr key={(row?.id ?? `col_${ix}`) as string}>
-            {Object.values(row).map((cell) => (
-              <TableCell
-                key={
-                  typeof cell === 'object'
-                    ? JSON.stringify(cell)
-                    : (cell as string)
-                }
-                value={cell}
-              />
-            ))}
+        {tableData?.tableData?.map((row, ix) => (
+          <tr
+            className="hover:bg-gray-700 hover:text-gray-100"
+            key={(row?.id ?? `col_${ix}`) as string}
+          >
+            {tableData?.columnNames?.map(({ column_name }) => {
+              const cell = row?.[column_name];
+              if (ix === 0) console.log({ column_name, cell, row });
+              return (
+                <TableCell
+                  key={`${selectedSchema}_${selectedTable}_${column_name}_${
+                    typeof cell === 'object'
+                      ? JSON.stringify(cell)
+                      : (cell as string)
+                  }`}
+                  value={cell}
+                />
+              );
+            })}
           </tr>
         ))}
       </table>
@@ -129,7 +159,13 @@ const TableComp = ({
   );
 };
 
-const TableScreen = ({ session }: { session: DbSession }) => {
+const TableScreen = ({
+  session,
+  selectedTab,
+}: {
+  session: DbSession;
+  selectedTab: string;
+}) => {
   const [schemaList, setSchemaList] = useState<string[]>([]);
   const [selectedSchema, setSelectedSchema] = useState<string>();
 
@@ -152,19 +188,28 @@ const TableScreen = ({ session }: { session: DbSession }) => {
     }
   }, [selectedSchema, session]);
   return (
-    <div className="flex w-full">
-      <div className="h-full bg-gray-700 w-60">
-        <SideHeader title="SCHEMAS" />
-        <Schemalist
-          {...{ schemas: schemaList, selectedSchema, setSelectedSchema }}
-        />
+    <div className="flex w-full h-full">
+      {selectedTab === 'TABLE' && (
+        <div className="h-full bg-gray-700" style={{ width: 300 }}>
+          {/* {selectedTab === 'SQL' && <SideHeader title="Queries" />} */}
+          {selectedTab === 'TABLE' && (
+            <>
+              <SideHeader title="SCHEMAS" />
+              <Schemalist
+                {...{ schemas: schemaList, selectedSchema, setSelectedSchema }}
+              />
 
-        <SideHeader title="TABLES" />
-        <TableList {...{ tables, selectedTable, setSelectedTable }} />
-      </div>
-      <div className="h-full w-full overflow-y-auto overflow-x-auto">
+              <SideHeader title="TABLES" />
+              {selectedTable && (
+                <TableList {...{ tables, selectedTable, setSelectedTable }} />
+              )}
+            </>
+          )}
+        </div>
+      )}
+      <div className="h-full w-full max-h-full">
         {/* Tabs Section */}
-        <div className="w-full bg-gray-800 flex" style={{ height: 25 }}>
+        {/* <div className="w-full bg-gray-800 flex" style={{ height: 25 }}>
           {new Array(3).fill('Tab').map((t, ix) => (
             // eslint-disable-next-line react/no-array-index-key
             <div className="border border-gray-500" key={`${t}_${ix}`}>
@@ -176,8 +221,11 @@ const TableScreen = ({ session }: { session: DbSession }) => {
               </button>
             </div>
           ))}
-        </div>
-        <TableComp {...{ session, selectedTable, selectedSchema }} />
+        </div> */}
+        {selectedTab === 'SQL' && <SqlExecuter session={session} />}
+        {selectedTab === 'TABLE' && (
+          <TableComp {...{ session, selectedTable, selectedSchema }} />
+        )}
       </div>
     </div>
   );

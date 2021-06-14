@@ -22,8 +22,10 @@ const MainScreen: React.FC<MainScreenProps> = ({
       <div className="flex w-full h-full">
         <Sidebar {...{ selectedTab, setSelectedTab }} />
         <div className="bg-gray-100 w-full max-w-full h-full max-h-full flex flex-row overflow-hidden">
-          {selectedTab === 'SQL' && <SqlExecuter session={session} />}
-          {selectedTab === 'TABLE' && <TableScreen session={session} />}
+          {/* {selectedTab === 'SQL' && <SqlExecuter session={session} />} */}
+          {/* {selectedTab === 'TABLE' && ( */}
+          <TableScreen session={session} selectedTab={selectedTab} />
+          {/* )} */}
         </div>
       </div>
     </div>
