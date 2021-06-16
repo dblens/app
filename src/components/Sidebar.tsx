@@ -10,7 +10,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   setSelectedTab,
 }: SidebarProps) => {
   return (
-    <div className="bg-gray-800 text-gray-100 w-12 pt-8 flex flex-col ">
+    <div className="bg-gray-800 text-gray-100 w-12 pt-8 flex flex-col border border-gray-700">
       <button type="button">
         <span role="img" aria-label="app-icon" className="pl-6">
           ⚡️
@@ -18,8 +18,8 @@ const Sidebar: React.FC<SidebarProps> = ({
       </button>
       <button
         type="button"
-        className={`text-xs h-20 ${
-          selectedTab === 'SQL' && 'bg-blue-200 text-blue-900'
+        className={`text-xs h-20 focus:ring-0 ${
+          selectedTab === 'SQL' && 'border-l-2 border-gray-300 font-bold'
         }`}
         onClick={() => setSelectedTab('SQL')}
       >
@@ -27,8 +27,8 @@ const Sidebar: React.FC<SidebarProps> = ({
       </button>
       <button
         type="button"
-        className={`text-xs h-20 ${
-          selectedTab === 'TABLE' && 'bg-blue-200 text-blue-900'
+        className={`text-xs h-20 focus:ring-0 ${
+          selectedTab === 'TABLE' && 'border-l-2 border-gray-300 font-bold'
         }`}
         onClick={() => setSelectedTab('TABLE')}
       >

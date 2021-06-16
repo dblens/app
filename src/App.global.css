@@ -42,5 +42,28 @@ a:hover {
 
 .autoscroll:hover {
   overflow: auto;
-  margin-right: -10px;
+  /* margin-right: -10px; */
+}
+
+.titlebar-drag-region {
+  /*added*/
+  display: block;
+  z-index: -1;
+  -webkit-app-region: drag;
+}
+
+button:focus {
+  outline: none;
+  font-weight: bold;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
 }

@@ -53,11 +53,14 @@ const TableList = ({
   setSelectedTable,
 }: TableListProps) => {
   return (
-    <div className="autoscroll h-full max-h-full flex flex-col">
+    <div
+      className="autoscroll h-full max-h-full flex flex-col"
+      style={{ minWidth: 250 }}
+    >
       {tables?.map((t) => (
         <button
-          className={`pl-4 pr-4 text-xs text-left text-gray-200  hover:bg-gray-400 hover:text-gray-800 cursor-pointer ${
-            selectedTable === t?.table_name && 'hover:bg-blue-400 bg-blue-400'
+          className={`pl-4 pr-4 text-xs text-left text-gray-200  hover:bg-gray-600 hover:text-gray-200 cursor-pointer ${
+            selectedTable === t?.table_name && 'hover:bg-gray-600 bg-gray-600'
           }`}
           key={t?.table_name}
           onClick={() => setSelectedTable(t?.table_name)}
@@ -70,6 +73,60 @@ const TableList = ({
   );
 };
 
+interface TableCompProps {
+  columnNames: ColumnName[];
+  tableData?: Record<string, unknown>[];
+  selectedSchema: string;
+  selectedTable: string;
+}
+
+const Table: React.FC<TableCompProps> = ({
+  columnNames = [],
+  tableData = [],
+  selectedSchema = '',
+  selectedTable = '',
+}: TableCompProps) => {
+  return (
+    <table className="w-full border border-gray-600">
+      <tr className="bg-gray-900">
+        {columnNames?.map(({ column_name: colName = '' }) => (
+          <th
+            key={colName}
+            className={`p-3 px-4 border border-gray-600 ${colName}`}
+            style={{ minWidth: 200 }}
+          >
+            {colName}
+          </th>
+        ))}
+      </tr>
+      {tableData?.map((row, ix) => (
+        <tr
+          className="hover:bg-gray-700 hover:text-gray-100"
+          key={(row?.id ?? `col_${ix}`) as string}
+        >
+          {columnNames?.map(({ column_name }) => {
+            const cell = row?.[column_name];
+            if (ix === 0) console.log({ column_name, cell, row });
+            return (
+              <TableCell
+                key={`${selectedSchema}_${selectedTable}_${column_name}_${
+                  typeof cell === 'object'
+                    ? JSON.stringify(cell)
+                    : (cell as string)
+                }`}
+                value={cell}
+              />
+            );
+          })}
+        </tr>
+      ))}
+    </table>
+  );
+};
+Table.defaultProps = {
+  tableData: [],
+};
+
 const TableComp = ({
   session,
   selectedSchema,
@@ -79,6 +136,7 @@ const TableComp = ({
   selectedSchema: string | undefined;
   selectedTable: string;
 }) => {
+  const [currentPage, setCurrentPage] = useState(1);
   const [tableData, setTableData] = useState<{
     tableData?: Record<string, unknown>[];
     columnNames?: ColumnName[];
@@ -98,7 +156,7 @@ const TableComp = ({
           schema: selectedSchema,
           table: selectedTable,
           offset: 0,
-          pagenumber: 1,
+          pagenumber: currentPage,
           size: 50,
         });
         if (columnNames?.status === 'SUCCESS') {
@@ -110,47 +168,64 @@ const TableComp = ({
       }
     };
     loadData();
-  }, [selectedSchema, selectedTable, session]);
+  }, [selectedSchema, selectedTable, session, currentPage]);
 
   useEffect(() => {
     console.log({ tableData });
   }, [tableData]);
 
   return (
-    <div className="w-full h-full max-h-full  bg-gray-800 border-l border-gray-300 text-gray-300 text-sm overflow-auto">
-      <table className="w-full table-fixed border border-gray-500">
-        <tr className="bg-gray-900">
-          {tableData?.columnNames?.map(({ column_name: colName = '' }) => (
-            <th
-              key={colName}
-              className={`p-3 px-4 border border-gray-500 ${colName}`}
-            >
-              {colName}
-            </th>
-          ))}
-        </tr>
-        {tableData?.tableData?.map((row, ix) => (
-          <tr
-            className="hover:bg-gray-700 hover:text-gray-100"
-            key={(row?.id ?? `col_${ix}`) as string}
+    <div className="w-full h-full max-h-full max-w-full bg-gray-800 border-l border-gray-600 text-gray-300 text-sm overflow-auto overflow-x-auto">
+      {/* PaginationSection */}
+      <div className="w-full bg-gray-800 flex border border-gray-700">
+        <div
+          className="w-full bg-gray-800 flex my-auto px-4 text-base font-normal"
+          style={{ height: 25 }}
+        >
+          {selectedSchema ?? ''}
+          {' / '}
+          {selectedTable ?? ''}
+        </div>
+        <div
+          className="w-auto items-center flex justify-end rounded-md my-2"
+          style={{ height: 25 }}
+        >
+          <button
+            type="button"
+            className="h-full pl-4 pr-4 text-gray-100"
+            onClick={() => setCurrentPage((p) => (p > 1 ? Number(p) - 1 : 1))}
           >
-            {tableData?.columnNames?.map(({ column_name }) => {
-              const cell = row?.[column_name];
-              if (ix === 0) console.log({ column_name, cell, row });
-              return (
-                <TableCell
-                  key={`${selectedSchema}_${selectedTable}_${column_name}_${
-                    typeof cell === 'object'
-                      ? JSON.stringify(cell)
-                      : (cell as string)
-                  }`}
-                  value={cell}
-                />
-              );
-            })}
-          </tr>
-        ))}
-      </table>
+            {`<`}
+          </button>
+          <input
+            type="number"
+            className="h-full px-2 text-gray-100 bg-transparent focus:outline-none border-b-2 font-bold"
+            style={{ width: 25 + 5 * `${currentPage}`.length }}
+            value={currentPage}
+            // onChange={({ e: { target: { value = currentPage } = {} } = {} }) =>
+            onChange={(e) =>
+              e.target.value && setCurrentPage(Number(e.target.value))
+            }
+            //   !Number.isNaN(Number(value)) && setCurrentPage(value)
+            // }
+          />
+          <button
+            type="button"
+            className="h-full pl-4 pr-4 text-gray-100"
+            onClick={() => setCurrentPage((p) => Number(p) + 1)}
+          >
+            {`>`}
+          </button>
+        </div>
+      </div>
+      <Table
+        {...{
+          columnNames: tableData?.columnNames ?? [],
+          tableData: tableData?.tableData ?? [],
+          selectedSchema: selectedSchema ?? '',
+          selectedTable: selectedTable ?? '',
+        }}
+      />
     </div>
   );
 };
@@ -186,7 +261,7 @@ const TableScreen = ({
   return (
     <div className="flex w-full h-full">
       {selectedTab === 'TABLE' && (
-        <div className="h-full bg-gray-700" style={{ width: 300 }}>
+        <div className="h-full bg-gray-800" style={{ width: 300 }}>
           {/* {selectedTab === 'SQL' && <SideHeader title="Queries" />} */}
           {selectedTab === 'TABLE' && (
             <>
@@ -211,10 +286,10 @@ const TableScreen = ({
       )}
       <div className="h-full w-full max-h-full">
         {/* Tabs Section */}
-        {/* <div className="w-full bg-gray-800 flex" style={{ height: 25 }}>
+        <div className="w-full bg-gray-800 flex" style={{ height: 25 }}>
           {new Array(3).fill('Tab').map((t, ix) => (
             // eslint-disable-next-line react/no-array-index-key
-            <div className="border border-gray-500" key={`${t}_${ix}`}>
+            <div className="border border-gray-600" key={`${t}_${ix}`}>
               <button type="button" className="pl-4 pr-4 text-gray-100">
                 Test Tab
               </button>
@@ -223,7 +298,7 @@ const TableScreen = ({
               </button>
             </div>
           ))}
-        </div> */}
+        </div>
         {selectedTab === 'SQL' && <SqlExecuter session={session} />}
         {selectedTab === 'TABLE' && (
           <TableComp {...{ session, selectedTable, selectedSchema }} />
