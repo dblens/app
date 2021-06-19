@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import KeyboardListener from 'react-keyboard-listener';
+
 import DbSession from '../sessions/DbSession';
 import SqlExecuter from './SqlExecuter';
 import Sidebar from './Sidebar';
@@ -17,18 +19,20 @@ const MainScreen: React.FC<MainScreenProps> = ({
   const [selectedTab, setSelectedTab] = useState('TABLE');
 
   return (
-    <div className="w-screen h-screen text-gray-800 focus:font-bold focus:outline-none">
-      <Titlebar />
-      <div className="flex w-full h-full">
-        <Sidebar {...{ selectedTab, setSelectedTab }} />
-        <div className="bg-gray-100 w-full max-w-full h-full max-h-full flex flex-row overflow-hidden font-mono">
-          {/* {selectedTab === 'SQL' && <SqlExecuter session={session} />} */}
-          {/* {selectedTab === 'TABLE' && ( */}
-          <TableScreen session={session} selectedTab={selectedTab} />
-          {/* )} */}
+    <KeyboardListener onKeyDown={console.log}>
+      <div className="w-screen h-screen text-gray-800 focus:font-bold focus:outline-none">
+        <Titlebar />
+        <div className="flex w-full h-full">
+          <Sidebar {...{ selectedTab, setSelectedTab }} />
+          <div className="bg-gray-100 w-full max-w-full h-full max-h-full flex flex-row overflow-hidden font-mono">
+            {/* {selectedTab === 'SQL' && <SqlExecuter session={session} />} */}
+            {/* {selectedTab === 'TABLE' && ( */}
+            <TableScreen session={session} selectedTab={selectedTab} />
+            {/* )} */}
+          </div>
         </div>
       </div>
-    </div>
+    </KeyboardListener>
   );
 };
 
