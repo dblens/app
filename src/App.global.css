@@ -44,7 +44,19 @@ a:hover {
   overflow: auto;
   /* margin-right: -10px; */
 }
-
+.height-adjust-25 {
+  height: calc(100% - 25px);
+}
+.header-fixed {
+  width: calc(100vw - 300px);
+  position: fixed;
+}
+.table-wrapper {
+  overflow: auto;
+  padding-top: 41px;
+  min-height: 100%;
+  height: calc(100vh - 25px);
+}
 .titlebar-drag-region {
   /*added*/
   display: block;
@@ -54,7 +66,6 @@ a:hover {
 
 button:focus {
   outline: none;
-  font-weight: bold;
 }
 
 input::-webkit-outer-spin-button,

@@ -12,7 +12,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   return (
     <div className="bg-gray-800 text-gray-100 w-12 pt-8 flex flex-col border border-gray-700">
       <button type="button">
-        <span role="img" aria-label="app-icon" className="pl-6">
+        <span role="img" aria-label="app-icon" className="p-2">
           ⚡️
         </span>
       </button>

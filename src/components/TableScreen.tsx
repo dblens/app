@@ -3,6 +3,7 @@ import DbSession, { ColumnName, TableType } from '../sessions/DbSession';
 import SideHeader from './atoms/SideHeader';
 import TableCell from './atoms/TableCell';
 import SqlExecuter from './SqlExecuter';
+import Tabs from './Tabs';
 
 interface SchemaListProps {
   schemas: string[];
@@ -175,9 +176,9 @@ const TableComp = ({
   }, [tableData]);
 
   return (
-    <div className="w-full h-full max-h-full max-w-full bg-gray-800 border-l border-gray-600 text-gray-300 text-sm overflow-auto overflow-x-auto">
+    <div className="w-full h-full max-h-full max-w-full bg-gray-800 border-l border-gray-600 text-gray-300 text-sm overflow-auto overflow-x-auto height-adjust-25">
       {/* PaginationSection */}
-      <div className="w-full bg-gray-800 flex border border-gray-700">
+      <div className="w-full bg-gray-800 flex border border-gray-700 header-fixed">
         <div
           className="w-full bg-gray-800 flex my-auto px-4 text-base font-normal"
           style={{ height: 25 }}
@@ -199,6 +200,7 @@ const TableComp = ({
           </button>
           <input
             type="number"
+            min={1}
             className="h-full px-2 text-gray-100 bg-transparent focus:outline-none border-b-2 font-bold"
             style={{ width: 25 + 5 * `${currentPage}`.length }}
             value={currentPage}
@@ -218,14 +220,16 @@ const TableComp = ({
           </button>
         </div>
       </div>
-      <Table
-        {...{
-          columnNames: tableData?.columnNames ?? [],
-          tableData: tableData?.tableData ?? [],
-          selectedSchema: selectedSchema ?? '',
-          selectedTable: selectedTable ?? '',
-        }}
-      />
+      <div className="table-wrapper">
+        <Table
+          {...{
+            columnNames: tableData?.columnNames ?? [],
+            tableData: tableData?.tableData ?? [],
+            selectedSchema: selectedSchema ?? '',
+            selectedTable: selectedTable ?? '',
+          }}
+        />
+      </div>
     </div>
   );
 };
@@ -286,22 +290,17 @@ const TableScreen = ({
       )}
       <div className="h-full w-full max-h-full">
         {/* Tabs Section */}
-        <div className="w-full bg-gray-800 flex" style={{ height: 25 }}>
-          {new Array(3).fill('Tab').map((t, ix) => (
-            // eslint-disable-next-line react/no-array-index-key
-            <div className="border border-gray-600" key={`${t}_${ix}`}>
-              <button type="button" className="pl-4 pr-4 text-gray-100">
-                Test Tab
-              </button>
-              <button type="button" className="ml-4 mr-4 text-gray-100">
-                X
-              </button>
-            </div>
-          ))}
-        </div>
+        {/* <Tabs /> */}
         {selectedTab === 'SQL' && <SqlExecuter session={session} />}
         {selectedTab === 'TABLE' && (
-          <TableComp {...{ session, selectedTable, selectedSchema }} />
+          <TableComp
+            {...{
+              session,
+              key: `${selectedSchema}_${selectedTable}`,
+              selectedTable,
+              selectedSchema,
+            }}
+          />
         )}
       </div>
     </div>

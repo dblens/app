@@ -27,7 +27,7 @@ const SqlExecuter = ({ session }: { session: DbSession }) => {
   };
 
   return (
-    <div className="p-4 w-full">
+    <div className="p-4 h-full w-full bg-gray-800">
       <div className="flex flex-1 w-full justify-between">
         <p className="text-green-600 align-center">Connected</p>
         <button
@@ -41,11 +41,11 @@ const SqlExecuter = ({ session }: { session: DbSession }) => {
       </div>
       <br />
       <textarea
-        className="w-full h-1/2 font-mono p-2"
+        className="w-full h-1/2 font-mono p-2 bg-gray-700 text-gray-200"
         value={sql}
         onChange={(e) => setSql(e?.target?.value)}
       />
-      <pre className="h-1/3 overflow-y-auto text-gray-600 font-mono bg-gray-200">
+      <pre className="h-1/3 overflow-y-auto bg-gray-700 p-2 text-gray-200 font-mono">
         {state && JSON.stringify(state, null, 2)}
       </pre>
     </div>
