@@ -1,5 +1,9 @@
 ## DB View
 
+
+https://user-images.githubusercontent.com/8408875/122637520-bc115f80-d10c-11eb-91ed-a6d6a759e1e6.mov
+
+
 ## Setup dev env
 
 ### Prerequisites
