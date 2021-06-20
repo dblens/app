@@ -14,12 +14,12 @@ const TableList = ({
 }: TableListProps) => {
   return (
     <div
-      className="autoscroll h-full max-h-full flex flex-col"
+      className="autoscroll h-full max-h-full flex flex-col text-gray-200 text-xs"
       style={{ minWidth: 250 }}
     >
       {tables?.map((t) => (
         <button
-          className={`pl-4 pr-4 text-xs text-left text-gray-200  hover:bg-gray-600 hover:text-gray-200 cursor-pointer ${
+          className={`pl-4 pr-4 text-left hover:bg-gray-600 hover:text-gray-200 cursor-pointer ${
             selectedTable === t?.table_name && 'hover:bg-gray-600 bg-gray-600'
           }`}
           key={t?.table_name}
@@ -29,6 +29,9 @@ const TableList = ({
           {t?.table_name}
         </button>
       ))}
+      {!tables?.length && (
+        <span className="w-full text-center p-2">No tables found</span>
+      )}
     </div>
   );
 };
