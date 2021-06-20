@@ -49,6 +49,15 @@ const TableComp = ({
     console.log({ tableData });
   }, [tableData]);
 
+  if (!selectedTable)
+    return (
+      <div className="w-full h-full max-h-full max-w-full bg-gray-800 border-l border-gray-600 text-gray-300 text-sm overflow-auto overflow-x-auto height-adjust-25 flex justify-items-center items-center">
+        <span className="h-full w-full text-center m-auto p-6">
+          Please select a table from the sidebar
+        </span>
+      </div>
+    );
+
   return (
     <div className="w-full h-full max-h-full max-w-full bg-gray-800 border-l border-gray-600 text-gray-300 text-sm overflow-auto overflow-x-auto height-adjust-25">
       {/* PaginationSection */}
