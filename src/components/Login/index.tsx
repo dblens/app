@@ -13,7 +13,7 @@ interface LoginProps {
 
 const Login: React.FC<LoginProps> = ({ setSession }: LoginProps) => {
   const [connectionString, setConnectionString] = React.useState<string>(
-    'postgresql://postgres:postgrespassword@127.0.0.1/postgres'
+    'postgresql://postgres:postgres@127.0.0.1/postgres'
   );
   const [loading, setLoading] = React.useState<boolean>(false);
 

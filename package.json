@@ -248,6 +248,7 @@
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
+    "react-tooltip": "^4.2.21",
     "regenerator-runtime": "^0.13.7",
     "source-map-support": "^0.5.19",
     "uuid": "^8.3.2"
