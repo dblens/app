@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import DbSession, { ColumnName } from '../sessions/DbSession';
 import Table from './molecules/Table';
 
+const pageSizes = [10, 50, 100, 1000];
+
 const TableComp = ({
   session,
   selectedSchema,
@@ -12,6 +14,7 @@ const TableComp = ({
   selectedTable: string;
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentPageSize, setCurrentPageSize] = useState<number>(pageSizes[0]);
   const [tableData, setTableData] = useState<{
     tableData?: Record<string, unknown>[];
     columnNames?: ColumnName[];
@@ -32,7 +35,7 @@ const TableComp = ({
           table: selectedTable,
           offset: 0,
           pagenumber: currentPage,
-          size: 50,
+          size: currentPageSize,
         });
         if (columnNames?.status === 'SUCCESS') {
           setTableData({
@@ -43,7 +46,7 @@ const TableComp = ({
       }
     };
     loadData();
-  }, [selectedSchema, selectedTable, session, currentPage]);
+  }, [selectedSchema, selectedTable, session, currentPage, currentPageSize]);
 
   useEffect(() => {
     console.log({ tableData });
@@ -101,6 +104,19 @@ const TableComp = ({
           >
             {`>`}
           </button>
+          <select
+            className="pl-4 bg-transparent focus:shadow-outline px-4"
+            onChange={(e) =>
+              setCurrentPageSize(Number.parseInt(e.target.value, 10))
+            }
+            value={currentPageSize}
+          >
+            {pageSizes.map((i) => (
+              <option key={i} value={i}>
+                {i} rows/page
+              </option>
+            ))}
+          </select>
         </div>
       </div>
       <div className="table-wrapper">

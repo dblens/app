@@ -28,13 +28,13 @@ const TableScreen = ({
         return setSchemaList(list);
       })
       .catch(console.error);
-  }, []);
+  }, [selectedTab]);
 
   useEffect(() => {
     if (selectedSchema) {
       session.getAllTables(selectedSchema).then(settables).catch(console.error);
     }
-  }, [selectedSchema, session]);
+  }, [selectedSchema, session, selectedTab]);
   return (
     <div className="flex w-full h-full">
       {selectedTab === 'TABLE' && (

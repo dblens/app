@@ -13,6 +13,7 @@ export type TableDataType = Record<string, unknown>;
 export type ColumnName = {
   column_name: string;
   data_type: string;
+  visible?: boolean;
 };
 
 interface DbSession {

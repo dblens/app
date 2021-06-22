@@ -13,7 +13,7 @@ const SchemaList: React.FC<SchemaListProps> = ({
   return (
     <div className="relative inline-block w-full text-gray-700">
       <select
-        className="w-full p-1 text-xs placeholder-gray-600 border  appearance-none focus:shadow-outline"
+        className="appearance-none bg-gray-900 border focus:shadow-outline p-2 placeholder-gray-600 text-gray-200 text-xs w-full"
         placeholder="Regular input"
         value={selectedSchema}
         onChange={(e) => setSelectedSchema(e.target.value)}
