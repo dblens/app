@@ -19,6 +19,7 @@ export const connectDB = ({
 }) => {
   const client = new Client({
     connectionString,
+    ssl: { rejectUnauthorized: false },
   });
   client.connect((err) => {
     console.log('CONNECT_RESP', err, !!err);
