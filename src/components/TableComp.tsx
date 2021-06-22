@@ -121,7 +121,7 @@ const TableComp = ({
             {`>`}
           </button>
           <select
-            className="pl-4 bg-transparent focus:shadow-outline px-4"
+            className="pl-4 mr-2 bg-transparent focus:shadow-outline px-4"
             onChange={(e) =>
               setCurrentPageSize(Number.parseInt(e.target.value, 10))
             }
