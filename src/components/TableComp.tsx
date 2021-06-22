@@ -13,8 +13,15 @@ const TableComp = ({
   selectedSchema: string | undefined;
   selectedTable: string;
 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [currentPageSize, setCurrentPageSize] = useState<number>(pageSizes[0]);
+  const [pagination, setPagination] = useState<{
+    currentPage: number;
+    currentPageSize: number;
+  }>({
+    currentPage: 1,
+    currentPageSize: pageSizes[0],
+  });
+  // const [currentPage, setCurrentPage] = useState({1});
+  // const [currentPageSize, setCurrentPageSize] = useState<number>(pageSizes[0]);
   const [tableData, setTableData] = useState<{
     tableData?: Record<string, unknown>[];
     columnNames?: ColumnName[];
@@ -29,6 +36,7 @@ const TableComp = ({
           schema: selectedSchema,
           table: selectedTable,
         });
+        const { currentPage, currentPageSize } = pagination;
 
         tableRows = await session.getTableData({
           schema: selectedSchema,
@@ -46,7 +54,7 @@ const TableComp = ({
       }
     };
     loadData();
-  }, [selectedSchema, selectedTable, session, currentPage, currentPageSize]);
+  }, [selectedSchema, selectedTable, session, pagination]);
 
   useEffect(() => {
     console.log({ tableData });
@@ -60,6 +68,12 @@ const TableComp = ({
         </span>
       </div>
     );
+
+  const { currentPage, currentPageSize } = pagination;
+  const setCurrentPage = (page: number) =>
+    setPagination((prevPage) => ({ ...prevPage, currentPage: page }));
+  const setCurrentPageSize = (pageSize: number) =>
+    setPagination({ currentPage: 1, currentPageSize: pageSize }); // onPageSizeChange => set pageNo to 1
 
   return (
     <div className="w-full h-full max-h-full max-w-full bg-gray-800 border-l border-gray-600 text-gray-300 text-sm overflow-auto overflow-x-auto height-adjust-25">
@@ -80,7 +94,9 @@ const TableComp = ({
           <button
             type="button"
             className="h-full pl-4 pr-4 text-gray-100"
-            onClick={() => setCurrentPage((p) => (p > 1 ? Number(p) - 1 : 1))}
+            onClick={() =>
+              setCurrentPage(currentPage > 1 ? Number(currentPage) - 1 : 1)
+            }
           >
             {`<`}
           </button>
@@ -100,7 +116,7 @@ const TableComp = ({
           <button
             type="button"
             className="h-full pl-4 pr-4 text-gray-100"
-            onClick={() => setCurrentPage((p) => Number(p) + 1)}
+            onClick={() => setCurrentPage(Number(currentPage) + 1)}
           >
             {`>`}
           </button>
