@@ -22,12 +22,12 @@ export const connectDB = ({
     ssl: { rejectUnauthorized: false },
   });
   client.connect((err) => {
-    console.log('CONNECT_RESP', err, !!err);
+    // console.log('CONNECT_RESP', err, !!err);
     if (err) {
+      // console.log('CONNECT_RESP');
       if (window)
         window.webContents.send('CONNECT_RESP', { status: 'FAILED', uuid });
     } else {
-      console.log('CONNECT_RESP');
       connections[uuid] = { client, window };
       if (window)
         window.webContents.send('CONNECT_RESP', { status: 'CONNECTED', uuid });
@@ -40,7 +40,7 @@ export const sqlExecute = async (
   { uuid = '', sql = 'SELECT NOW();' } = {}
 ) => {
   try {
-    console.error('>>>', uuid, connections, uuid in connections);
+    // console.error('>>>', uuid, connections, uuid in connections);
 
     if (connections?.[uuid]) {
       const { client } = connections?.[uuid];

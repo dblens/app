@@ -134,14 +134,13 @@ app.on('activate', () => {
   if (mainWindow === null) createWindow();
 });
 
-console.log('>><');
 // ipcMain.on('ping', (event: IpcMainEvent, params: any) => {
 //   console.log('Test');
 // });
 
 ipcMain.on('connect', (_, params) => {
   console.log('connect');
-  console.log(JSON.stringify({ params }, null, 2));
+  // console.log(JSON.stringify({ params }, null, 2));
   if (mainWindow)
     connectDB({
       ...params,

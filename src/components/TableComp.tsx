@@ -32,13 +32,12 @@ const TableComp = ({
     const loadData = async () => {
       let tableRows;
       let columnNames;
-      if (selectedSchema) {
+      if (selectedSchema && selectedTable) {
         columnNames = await session.getColumnNames({
           schema: selectedSchema,
           table: selectedTable,
         });
         const { currentPage, currentPageSize } = pagination;
-        console.log('<<><><');
 
         tableRows = await session.getTableData({
           schema: selectedSchema,
@@ -48,7 +47,7 @@ const TableComp = ({
           size: currentPageSize,
           sortedColumns: pagination?.sortedColumns,
         });
-        console.log('<<><><');
+
         if (columnNames?.status === 'SUCCESS') {
           setTableData({
             tableData: tableRows?.rows,
@@ -62,10 +61,6 @@ const TableComp = ({
     };
     loadData();
   }, [selectedSchema, selectedTable, session, pagination]);
-
-  useEffect(() => {
-    console.log({ pagination });
-  }, [pagination]);
 
   const onSort = (newSort: SortColumnType) => {
     setPagination((currentPagination) => {
@@ -104,7 +99,7 @@ const TableComp = ({
       {/* PaginationSection */}
       <div className="w-full bg-gray-800 flex border border-gray-700 header-fixed">
         <div
-          className="w-full bg-gray-800 flex my-auto px-4 text-base font-normal"
+          className="w-full bg-gray-800 flex my-auto px-4 text-base font-normal truncate"
           style={{ height: 25 }}
         >
           {selectedSchema ?? ''}

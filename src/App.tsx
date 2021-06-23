@@ -19,7 +19,6 @@ export default function App() {
         <Route
           path="/"
           render={() => {
-            console.log(session);
             // <Redirect to="/dashboard" />
             return session ? (
               <MainScreen {...{ session }} />

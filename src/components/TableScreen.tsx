@@ -52,7 +52,7 @@ const TableScreen = ({
                 <TableList
                   {...{
                     tables,
-                    selectedTable: selectedTable || tables?.[0]?.table_name,
+                    selectedTable,
                     setSelectedTable,
                   }}
                 />
