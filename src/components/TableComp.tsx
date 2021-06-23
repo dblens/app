@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import DbSession, { ColumnName } from '../sessions/DbSession';
+import DbSession, { ColumnName, SortColumnType } from '../sessions/DbSession';
 import Table from './molecules/Table';
 
 const pageSizes = [10, 50, 100, 1000];
@@ -16,6 +16,7 @@ const TableComp = ({
   const [pagination, setPagination] = useState<{
     currentPage: number;
     currentPageSize: number;
+    sortedColumns?: SortColumnType;
   }>({
     currentPage: 1,
     currentPageSize: pageSizes[0],
@@ -37,6 +38,7 @@ const TableComp = ({
           table: selectedTable,
         });
         const { currentPage, currentPageSize } = pagination;
+        console.log('<<><><');
 
         tableRows = await session.getTableData({
           schema: selectedSchema,
@@ -44,11 +46,16 @@ const TableComp = ({
           offset: 0,
           pagenumber: currentPage,
           size: currentPageSize,
+          sortedColumns: pagination?.sortedColumns,
         });
+        console.log('<<><><');
         if (columnNames?.status === 'SUCCESS') {
           setTableData({
             tableData: tableRows?.rows,
-            columnNames: columnNames?.rows,
+            columnNames: columnNames?.rows?.map((i) => ({
+              ...i,
+              sort: pagination?.sortedColumns?.[i?.column_name],
+            })),
           });
         }
       }
@@ -57,8 +64,19 @@ const TableComp = ({
   }, [selectedSchema, selectedTable, session, pagination]);
 
   useEffect(() => {
-    console.log({ tableData });
-  }, [tableData]);
+    console.log({ pagination });
+  }, [pagination]);
+  const onSort = (newSort: SortColumnType) => {
+    setPagination((currentPagination) => {
+      return {
+        ...currentPagination,
+        sortedColumns: {
+          ...(currentPagination?.sortedColumns ?? {}),
+          ...newSort,
+        },
+      };
+    });
+  };
 
   if (!selectedTable)
     return (
@@ -142,6 +160,7 @@ const TableComp = ({
             tableData: tableData?.tableData ?? [],
             selectedSchema: selectedSchema ?? '',
             selectedTable: selectedTable ?? '',
+            onSort,
           }}
         />
       </div>

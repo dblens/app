@@ -1,5 +1,6 @@
 import React from 'react';
-import { ColumnName } from '../../sessions/DbSession';
+import { ColumnName, SortColumnType, SortType } from '../../sessions/DbSession';
+import SortIcon from '../atoms/SortIcon';
 import TableCell from '../atoms/TableCell';
 
 interface TableCompProps {
@@ -7,6 +8,7 @@ interface TableCompProps {
   tableData?: Record<string, unknown>[];
   selectedSchema: string;
   selectedTable: string;
+  onSort: (sort: SortColumnType) => void;
 }
 
 const Table: React.FC<TableCompProps> = ({
@@ -14,19 +16,35 @@ const Table: React.FC<TableCompProps> = ({
   tableData = [],
   selectedSchema = '',
   selectedTable = '',
+  onSort,
 }: TableCompProps) => {
+  const onSortColumn = (ix: number) => {
+    const column = columnNames[ix];
+    let newSort: SortType;
+    if (!column?.sort) newSort = 'asc';
+    if (column?.sort === 'asc') newSort = 'desc';
+    else newSort = 'asc';
+    onSort({ [column?.column_name]: newSort });
+  };
+
   return (
     <table className="w-full border border-gray-600">
       <tr className="bg-gray-900">
         {columnNames?.map(
-          ({ visible = true, column_name: colName = '' }) =>
+          ({ visible = true, column_name: colName = '', sort }, index) =>
             visible && (
               <th
                 key={colName}
-                className={`p-3 px-4 border bg-gray-900 border-gray-600 ${colName}`}
+                className={`border bg-gray-900 border-gray-600 ${colName} ${
+                  !sort && 'text-transparent'
+                } hover:text-gray-200 cursor-pointer`}
                 style={{ minWidth: 200 }}
+                onClick={() => onSortColumn(index)}
               >
-                {colName}
+                <div className={`absolute p-1 ${sort && 'text-blue-600'}`}>
+                  <SortIcon mode={sort} />
+                </div>
+                <div className="w-full p-3 px-4 text-gray-200">{colName}</div>
               </th>
             )
         )}

@@ -1,8 +1,8 @@
 import utils from '../components/utils/utils';
 import DbSession, {
   ColumnName,
+  SortColumnType,
   SqlExecReponseType,
-  TableDataType,
   TableType,
 } from './DbSession';
 
@@ -60,25 +60,38 @@ class PgSession implements DbSession {
     table,
     pagenumber = 1,
     size = 50,
+    sortedColumns,
   }: {
     schema: string;
     table: string;
     offset: number;
     pagenumber: number;
     size: number;
-  }): Promise<TableDataType[]> =>
-    new Promise<TableDataType[]>((resolve, reject) => {
-      const offset = (pagenumber - 1) * size;
-      const sql = `SELECT * FROM "${schema}"."${table}" LIMIT ${size} OFFSET ${offset};`;
-      // console.log('>>>', sql);
-      utils
-        .executeSQL(sql, this.id)
-        .then((data) => {
-          const tableData = data as unknown;
-          return resolve(tableData as TableDataType[]);
-        })
-        .catch(reject);
-    });
+    sortedColumns?: SortColumnType;
+  }): Promise<{ status: string; rows: Record<string, unknown>[] }> =>
+    new Promise<{ status: string; rows: Record<string, unknown>[] }>(
+      (resolve, reject) => {
+        const offset = (pagenumber - 1) * size;
+        let sql = `SELECT * FROM "${schema}"."${table}" `;
+        if (sortedColumns) {
+          sql += ' ORDER BY ';
+          sql += Object.entries(sortedColumns)
+            .map(([col, sort]) => `${col} ${sort}`)
+            .join(',');
+        }
+
+        sql += ` LIMIT ${size} OFFSET ${offset};`;
+        utils
+          .executeSQL(sql, this.id)
+          .then((data) => {
+            const tableData = data as unknown;
+            return resolve(
+              tableData as { status: string; rows: Record<string, unknown>[] }
+            );
+          })
+          .catch(reject);
+      }
+    );
 
   getColumnNames = ({
     schema,
