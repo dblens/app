@@ -66,14 +66,20 @@ const TableComp = ({
   useEffect(() => {
     console.log({ pagination });
   }, [pagination]);
+
   const onSort = (newSort: SortColumnType) => {
     setPagination((currentPagination) => {
+      let newVals = {};
+      Object.entries({
+        ...(currentPagination?.sortedColumns ?? {}),
+        ...newSort,
+      }).forEach(([c, s]) => {
+        if (s === 'asc' || s === 'desc') newVals = { ...newVals, [c]: s };
+      });
+
       return {
         ...currentPagination,
-        sortedColumns: {
-          ...(currentPagination?.sortedColumns ?? {}),
-          ...newSort,
-        },
+        sortedColumns: newVals,
       };
     });
   };

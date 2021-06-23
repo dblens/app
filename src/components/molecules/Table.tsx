@@ -22,8 +22,8 @@ const Table: React.FC<TableCompProps> = ({
     const column = columnNames[ix];
     let newSort: SortType;
     if (!column?.sort) newSort = 'asc';
-    if (column?.sort === 'asc') newSort = 'desc';
-    else newSort = 'asc';
+    else if (column?.sort === 'asc') newSort = 'desc';
+    else newSort = 'none';
     onSort({ [column?.column_name]: newSort });
   };
 

@@ -10,7 +10,7 @@ export type TableType = {
 };
 export type TableDataType = Record<string, unknown>;
 
-export type SortType = 'asc' | 'desc';
+export type SortType = 'asc' | 'desc' | 'none';
 
 export type ColumnName = {
   column_name: string;
