@@ -39,19 +39,29 @@ export const sqlExecute = async (
   _: IpcMainInvokeEvent,
   { uuid = '', sql = 'SELECT NOW();' } = {}
 ) => {
+  const startTime = +new Date();
   try {
     // console.error('>>>', uuid, connections, uuid in connections);
 
     if (connections?.[uuid]) {
       const { client } = connections?.[uuid];
       const { rows } = await client.query(sql);
-      if (Array.isArray(rows)) return { status: 'SUCCESS', rows: rows ?? [] };
-      return { status: 'SUCCESS', rows: [rows] ?? [] };
+      const duration = +new Date() - startTime;
+
+      if (Array.isArray(rows))
+        return {
+          status: 'SUCCESS',
+          rows: rows ?? [],
+          duration,
+        };
+      return { status: 'SUCCESS', rows: [rows] ?? [], duration };
     }
   } catch (e) {
     console.error(e);
-    return { status: 'FAILED', error: e };
+    const duration = +new Date() - startTime;
+    return { status: 'FAILED', error: e, duration };
   }
+  const duration = +new Date() - startTime;
   console.error('>>>');
-  return { status: 'FAILED' };
+  return { status: 'FAILED', duration };
 };

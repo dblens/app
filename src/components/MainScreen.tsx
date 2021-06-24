@@ -17,7 +17,7 @@ const MainScreen: React.FC<MainScreenProps> = ({
   const [selectedTab, setSelectedTab] = useState('TABLE');
 
   return (
-    <div className="w-screen h-screen text-gray-800 focus:font-bold focus:outline-none">
+    <div className="w-screen h-screen max-h-screen text-gray-800 focus:font-bold focus:outline-none">
       <Titlebar />
       <div className="flex w-full h-full">
         <Sidebar {...{ selectedTab, setSelectedTab }} />

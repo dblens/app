@@ -3,6 +3,7 @@ import { QueryResultRow } from 'pg';
 export type SqlExecReponseType = {
   status: string;
   rows: QueryResultRow[] | string;
+  duration: number;
 };
 export type TableType = {
   table_name: string;
