@@ -10,11 +10,16 @@ export type TableType = {
 };
 export type TableDataType = Record<string, unknown>;
 
+export type SortType = 'asc' | 'desc' | 'none';
+
 export type ColumnName = {
   column_name: string;
   data_type: string;
+  visible?: boolean;
+  sort?: SortType;
 };
 
+export type SortColumnType = Record<string, SortType>; // key is the colName
 interface DbSession {
   id: string;
   executeSQL: (sql: string) => Promise<SqlExecReponseType>;
@@ -32,6 +37,7 @@ interface DbSession {
     offset: number;
     pagenumber: number;
     size: number;
+    sortedColumns?: SortColumnType;
   }) => Promise<{ status: string; rows: Record<string, unknown>[] }>;
   getColumnNames: ({
     schema,

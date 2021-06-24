@@ -21,14 +21,13 @@ const Login: React.FC<LoginProps> = ({ setSession }: LoginProps) => {
     electron.ipcRenderer.on('CONNECT_RESP', (_, params) => {
       setLoading(false);
       if (params?.status === 'CONNECTED') {
-        console.log('CONNECTED', params);
+        // console.log('CONNECTED', params);
         setSession(new PgSession(params?.uuid));
       }
       // TODO else show error message
     });
   }, []);
   const send = () => {
-    console.log('>>');
     // electron.ipcRenderer.send('ping', 'a string', 10);
 
     if (connectionString) {

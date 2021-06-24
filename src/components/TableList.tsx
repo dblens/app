@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { TableType } from '../sessions/DbSession';
 
 interface TableListProps {
@@ -7,11 +7,24 @@ interface TableListProps {
   setSelectedTable: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
+const hasTableInCurrentSchema = (
+  selected: string,
+  tables: TableType[]
+): boolean => {
+  const found = tables?.find((t) => t.table_name === selected);
+  if (found) return true;
+  return false;
+};
+
 const TableList = ({
   tables,
   selectedTable,
   setSelectedTable,
 }: TableListProps) => {
+  useEffect(() => {
+    if (!selectedTable || !hasTableInCurrentSchema(selectedTable, tables))
+      setSelectedTable(tables?.[0]?.table_name);
+  }, [selectedTable, setSelectedTable, tables]);
   return (
     <div
       className="autoscroll h-full max-h-full flex flex-col text-gray-200 text-xs"
