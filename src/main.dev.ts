@@ -14,6 +14,7 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import { v4 as uuidv4 } from 'uuid';
 import { connectDB, sqlExecute } from './electron/DBHandler';
 
 import MenuBuilder from './menu';
@@ -80,7 +81,9 @@ const createWindow = async () => {
     },
   });
 
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
+  const uuid = uuidv4();
+
+  mainWindow.loadURL(`file://${__dirname}/index.html?uuid=${uuid}`);
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
@@ -106,7 +109,7 @@ const createWindow = async () => {
   // Open urls in the user's browser
   mainWindow.webContents.on('new-window', (event, url) => {
     event.preventDefault();
-    shell.openExternal(url);
+    shell.openExternal(`${url}?uuid=${uuid}`);
   });
 
   // Remove this if your app does not use auto updates

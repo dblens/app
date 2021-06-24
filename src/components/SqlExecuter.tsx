@@ -1,9 +1,10 @@
 import { QueryResultRow } from 'pg';
-import React, { useState, useRef, KeyboardEventHandler } from 'react';
+import React, { useState, useRef } from 'react';
 import ReactTooltip from 'react-tooltip';
 import DbSession from '../sessions/DbSession';
 
 const SqlExecuter = ({ session }: { session: DbSession }) => {
+  // TODO move to sate machine, to implement tabs
   const [state, setstate] = useState<string | QueryResultRow>();
   const [loading, setLoading] = useState<boolean>(false);
   const [sql, setSql] = useState('SELECT NOW()');

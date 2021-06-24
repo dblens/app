@@ -30,7 +30,11 @@ export const connectDB = ({
     } else {
       connections[uuid] = { client, window };
       if (window)
-        window.webContents.send('CONNECT_RESP', { status: 'CONNECTED', uuid });
+        window.webContents.send('CONNECT_RESP', {
+          status: 'CONNECTED',
+          uuid,
+          connectionString,
+        });
     }
   });
 };

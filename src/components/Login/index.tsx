@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import electron from 'electron';
-import { v4 as uuidv4 } from 'uuid';
 import DbSession from '../../sessions/DbSession';
 import PgSession from '../../sessions/PgSession';
 
@@ -23,22 +22,52 @@ const Login: React.FC<LoginProps> = ({ setSession }: LoginProps) => {
       if (params?.status === 'CONNECTED') {
         // console.log('CONNECTED', params);
         setSession(new PgSession(params?.uuid));
+        localStorage.setItem(
+          'lastConnectedUUID',
+          JSON.stringify({
+            connectionString: params?.connectionString,
+            uuid: params?.uuid,
+            at: new Date(),
+          })
+        );
       }
       // TODO else show error message
     });
   }, []);
-  const send = () => {
+
+  const mounted = useRef(false);
+
+  const send = (override?: string) => {
     // electron.ipcRenderer.send('ping', 'a string', 10);
 
     if (connectionString) {
       setLoading(true);
+      // todo change this also to invoke
       electron.ipcRenderer.send(
         'connect',
-        { connectionString, uuid: uuidv4() },
+        {
+          connectionString: override ?? connectionString,
+          uuid: new URL(window.location.href).searchParams.get('uuid'),
+        },
         10
       );
     }
   };
+  useEffect(() => {
+    console.log('storage>>');
+    if (mounted.current) return;
+    mounted.current = true;
+    console.log('storage>>');
+    const storage = JSON.parse(localStorage.getItem('lastConnectedUUID') ?? '');
+    console.log(storage);
+    if (
+      storage?.uuid === new URL(window.location.href).searchParams.get('uuid')
+    ) {
+      setConnectionString(storage?.connectionString);
+      send(storage?.connectionString);
+    }
+  }, []);
+
   return (
     <div className="bg-gray-800 w-screen h-screen flex text-gray-800">
       <div className="bg-gray-800 md:w-1/12 pt-8 flex">
@@ -57,14 +86,14 @@ const Login: React.FC<LoginProps> = ({ setSession }: LoginProps) => {
           <div className="mt-6">
             <button
               type="button"
-              onClick={send}
+              onClick={() => send()}
               disabled={loading}
               className="bg-gray-700 p-2 text-gray-200 hover:bg-gray-800 hover:text-gray-100"
             >
               <span role="img" aria-label="books">
                 ⚡️
               </span>
-              Connect DB
+              {loading ? 'Connecting...' : 'Connect DB'}
             </button>
           </div>
         </div>
