@@ -6,7 +6,7 @@ type SideHeaderProps = {
 
 const SideHeader: React.FC<SideHeaderProps> = ({ title }: SideHeaderProps) => {
   return (
-    <h2 className="text-gray-200 pl-2 font-bold text-xs border-gray-400 border">
+    <h2 className="text-gray-400 pl-2 py-1 font-bold text-xs border-gray-400 border">
       {title}
     </h2>
   );

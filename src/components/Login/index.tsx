@@ -12,9 +12,7 @@ interface LoginProps {
 }
 
 const Login: React.FC<LoginProps> = ({ setSession }: LoginProps) => {
-  const [connectionString, setConnectionString] = React.useState<string>(
-    'postgresql://postgres:postgres@127.0.0.1/postgres'
-  );
+  const [connectionString, setConnectionString] = React.useState<string>('');
   const [loading, setLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
@@ -52,19 +50,25 @@ const Login: React.FC<LoginProps> = ({ setSession }: LoginProps) => {
           <input
             className="w-full bg-gray-200 text-gray-600 p-2 focus:outline-none focus:ring-2 focus:ring-gray-600 flex-grow bg-transparent focus:border-b-0 border-b-2 border-gray-700 mt-6"
             value={connectionString}
+            placeholder="postgresql://postgres:postgres@127.0.0.1/postgres"
             onChange={(e) => setConnectionString(e?.target?.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') send();
+            }}
           />
           <div className="mt-6">
             <button
               type="button"
               onClick={send}
               disabled={loading}
-              className="bg-gray-700 p-2 text-gray-200 hover:bg-gray-800 hover:text-gray-100"
+              className={`bg-gray-700 p-2 text-gray-200 ${
+                loading && 'cursor-wait'
+              } ${!loading && 'hover:bg-gray-800 hover:text-gray-100'}`}
             >
               <span role="img" aria-label="books">
                 ⚡️
               </span>
-              Connect DB
+              {loading ? 'Loading...' : 'Connect DB'}
             </button>
           </div>
         </div>
