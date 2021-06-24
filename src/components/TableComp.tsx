@@ -19,7 +19,7 @@ const TableComp = ({
     sortedColumns?: SortColumnType;
   }>({
     currentPage: 1,
-    currentPageSize: pageSizes[0],
+    currentPageSize: pageSizes[1],
   });
   // const [currentPage, setCurrentPage] = useState({1});
   // const [currentPageSize, setCurrentPageSize] = useState<number>(pageSizes[0]);

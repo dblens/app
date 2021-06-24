@@ -6,6 +6,7 @@ export type SqlExecReponseType = {
   duration: number;
 };
 export type TableType = {
+  index?: number;
   table_name: string;
   table_type: string;
 };

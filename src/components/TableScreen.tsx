@@ -18,7 +18,7 @@ const TableScreen = ({
   const [selectedSchema, setSelectedSchema] = useState<string>();
 
   const [tables, settables] = useState<TableType[]>([]);
-  const [selectedTable, setSelectedTable] = useState<string>();
+  const [selectedTable, setSelectedTable] = useState<TableType>();
 
   useEffect(() => {
     session
@@ -27,12 +27,18 @@ const TableScreen = ({
         if (list?.[0]) setSelectedSchema(list[0]);
         return setSchemaList(list);
       })
+      // eslint-disable-next-line no-console
       .catch(console.error);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedTab]);
 
   useEffect(() => {
     if (selectedSchema) {
-      session.getAllTables(selectedSchema).then(settables).catch(console.error);
+      session
+        .getAllTables(selectedSchema)
+        .then((tbls) => settables(tbls?.map((t, tx) => ({ ...t, index: tx }))))
+        // eslint-disable-next-line no-console
+        .catch(console.error);
     }
   }, [selectedSchema, session, selectedTab]);
   return (
@@ -69,8 +75,8 @@ const TableScreen = ({
           <TableComp
             {...{
               session,
-              key: `${selectedSchema}_${selectedTable}`,
-              selectedTable,
+              key: `${selectedSchema}_${selectedTable?.table_name}`,
+              selectedTable: selectedTable?.table_name,
               selectedSchema,
             }}
           />

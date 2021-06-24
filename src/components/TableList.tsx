@@ -3,8 +3,8 @@ import { TableType } from '../sessions/DbSession';
 
 interface TableListProps {
   tables: TableType[];
-  selectedTable: string;
-  setSelectedTable: React.Dispatch<React.SetStateAction<string | undefined>>;
+  selectedTable: TableType;
+  setSelectedTable: React.Dispatch<React.SetStateAction<TableType>>;
 }
 
 const hasTableInCurrentSchema = (
@@ -22,21 +22,39 @@ const TableList = ({
   setSelectedTable,
 }: TableListProps) => {
   useEffect(() => {
-    if (!selectedTable || !hasTableInCurrentSchema(selectedTable, tables))
-      setSelectedTable(tables?.[0]?.table_name);
+    if (
+      !selectedTable ||
+      !hasTableInCurrentSchema(selectedTable?.table_name, tables)
+    )
+      setSelectedTable(tables?.[0]);
   }, [selectedTable, setSelectedTable, tables]);
   return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
       className="autoscroll h-full max-h-full flex flex-col text-gray-200 text-xs"
       style={{ minWidth: 250 }}
+      onKeyDown={(e) => {
+        if (e.key === 'ArrowUp') {
+          if (selectedTable?.index && selectedTable?.index >= 0)
+            setSelectedTable(tables[selectedTable?.index - 1]);
+        } else if (e.key === 'ArrowDown') {
+          if (
+            selectedTable?.index !== undefined &&
+            tables?.length &&
+            selectedTable?.index < tables?.length
+          )
+            setSelectedTable(tables[selectedTable?.index + 1]);
+        }
+      }}
     >
       {tables?.map((t) => (
         <button
           className={`pl-4 pr-4 text-left hover:bg-gray-600 hover:text-gray-200 cursor-pointer ${
-            selectedTable === t?.table_name && 'hover:bg-gray-600 bg-gray-600'
+            selectedTable?.table_name === t?.table_name &&
+            'hover:bg-gray-600 bg-gray-600'
           }`}
           key={t?.table_name}
-          onClick={() => setSelectedTable(t?.table_name)}
+          onClick={() => setSelectedTable(t)}
           type="button"
         >
           {t?.table_name}
