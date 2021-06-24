@@ -51,7 +51,7 @@ const SqlExecuter = ({ session }: { session: DbSession }) => {
         onChange={(e) => setSql(e?.target?.value)}
         onKeyDown={(e) => {
           if (e.key === 'Control' || e.key === 'Meta') ctrlRef.current = true;
-          else if (e.key === 'Enter' && ctrlRef.current) post();
+          else if (e.key === 'Enter' && ctrlRef.current && !loading) post();
         }}
         onKeyUp={(e) => {
           if (e.key === 'Control' || e.key === 'Meta') ctrlRef.current = false;
