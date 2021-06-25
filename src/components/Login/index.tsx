@@ -4,12 +4,27 @@ import electron from 'electron';
 import { v4 as uuidv4 } from 'uuid';
 import DbSession from '../../sessions/DbSession';
 import PgSession from '../../sessions/PgSession';
+import RecentConnections from './RecentConnections';
 
 // import icon from '../../assets/icon.svg';
 
 interface LoginProps {
   setSession: (v: DbSession) => void;
 }
+
+const updateRecentsLS = (connectionString: string) => {
+  if (!connectionString || connectionString === '') return;
+  let newValues = [connectionString];
+  const currentValues = localStorage.getItem('RECENT_CONNECTIONS');
+  if (currentValues) {
+    const newSet = new Set([...currentValues]);
+    newSet.add(connectionString);
+    newValues = Array.from(newSet);
+  }
+  // todo implement labels
+  if (newValues)
+    localStorage.setItem('RECENT_CONNECTIONS', JSON.stringify(newValues));
+};
 
 const Login: React.FC<LoginProps> = ({ setSession }: LoginProps) => {
   const [connectionString, setConnectionString] = React.useState<string>('');
@@ -25,16 +40,17 @@ const Login: React.FC<LoginProps> = ({ setSession }: LoginProps) => {
       // TODO else show error message
     });
   }, []);
-  const send = () => {
+  const send = (override?: string) => {
     // electron.ipcRenderer.send('ping', 'a string', 10);
-
-    if (connectionString) {
+    const conn = override ?? connectionString;
+    if (conn) {
       setLoading(true);
       electron.ipcRenderer.send(
         'connect',
-        { connectionString, uuid: uuidv4() },
+        { connectionString: conn, uuid: uuidv4() },
         10
       );
+      updateRecentsLS(connectionString);
     }
   };
   return (
@@ -56,10 +72,15 @@ const Login: React.FC<LoginProps> = ({ setSession }: LoginProps) => {
               if (e.key === 'Enter') send();
             }}
           />
-          <div className="mt-6">
+          <RecentConnections
+            send={send}
+            setConnectionString={setConnectionString}
+          />
+
+          <div className="mt-6 w-full">
             <button
               type="button"
-              onClick={send}
+              onClick={() => send()}
               disabled={loading}
               className={`bg-gray-700 p-2 text-gray-200 ${
                 loading && 'cursor-wait'
