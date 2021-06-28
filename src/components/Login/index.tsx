@@ -1,10 +1,11 @@
 /* eslint-disable no-console */
-import React from 'react';
+import React, { useRef } from 'react';
 import electron from 'electron';
 import { v4 as uuidv4 } from 'uuid';
 import DbSession from '../../sessions/DbSession';
 import PgSession from '../../sessions/PgSession';
 import RecentConnections from './RecentConnections';
+import Telemetry from '../../services/telemetry';
 
 // import icon from '../../assets/icon.svg';
 
@@ -29,8 +30,14 @@ const updateRecentsLS = (connectionString: string) => {
 const Login: React.FC<LoginProps> = ({ setSession }: LoginProps) => {
   const [connectionString, setConnectionString] = React.useState<string>('');
   const [loading, setLoading] = React.useState<boolean>(false);
+  const mounted = useRef(false);
 
   React.useEffect(() => {
+    if (mounted.current) return;
+    mounted.current = true;
+
+    // didMount
+
     electron.ipcRenderer.on('CONNECT_RESP', (_, params) => {
       setLoading(false);
       if (params?.status === 'CONNECTED') {
@@ -39,6 +46,7 @@ const Login: React.FC<LoginProps> = ({ setSession }: LoginProps) => {
       }
       // TODO else show error message
     });
+    Telemetry.registerInstall();
   }, []);
   const send = (override?: string) => {
     // electron.ipcRenderer.send('ping', 'a string', 10);
