@@ -57,14 +57,14 @@ export default class MenuBuilder {
       label: 'Electron',
       submenu: [
         {
-          label: 'About DB View',
+          label: 'About DB Lens',
           selector: 'orderFrontStandardAboutPanel:',
         },
         { type: 'separator' },
         { label: 'Services', submenu: [] },
         { type: 'separator' },
         {
-          label: 'Hide DB View',
+          label: 'Hide DB Lens',
           accelerator: 'Command+H',
           selector: 'hide:',
         },
