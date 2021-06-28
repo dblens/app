@@ -1,13 +1,13 @@
 {
-  "name": "db_view",
-  "productName": "DB View",
+  "name": "db_lens",
+  "productName": "DB Lens",
   "description": "A DB client made for developers.",
   "version": "0.0.1",
   "main": "./main.prod.js",
   "author": {
     "name": "Soorajshankar",
     "email": "soorajshankar@gmail.com",
-    "url": "https://github.com/soorajshankar/db_view"
+    "url": "https://github.com/soorajshankardb_view"
   },
   "scripts": {
     "electron-rebuild": "node -r ../.erb/scripts/BabelRegister.js ../.erb/scripts/ElectronRebuild.js",

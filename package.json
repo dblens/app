@@ -1,6 +1,6 @@
 {
-  "name": "db_view",
-  "productName": "DB View",
+  "name": "db_lens",
+  "productName": "DB Lens",
   "description": "A DB client made for developers.",
   "version": "0.0.1",
   "scripts": {
@@ -31,8 +31,8 @@
     ]
   },
   "build": {
-    "productName": "DB View",
-    "appId": "org.db_view.client",
+    "productName": "DB Lens",
+    "appId": "org.db_lens.client",
     "files": [
       "dist/",
       "node_modules/",
@@ -98,7 +98,7 @@
   "author": {
     "name": "Soorajshankar",
     "email": "soorajshankar@gmail.com",
-    "url": "https://github.com/soorajshankar/db_view"
+    "url": "https://github.com/soorajshankardb_view"
   },
   "contributors": [],
   "license": "MIT",

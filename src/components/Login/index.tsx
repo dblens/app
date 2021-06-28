@@ -62,7 +62,7 @@ const Login: React.FC<LoginProps> = ({ setSession }: LoginProps) => {
       </div>
       <div className="bg-gray-100 w-11/12 flex flex-row">
         <div className="p-4 mt-24 text-gray-800 items-end w-full">
-          <h1 className="text-2xl text-gray-800">DB View</h1>
+          <h1 className="text-2xl text-gray-800">DB Lens</h1>
           <input
             className="w-full bg-gray-200 text-gray-600 p-2 focus:outline-none focus:ring-2 focus:ring-gray-600 flex-grow bg-transparent focus:border-b-0 border-b-2 border-gray-700 mt-6"
             value={connectionString}
