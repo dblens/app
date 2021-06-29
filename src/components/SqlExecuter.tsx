@@ -1,7 +1,8 @@
 import { QueryResultRow } from 'pg';
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
 import DbSession, { SqlExecReponseType } from '../sessions/DbSession';
+import { useAppState } from '../state/AppProvider';
 
 const getSize = (ss?: QueryResultRow[] | string) => {
   if (!ss) return '';
@@ -17,12 +18,24 @@ const getTimeHeat = (duration = 0) => {
   return 'text-green-600';
 };
 
-const SqlExecuter = ({ session }: { session: DbSession }) => {
+const SqlExecuter = ({
+  session,
+  selectedSql,
+}: {
+  session: DbSession;
+  selectedSql: string;
+}) => {
   const [state, setstate] = useState<SqlExecReponseType>();
   const [loading, setLoading] = useState<boolean>(false);
-  const [sql, setSql] = useState('SELECT NOW()');
+  const [sql, setSql] = useState('SELECT NOW();');
+  const [, dispatch] = useAppState();
 
   const ctrlRef = useRef<boolean>(false);
+  useEffect(() => {
+    if (selectedSql) {
+      setSql(selectedSql);
+    }
+  }, [selectedSql]);
 
   const post = async () => {
     setLoading(true);
@@ -30,6 +43,13 @@ const SqlExecuter = ({ session }: { session: DbSession }) => {
       .executeSQL(sql)
       .then(({ status, rows, duration }) => {
         setLoading(false);
+        dispatch({
+          type: 'ADD_HISTORY',
+          payload: {
+            time: new Date(),
+            sql,
+          },
+        });
         // eslint-disable-next-line no-console
         // console.log(status, rows);
         if (status === 'SUCCESS') setstate({ status, rows, duration });
@@ -85,7 +105,7 @@ const SqlExecuter = ({ session }: { session: DbSession }) => {
           onClick={post}
           type="button"
           disabled={loading}
-          className={`m-2 text-gray-200 hover:bg-gray-600 hover:text-gray-100 text-xs ${
+          className={`p-2 hover:bg-gray-700 hover:text-gray-100 ${
             loading && 'cursor-wait'
           }`}
           data-tip

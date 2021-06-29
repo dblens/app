@@ -1,18 +1,15 @@
-import React, { useState } from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from 'react-router-dom';
+import React from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import './App.global.css';
 import Login from './components/Login';
 import MainScreen from './components/MainScreen';
-import DbSession from './sessions/DbSession';
+import { useAppState } from './state/AppProvider';
 
 export default function App() {
-  const [session, setSession] = useState<DbSession>();
+  const [state] = useAppState();
+  const { session } = state;
+
   return (
     <Router>
       <Switch>
@@ -20,11 +17,7 @@ export default function App() {
           path="/"
           render={() => {
             // <Redirect to="/dashboard" />
-            return session ? (
-              <MainScreen {...{ session }} />
-            ) : (
-              <Login {...{ setSession }} />
-            );
+            return session ? <MainScreen {...{ session }} /> : <Login />;
           }}
         />
         <Route path="/dashboard" render={() => <h1>Test</h1>} />
