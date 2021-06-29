@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import DbSession from '../sessions/DbSession';
-import SqlExecuter from './SqlExecuter';
+import SqlScreen from './SqlScreen';
 import Sidebar from './Sidebar';
 import TableScreen from './TableScreen';
 import Titlebar from './Titlebar';
@@ -22,10 +22,10 @@ const MainScreen: React.FC<MainScreenProps> = ({
       <div className="flex w-full h-full">
         <Sidebar {...{ selectedTab, setSelectedTab }} />
         <div className="bg-gray-100 w-full max-w-full h-full max-h-full flex flex-row overflow-hidden font-mono">
-          {/* {selectedTab === 'SQL' && <SqlExecuter session={session} />} */}
-          {/* {selectedTab === 'TABLE' && ( */}
-          <TableScreen session={session} selectedTab={selectedTab} />
-          {/* )} */}
+          {selectedTab === 'SQL' && <SqlScreen session={session} />}
+          {selectedTab === 'TABLE' && (
+            <TableScreen session={session} selectedTab={selectedTab} />
+          )}
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from 'uuid';
 import DbSession from '../../sessions/DbSession';
 import PgSession from '../../sessions/PgSession';
 import RecentConnections from './RecentConnections';
+import { useAppState } from '../../state/AppProvider';
 
 // import icon from '../../assets/icon.svg';
 
@@ -26,16 +27,20 @@ const updateRecentsLS = (connectionString: string) => {
     localStorage.setItem('RECENT_CONNECTIONS', JSON.stringify(newValues));
 };
 
-const Login: React.FC<LoginProps> = ({ setSession }: LoginProps) => {
+const Login: React.FC = () => {
   const [connectionString, setConnectionString] = React.useState<string>('');
   const [loading, setLoading] = React.useState<boolean>(false);
+  const [, dispatch] = useAppState();
 
   React.useEffect(() => {
     electron.ipcRenderer.on('CONNECT_RESP', (_, params) => {
       setLoading(false);
       if (params?.status === 'CONNECTED') {
         // console.log('CONNECTED', params);
-        setSession(new PgSession(params?.uuid));
+        dispatch({
+          type: 'SET_SESSION',
+          payload: new PgSession(params?.uuid, dispatch),
+        });
       }
       // TODO else show error message
     });

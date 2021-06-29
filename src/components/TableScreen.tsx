@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DbSession, { TableType } from '../sessions/DbSession';
 import SideHeader from './atoms/SideHeader';
-import SqlExecuter from './SqlExecuter';
+// import SqlExecuter from './SqlExecuter';
 import SchemaList from './SchemaList';
 import TableList from './TableList';
 import TableComp from './TableComp';
@@ -70,7 +70,7 @@ const TableScreen = ({
       <div className="h-full w-full max-h-full">
         {/* Tabs Section */}
         {/* <Tabs /> */}
-        {selectedTab === 'SQL' && <SqlExecuter session={session} />}
+        {/* {selectedTab === 'SQL' && <SqlExecuter session={session} />} */}
         {selectedTab === 'TABLE' && (
           <TableComp
             {...{
