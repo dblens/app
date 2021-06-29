@@ -105,7 +105,7 @@ const SqlExecuter = ({
           onClick={post}
           type="button"
           disabled={loading}
-          className={`m-2 text-gray-200 hover:bg-gray-600 hover:text-gray-100 text-xs p-2 bg-gray-400 ${
+          className={`p-2 hover:bg-gray-700 hover:text-gray-100 ${
             loading && 'cursor-wait'
           }`}
           data-tip
