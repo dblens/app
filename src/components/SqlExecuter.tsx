@@ -113,7 +113,7 @@ const SqlExecuter = ({
           data-for="btn-run"
         >
           {loading ? (
-            <span role="img" className="font-sans" aria-label="run_icon">
+            <span role="img" className="font-mono" aria-label="run_icon">
               ⚡️
             </span>
           ) : (
