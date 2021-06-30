@@ -51,7 +51,7 @@ const Login: React.FC = () => {
       }
       // TODO else show error message
     });
-    Telemetry.registerInstall();
+    Telemetry.init();
   }, []);
   const send = (override?: string) => {
     // electron.ipcRenderer.send('ping', 'a string', 10);
