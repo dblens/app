@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
 import DbSession, { SqlExecReponseType } from '../sessions/DbSession';
 import { useAppState } from '../state/AppProvider';
+import SqlDataViewer from './SqlDataViewer';
 
 const getSize = (ss?: QueryResultRow[] | string) => {
   if (!ss) return '';
@@ -123,12 +124,7 @@ const SqlExecuter = ({
           <span>Tip: Ctrl+ Enter to execute SQL</span>
         </ReactTooltip>
       </div>
-      <pre
-        className="h-1/3 overflow-y-auto bg-gray-700 p-2 text-gray-200 font-mono"
-        style={{ height: '40%' }}
-      >
-        {state && JSON.stringify(state?.rows, null, 2)}
-      </pre>
+      <SqlDataViewer rows={state?.rows} loading={loading} />
     </div>
   );
 };
