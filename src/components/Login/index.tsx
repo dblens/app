@@ -61,7 +61,11 @@ const Login: React.FC = () => {
   return (
     <div className="bg-gray-800 w-screen h-screen flex text-gray-800">
       <div className="bg-gray-800 md:w-1/12 pt-8 flex">
-        <span role="img" aria-label="app-icon" className="pl-6 pr-6">
+        <span
+          role="img"
+          aria-label="app-icon"
+          className="pl-6 pr-6 font-mono text-gray-200 text-2xl"
+        >
           ⚡️
         </span>
       </div>
@@ -91,9 +95,9 @@ const Login: React.FC = () => {
                 loading && 'cursor-wait'
               } ${!loading && 'hover:bg-gray-800 hover:text-gray-100'}`}
             >
-              <span role="img" aria-label="books">
+              {/* <span role="img" aria-label="books" className="pr-2">
                 ⚡️
-              </span>
+              </span> */}
               {loading ? 'Loading...' : 'Connect DB'}
             </button>
           </div>

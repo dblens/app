@@ -1,6 +1,8 @@
 import { QueryResultRow } from 'pg';
 import React, { useState, useRef, useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
+import { v4 as uuidv4 } from 'uuid';
+
 import DbSession, { SqlExecReponseType } from '../sessions/DbSession';
 import { useAppState } from '../state/AppProvider';
 import SqlDataViewer from './SqlDataViewer';
@@ -49,6 +51,7 @@ const SqlExecuter = ({
           payload: {
             time: new Date(),
             sql,
+            uuid: uuidv4(),
           },
         });
         // eslint-disable-next-line no-console
