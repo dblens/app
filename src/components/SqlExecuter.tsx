@@ -2,6 +2,7 @@ import { QueryResultRow } from 'pg';
 import React, { useState, useRef, useEffect } from 'react';
 import ReactTooltip from 'react-tooltip';
 import { v4 as uuidv4 } from 'uuid';
+import MonacoEditor from 'react-monaco-editor';
 
 import DbSession, { SqlExecReponseType } from '../sessions/DbSession';
 import { useAppState } from '../state/AppProvider';
@@ -67,9 +68,12 @@ const SqlExecuter = ({
       });
   };
 
+  const options = {
+    selectOnLineNumbers: true,
+  };
   return (
     <div className="p-4 h-full w-full bg-gray-800">
-      <textarea
+      {/* <textarea
         className="w-full h-1/2 font-mono p-2 bg-gray-700 text-gray-200"
         value={sql}
         onChange={(e) => setSql(e?.target?.value)}
@@ -81,7 +85,15 @@ const SqlExecuter = ({
           if (e.key === 'Control' || e.key === 'Meta') ctrlRef.current = false;
         }}
         tabIndex={0}
-      />
+      /> */}
+      <div className="w-full h-1/2 font-mono p-2 bg-gray-700 text-gray-200">
+        <MonacoEditor
+          language="javascript"
+          theme="vs-dark"
+          value="{code}"
+          options={options}
+        />
+      </div>
       <div className="flex flex-1 w-full justify-between text-gray-200">
         <div className="align-center text-xs px-2 pt-2">
           Status:
