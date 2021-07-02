@@ -7,7 +7,7 @@
   "author": {
     "name": "Soorajshankar",
     "email": "soorajshankar@gmail.com",
-    "url": "https://github.com/soorajshankardb_view"
+    "url": "https://github.com/soorajshankar"
   },
   "scripts": {
     "electron-rebuild": "node -r ../.erb/scripts/BabelRegister.js ../.erb/scripts/ElectronRebuild.js",
