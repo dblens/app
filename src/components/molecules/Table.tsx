@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React from 'react';
 import { ColumnName, SortColumnType, SortType } from '../../sessions/DbSession';
 import SortIcon from '../atoms/SortIcon';
@@ -6,9 +7,9 @@ import TableCell from '../atoms/TableCell';
 interface TableCompProps {
   columnNames: ColumnName[];
   tableData?: Record<string, unknown>[];
-  selectedSchema: string;
-  selectedTable: string;
-  onSort: (sort: SortColumnType) => void;
+  selectedSchema?: string;
+  selectedTable?: string;
+  onSort?: (sort: SortColumnType) => void;
 }
 
 const Table: React.FC<TableCompProps> = ({
@@ -16,7 +17,8 @@ const Table: React.FC<TableCompProps> = ({
   tableData = [],
   selectedSchema = '',
   selectedTable = '',
-  onSort,
+  // eslint-disable-next-line no-console
+  onSort = console.warn,
 }: TableCompProps) => {
   const onSortColumn = (ix: number) => {
     const column = columnNames[ix];

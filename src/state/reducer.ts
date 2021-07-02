@@ -4,6 +4,7 @@ export type HistoryType = {
   sql: string;
   status?: string;
   time: Date;
+  uuid: string;
 };
 
 export interface AppState {
