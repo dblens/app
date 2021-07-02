@@ -87,18 +87,18 @@
     ],
     "publish": {
       "provider": "github",
-      "owner": "electron-react-boilerplate",
-      "repo": "electron-react-boilerplate"
+      "owner": "dblens",
+      "repo": "app"
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/electron-react-boilerplate/electron-react-boilerplate.git"
+    "url": "git+https://github.com/dblens/app.git"
   },
   "author": {
     "name": "Soorajshankar",
     "email": "soorajshankar@gmail.com",
-    "url": "https://github.com/soorajshankardb_view"
+    "url": "https://github.com/soorajshankar"
   },
   "contributors": [],
   "license": "MIT",
@@ -257,9 +257,6 @@
     "node": ">=10.x",
     "npm": ">=6.x",
     "yarn": ">=1.21.3"
-  },
-  "collective": {
-    "url": "https://opencollective.com/electron-react-boilerplate-594"
   },
   "browserslist": [],
   "prettier": {
