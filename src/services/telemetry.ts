@@ -52,6 +52,18 @@ const countOpen = (report: (v: string) => void) => {
   else if (newCount === 1000000) report('1000000th_OPEN');
   else if (newCount === 10000000) report('10000000th_OPEN');
 };
+const trackTimeElapsed = (report: (v: string) => void) => {
+  let counter = 0;
+  setInterval(() => {
+    counter += 1;
+    const matchBucket = [
+      1, 10, 60, 120, 180, 240, 1440, 2880, 1440, 43200,
+    ].find((i) => counter === i);
+    if (matchBucket) {
+      report(`${matchBucket}_MINS_OPEN`);
+    }
+  }, 1000 * 60);
+};
 const registerInstall = (report: (v: string) => void) => {
   const prevLogin = localStorage.getItem('uuid');
   if (prevLogin) return;
@@ -63,6 +75,7 @@ const init = (report: (v: string) => void = sendEvent) => {
   try {
     registerInstall(report);
     countOpen(report);
+    trackTimeElapsed(report);
   } catch (error) {
     console.error('TELEMETRY:something gone wrong ');
   }
