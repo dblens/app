@@ -1,11 +1,12 @@
 /* eslint-disable no-console */
-import React from 'react';
+import React, { useEffect } from 'react';
 import electron from 'electron';
 import { v4 as uuidv4 } from 'uuid';
 import DbSession from '../../sessions/DbSession';
 import PgSession from '../../sessions/PgSession';
 import RecentConnections from './RecentConnections';
 import { useAppState } from '../../state/AppProvider';
+import Utils from '../utils/utils';
 
 // import icon from '../../assets/icon.svg';
 
@@ -16,7 +17,7 @@ interface LoginProps {
 const updateRecentsLS = (connectionString: string) => {
   if (!connectionString || connectionString === '') return;
   let newValues = [connectionString];
-  const currentValues = localStorage.getItem('RECENT_CONNECTIONS');
+  const currentValues = Utils.getRecentConnections();
   if (currentValues) {
     const newSet = new Set([...currentValues]);
     newSet.add(connectionString);
@@ -26,6 +27,7 @@ const updateRecentsLS = (connectionString: string) => {
   if (newValues)
     localStorage.setItem('RECENT_CONNECTIONS', JSON.stringify(newValues));
 };
+let lastConnectionString: string;
 
 const Login: React.FC = () => {
   const [connectionString, setConnectionString] = React.useState<string>('');
@@ -41,6 +43,7 @@ const Login: React.FC = () => {
           type: 'SET_SESSION',
           payload: new PgSession(params?.uuid, dispatch),
         });
+        updateRecentsLS(lastConnectionString);
       }
       // TODO else show error message
     });
@@ -48,6 +51,7 @@ const Login: React.FC = () => {
   const send = (override?: string) => {
     // electron.ipcRenderer.send('ping', 'a string', 10);
     const conn = override ?? connectionString;
+    if (override) setConnectionString(override);
     if (conn) {
       setLoading(true);
       electron.ipcRenderer.send(
@@ -55,9 +59,14 @@ const Login: React.FC = () => {
         { connectionString: conn, uuid: uuidv4() },
         10
       );
-      updateRecentsLS(connectionString);
+      lastConnectionString = connectionString;
     }
   };
+  useEffect(() => {
+    // alert('test');
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (window as any).send = send;
+  }, []);
   return (
     <div className="bg-gray-800 w-screen h-screen flex text-gray-800">
       <div className="bg-gray-800 md:w-1/12 pt-8 flex">
