@@ -33,6 +33,13 @@
   "build": {
     "productName": "DB Lens",
     "appId": "org.db_lens.client",
+    "protocols": {
+      "name": "postgresql",
+      "schemes": [
+        "postgresql",
+        "postgres"
+      ]
+    },
     "files": [
       "dist/",
       "node_modules/",

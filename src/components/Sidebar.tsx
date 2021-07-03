@@ -38,6 +38,15 @@ const Sidebar: React.FC<SidebarProps> = ({
       >
         Tables
       </button>
+      <button
+        type="button"
+        className={`text-xs h-20 focus:ring-0 ${
+          selectedTab === 'ERD' && 'border-l-2 border-gray-300 font-bold'
+        }`}
+        onClick={() => setSelectedTab('ERD')}
+      >
+        ER Diagrams
+      </button>
     </div>
   );
 };
