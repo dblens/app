@@ -16,7 +16,16 @@ const executeSQL = async (
   );
   return response as SqlExecReponseType;
 };
+const getRecentConnections = () => {
+  try {
+    const mem = localStorage.getItem('RECENT_CONNECTIONS') ?? '';
+    return JSON.parse(mem);
+  } catch (error) {
+    return [];
+  }
+};
 
 export default {
   executeSQL,
+  getRecentConnections,
 };

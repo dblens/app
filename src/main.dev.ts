@@ -27,6 +27,8 @@ export default class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
+// Deep linked url
+let deeplinkingUrl: string[] | string;
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -51,6 +53,13 @@ const installExtensions = async () => {
       forceDownload
     )
     .catch(console.log);
+};
+// Log both at dev console and at running node console instance
+const logEverywhere = (s: string | number) => {
+  console.log(s);
+  if (mainWindow && mainWindow.webContents) {
+    mainWindow.webContents.executeJavaScript(`console.log("${s}")`);
+  }
 };
 
 const createWindow = async () => {
@@ -82,6 +91,12 @@ const createWindow = async () => {
 
   mainWindow.loadURL(`file://${__dirname}/index.html`);
 
+  // Protocol handler for win32
+  if (process.platform === 'win32') {
+    // Keep only command line / deep linked arguments
+    deeplinkingUrl = process.argv.slice(1);
+  }
+  logEverywhere(`createWindow# ${deeplinkingUrl}`);
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
   mainWindow.webContents.on('did-finish-load', () => {
@@ -93,6 +108,11 @@ const createWindow = async () => {
     } else {
       mainWindow.show();
       mainWindow.focus();
+      if (deeplinkingUrl) {
+        mainWindow.webContents.executeJavaScript(
+          `send("${deeplinkingUrl.toString().trim()}")`
+        );
+      }
     }
   });
 
@@ -149,3 +169,19 @@ ipcMain.on('connect', (_, params) => {
 });
 
 ipcMain.handle('SQL_EXECUTE', sqlExecute);
+
+// Define custom protocol handler.
+// Deep linking works on packaged versions of the application!
+app.setAsDefaultProtocolClient('postgresql');
+app.setAsDefaultProtocolClient('postgres');
+
+// Protocol handler for osx
+app.on('open-url', (event, url) => {
+  event.preventDefault();
+  deeplinkingUrl = url;
+  logEverywhere(`open-url# ${deeplinkingUrl}`);
+  if (mainWindow === null) createWindow();
+  // if (deeplinkingUrl) {
+  //   mainWindow.webContents.executeJavaScript(`alert("${deeplinkingUrl}")`);
+  // }
+});

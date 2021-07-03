@@ -26,6 +26,9 @@ const MainScreen: React.FC<MainScreenProps> = ({
           {selectedTab === 'TABLE' && (
             <TableScreen session={session} selectedTab={selectedTab} />
           )}
+          {selectedTab === 'ERD' && (
+            <TableScreen session={session} selectedTab={selectedTab} />
+          )}
         </div>
       </div>
     </div>
