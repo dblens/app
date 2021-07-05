@@ -11,7 +11,7 @@ import {
 } from 'storm-react-diagrams';
 import { distributeElements } from '../utils/DagreUtils';
 
-import '../styles.css';
+import './styles.css';
 
 function getDistributedModel(engine, model) {
   const serialized = model.serializeDiagram();
