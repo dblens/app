@@ -36,7 +36,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         }`}
         onClick={() => setSelectedTab('TABLE')}
       >
-        Tables
+        Table
       </button>
       <button
         type="button"
@@ -45,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         }`}
         onClick={() => setSelectedTab('ERD')}
       >
-        ER Diagrams
+        ER
       </button>
     </div>
   );
