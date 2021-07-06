@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DbSession, { ErdDataType } from '../../sessions/DbSession';
-
 import ERD from './ERD';
+
 type ColumnType = { name: string; type: string };
 type ForeignKeyType = {
   toTable?: string;
@@ -279,8 +279,66 @@ const schema: TableType[] = [
   },
 ];
 
-const parseResponseToSchema = (cols: ErdDataType[]) => {
-  //todo
+const mergeCols = (
+  existingCols: ColumnType[],
+  newColName: string
+): ColumnType[] => {
+  const newCol: ColumnType = { name: newColName, type: 'integer' };
+  if (!existingCols || existingCols?.length === 0) return [newCol];
+  const found = existingCols.findIndex((i) => i.name === newColName);
+  if (found >= 0) {
+    return existingCols;
+  }
+  return [...existingCols, newCol];
+};
+
+const parseResponseToSchema = (cols: ErdDataType[]): TableType[] => {
+  const result: TableType[] = [];
+  // const resultMapper = {};
+  cols.forEach((i: ErdDataType) => {
+    const found = result.findIndex(
+      (j) => j.table_schema === i.table_schema && j.table_name === i.table_name
+    );
+    // debugger;
+    if (found >= 0) {
+      let item = { ...result[found] };
+      item = {
+        table_name: i.table_name,
+        columns: mergeCols(item?.columns, i.column_name),
+        foreign_keys: [
+          ...(item?.foreign_keys ?? []),
+          {
+            toTable: i.foreign_table_name,
+            toTableSchema: i.foreign_table_schema,
+            fromColumn: i.column_name,
+            fromColumnType: 'integer',
+            toColumn: i.foreign_column_name,
+            toColumnType: 'integer',
+          },
+        ],
+        table_schema: i.table_schema,
+      };
+      result[found] = item;
+    } else {
+      result.push({
+        table_name: i.table_name,
+        columns: [{ name: i.column_name, type: 'integer' }],
+        foreign_keys: [
+          {
+            toTable: i.foreign_table_name,
+            toTableSchema: i.foreign_table_schema,
+            fromColumn: i.column_name,
+            fromColumnType: 'integer',
+            toColumn: i.foreign_column_name,
+            toColumnType: 'integer',
+          },
+        ],
+        table_schema: i.table_schema,
+      });
+    }
+  });
+  console.log(result);
+  return result;
 };
 
 interface ErdContainerProps {
@@ -290,19 +348,18 @@ interface ErdContainerProps {
 const ErdContainer: React.FC<ErdContainerProps> = ({
   session,
 }: ErdContainerProps) => {
-  const [erdData, setErdData] = useState();
+  const [erdData, setErdData] = useState<TableType[]>();
   useEffect(() => {
     session
       ?.getErdData()
       .then((list) => {
-        const newRows = list?.rows?.map(({ table_name, table_schema }) => ({
-          table_name,
-          table_schema,
-          columns: [{ name: 'columnD', type: 'integer' }],
-          foreign_keys: [],
-        }));
-        console.log(newRows);
-        setErdData(newRows as any);
+        // const newRows = list?.rows?.map(({ table_name, table_schema }) => ({
+        //   table_name,
+        //   table_schema,
+        //   columns: [{ name: 'columnD', type: 'integer' }],
+        //   foreign_keys: [],
+        // }));
+        return setErdData(parseResponseToSchema(list?.rows as ErdDataType[]));
       })
       // eslint-disable-next-line no-console
       .catch(console.error);
@@ -310,7 +367,7 @@ const ErdContainer: React.FC<ErdContainerProps> = ({
   }, []);
   console.log(erdData);
 
-  return !!erdData ? (
+  return erdData ? (
     <div className="h-full w-full">
       <ERD schema={erdData} />
     </div>
