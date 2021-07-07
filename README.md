@@ -1,33 +1,31 @@
 ## DB Lens
 
-https://user-images.githubusercontent.com/8408875/122637520-bc115f80-d10c-11eb-91ed-a6d6a759e1e6.mov
+
+
+
+https://user-images.githubusercontent.com/8408875/124805244-e2daed00-df78-11eb-9f65-925d012858d5.mov
+
+
 
 ## Setup dev env
 
 ### Prerequisites
 
-1. NodeJS & NPM
-2. docker and docker-compose (for postgres)
+NodeJS & yarn (NPM should also work but we are maintaining a yarn lock file only
 
 ### Steps
+* install dependencies
 
-- Start a local postgres instance
-  create a file `docker-compose.yaml` with the following data
-
-```yaml
-services:
-  postgres:
-    image: postgres:12
-    restart: always
-    volumes:
-      - db_data:/var/lib/postgresql/data
-    ports:
-      - '5432:5432'
-    environment:
-      POSTGRES_PASSWORD: postgrespassword
 ```
+yarn install
+```
+* to run the application
 
-- run `docker-compose up -d`
-- make sure postgres is running on 5432
+```
+yarn start
+```
+* to build and package the application
 
-- clone this repo run `npm start` to start the dev server
+```
+yarn package
+```

@@ -1,6 +1,7 @@
 import utils from '../components/utils/utils';
 import DbSession, {
   ColumnName,
+  ErdDataType,
   SortColumnType,
   SqlExecReponseType,
   TableType,
@@ -33,6 +34,35 @@ class PgSession implements DbSession {
             return resolve(allSchamas);
           }
           return reject(new Error('Failed to parse the schemas'));
+        })
+        .catch(reject);
+    });
+
+  getErdData = (): Promise<SqlExecReponseType<ErdDataType[]>> =>
+    new Promise<SqlExecReponseType<ErdDataType[]>>((resolve, reject) => {
+      const sql = `SELECT
+      tc.table_schema,
+      tc.constraint_name,
+      tc.table_name,
+      kcu.column_name,
+      ccu.table_schema AS foreign_table_schema,
+      ccu.table_name AS foreign_table_name,
+      ccu.column_name AS foreign_column_name
+  FROM
+      information_schema.table_constraints AS tc
+      JOIN information_schema.key_column_usage AS kcu
+        ON tc.constraint_name = kcu.constraint_name
+        AND tc.table_schema = kcu.table_schema
+      JOIN information_schema.constraint_column_usage AS ccu
+        ON ccu.constraint_name = tc.constraint_name
+        AND ccu.table_schema = tc.table_schema;
+  `;
+      utils
+        .executeSQL(sql, this.id)
+        .then((data) => {
+          console.log(data);
+          return resolve(data as SqlExecReponseType<ErdDataType[]>);
+          // return reject(new Error('Failed to parse the schemas'));
         })
         .catch(reject);
     });
