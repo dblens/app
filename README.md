@@ -1,7 +1,10 @@
 ## DB Lens
 
 
-https://user-images.githubusercontent.com/8408875/124804072-84613f00-df77-11eb-9d51-b15d4a32265b.mov
+
+
+https://user-images.githubusercontent.com/8408875/124805244-e2daed00-df78-11eb-9f65-925d012858d5.mov
+
 
 
 ## Setup dev env
