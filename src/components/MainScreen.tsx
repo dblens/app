@@ -5,6 +5,7 @@ import Sidebar from './Sidebar';
 import TableScreen from './TableScreen';
 import Titlebar from './Titlebar';
 import ErdContainer from './ERD/ErdContainer';
+import SettingsContainer from './Settings/SettingsContainer';
 
 interface MainScreenProps {
   session: DbSession;
@@ -28,6 +29,7 @@ const MainScreen: React.FC<MainScreenProps> = ({
             <TableScreen session={session} selectedTab={selectedTab} />
           )}
           {selectedTab === 'ERD' && <ErdContainer session={session} />}
+          {selectedTab === 'SETTINGS' && <SettingsContainer />}
         </div>
       </div>
     </div>

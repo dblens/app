@@ -6,7 +6,9 @@ const encodedParams = new URLSearchParams();
 const uuid = uuidv4();
 
 const sendEvent = (event: string) => {
-  // todo enable privacy and disable telemetry if user opt for it.
+  const isDisabled = localStorage.getItem('TEL_DISABLED');
+  if (isDisabled && isDisabled === 'true') return;
+
   encodedParams.set(
     'data',
     `{
