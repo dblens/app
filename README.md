@@ -11,16 +11,21 @@ https://user-images.githubusercontent.com/8408875/124805244-e2daed00-df78-11eb-9
 
 ### Prerequisites
 
-1. NodeJS & yarn (NPM should also work but we are maintaining a yarn lock file only
-2. docker and docker-compose (for postgres)
+NodeJS & yarn (NPM should also work but we are maintaining a yarn lock file only
 
 ### Steps
 * install dependencies
 
-`yarn install`
+```
+yarn install
+```
 * to run the application
 
-`yarn start`
+```
+yarn start
+```
 * to build and package the application
 
-`yarn package`
+```
+yarn package
+```
