@@ -8,18 +8,20 @@ const uuid = uuidv4();
 const sendEvent = (event: string) => {
   const isDisabled = localStorage.getItem('TEL_DISABLED');
   if (isDisabled && isDisabled === 'true') return;
+  console.log('reporting event', event);
 
   encodedParams.set(
     'data',
     `{
-  "event": ${event},
-  "properties": {
-    "distinct_id": "${uuid}",
-    "token": "6251fc1f306b01dccb4d3df99f15283e"
+    "event": "${event}",
+    "properties": {
+      "distinct_id": "${uuid}",
+      "token": "6251fc1f306b01dccb4d3df99f15283e"
+    }
   }
-}`
+  `
   );
-  // TODO ability to get this URL & transformer function from repo
+
   const url = 'https://api.mixpanel.com/track#live-event';
   const options = {
     method: 'POST',
@@ -43,7 +45,9 @@ const countOpen = (report: (v: string) => void) => {
   const newCount = openCount + 1;
   localStorage.setItem('TEL_OPEN_COUNT', JSON.stringify(openCount + 1));
 
-  if (newCount === 10) report('10th_OPEN');
+  if (newCount === 2) report('2nd_OPEN');
+  else if (newCount === 5) report('5th_OPEN');
+  else if (newCount === 10) report('10th_OPEN');
   else if (newCount === 50) report('50th_OPEN');
   else if (newCount === 100) report('100th_OPEN');
   else if (newCount === 500) report('500th_OPEN');
@@ -83,8 +87,19 @@ const init = (report: (v: string) => void = sendEvent) => {
   }
 };
 
+const connect = () => {
+  const firstCon = localStorage.getItem('TEL_firstConnected');
+  if (firstCon == null) {
+    localStorage.setItem('TEL_firstConnected', '1');
+    sendEvent('FirstConnect');
+  } else {
+    sendEvent('Connect');
+  }
+};
+
 const def = {
   init,
+  connect,
 };
 
 export default def;

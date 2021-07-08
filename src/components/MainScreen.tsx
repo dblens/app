@@ -16,7 +16,7 @@ interface MainScreenProps {
 const MainScreen: React.FC<MainScreenProps> = ({
   session,
 }: MainScreenProps) => {
-  const [selectedTab, setSelectedTab] = useState('TABLE');
+  const [selectedTab, setSelectedTab] = useState('SQL');
 
   return (
     <div className="w-screen h-screen max-h-screen text-gray-800 focus:font-bold focus:outline-none">

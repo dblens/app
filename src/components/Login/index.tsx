@@ -50,6 +50,7 @@ const Login: React.FC = () => {
           type: 'SET_SESSION',
           payload: new PgSession(params?.uuid),
         });
+        Telemetry.connect();
         updateRecentsLS(lastConnectionString);
       }
       // TODO else show error message

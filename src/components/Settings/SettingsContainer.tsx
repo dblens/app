@@ -36,13 +36,13 @@ const SettingsContainer = () => {
         style={{ width: 300 }}
       />
       <div className="h-full w-full flex flex-col justify-center p-4">
-        <h1 className="text-2xl">DB Lens</h1>
+        <h1 className="text-2xl font-bold">DB Lens</h1>
         <hr />
         <div className="my-2">
-          <span className="text-xl"> Telemetry Enabled :</span>
+          <span className="font-bold"> Telemetry Enabled :</span>
           <input
             type="checkbox"
-            className="form-checkbox h-5 w-5 p-2 m-2 mt-3 text-red-600"
+            className="form-checkbox h-3 w-3 p-2 m-2 mt-3 text-red-600"
             onChange={(e) => onChange(e.target.checked)}
             checked={isTelEnabled}
           />
