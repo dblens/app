@@ -5,6 +5,7 @@ import Sidebar from './Sidebar';
 import TableScreen from './TableScreen';
 import Titlebar from './Titlebar';
 import ErdContainer from './ERD/ErdContainer';
+import SettingsContainer from './Settings/SettingsContainer';
 
 interface MainScreenProps {
   session: DbSession;
@@ -15,7 +16,7 @@ interface MainScreenProps {
 const MainScreen: React.FC<MainScreenProps> = ({
   session,
 }: MainScreenProps) => {
-  const [selectedTab, setSelectedTab] = useState('TABLE');
+  const [selectedTab, setSelectedTab] = useState('SQL');
 
   return (
     <div className="w-screen h-screen max-h-screen text-gray-800 focus:font-bold focus:outline-none">
@@ -28,6 +29,7 @@ const MainScreen: React.FC<MainScreenProps> = ({
             <TableScreen session={session} selectedTab={selectedTab} />
           )}
           {selectedTab === 'ERD' && <ErdContainer session={session} />}
+          {selectedTab === 'SETTINGS' && <SettingsContainer />}
         </div>
       </div>
     </div>

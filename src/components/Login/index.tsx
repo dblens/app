@@ -1,10 +1,11 @@
 /* eslint-disable no-console */
-import React, { useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import electron from 'electron';
 import { v4 as uuidv4 } from 'uuid';
 import DbSession from '../../sessions/DbSession';
 import PgSession from '../../sessions/PgSession';
 import RecentConnections from './RecentConnections';
+import Telemetry from '../../services/telemetry';
 import { useAppState } from '../../state/AppProvider';
 import Utils from '../utils/utils';
 
@@ -32,21 +33,29 @@ let lastConnectionString: string;
 const Login: React.FC = () => {
   const [connectionString, setConnectionString] = React.useState<string>('');
   const [loading, setLoading] = React.useState<boolean>(false);
+  const mounted = useRef(false);
   const [, dispatch] = useAppState();
 
   React.useEffect(() => {
+    if (mounted.current) return;
+    mounted.current = true;
+
+    // didMount
+
     electron.ipcRenderer.on('CONNECT_RESP', (_, params) => {
       setLoading(false);
       if (params?.status === 'CONNECTED') {
         // console.log('CONNECTED', params);
         dispatch({
           type: 'SET_SESSION',
-          payload: new PgSession(params?.uuid, dispatch),
+          payload: new PgSession(params?.uuid),
         });
+        Telemetry.connect();
         updateRecentsLS(lastConnectionString);
       }
       // TODO else show error message
     });
+    Telemetry.init();
   }, []);
   const send = (override?: string) => {
     // electron.ipcRenderer.send('ping', 'a string', 10);

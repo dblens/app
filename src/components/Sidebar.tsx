@@ -47,6 +47,21 @@ const Sidebar: React.FC<SidebarProps> = ({
       >
         ER
       </button>
+      <button
+        type="button"
+        className={`text-xs h-20 focus:ring-0 ${
+          selectedTab === 'SETTINGS' && 'border-l-2 border-gray-300 font-bold'
+        }`}
+        onClick={() => setSelectedTab('SETTINGS')}
+      >
+        <span
+          role="img"
+          aria-label="app-icon"
+          className="p-2 font-mono text-2xl"
+        >
+          ⚙️
+        </span>
+      </button>
     </div>
   );
 };

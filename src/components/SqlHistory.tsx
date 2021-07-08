@@ -16,7 +16,7 @@ const SqlHistory = ({
         <li className="w-full text-left hover:bg-gray-700" key={i?.uuid}>
           <button
             type="button"
-            className="w-full text-left"
+            className="w-full text-left truncate"
             onClick={() => setSelectedSql(i?.sql)}
           >
             {i?.sql}
