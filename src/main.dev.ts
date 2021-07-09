@@ -11,7 +11,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, screen } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import { connectDB, sqlExecute } from './electron/DBHandler';
@@ -78,10 +78,12 @@ const createWindow = async () => {
     return path.join(RESOURCES_PATH, ...paths);
   };
 
+  const { width, height } = screen.getPrimaryDisplay().workAreaSize;
+  console.log('>>>', JSON.stringify(screen.getPrimaryDisplay()));
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
-    height: 728,
+    width: Math.ceil(width * 0.7),
+    height: Math.ceil(height * 0.7),
     icon: getAssetPath('icon.png'),
     titleBarStyle: 'hidden',
     webPreferences: {
