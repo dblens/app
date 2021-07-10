@@ -1,6 +1,6 @@
 import React, { ReactText } from 'react';
 
-type RankListProps = {
+export type RankListProps = {
   list: {
     field: ReactText;
     value: ReactText;

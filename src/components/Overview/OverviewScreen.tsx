@@ -4,7 +4,7 @@ import TopCacheHits from './TopCacheHits';
 import TopSeqScans from './TopSeqScans';
 import SlowestQueries from './SlowestQueries';
 import RecordRanks from './RecordRanks';
-import LongRunningQueries from './IndexUsage';
+import IndexUsage from './IndexUsage';
 import UnusedIndex from './UnusedIndex';
 import DiskUsageSection from './DiskUsageSection';
 import InstalledExtensions from './InstalledExtensions';
@@ -30,17 +30,17 @@ const SqlScreen = ({ session }: { session: DbSession }) => {
         <h1 className="text-2xl p-4">Records & Indexing</h1>
 
         <div className="w-full flex">
-          <RecordRanks />
-          <LongRunningQueries />
-          <UnusedIndex />
+          <RecordRanks session={session} />
+          <IndexUsage session={session} />
+          <UnusedIndex session={session} />
         </div>
         <InstalledExtensions />
       </div>
       <div className="h-full flex-none p-4" style={{ width: '25vw' }}>
         <div className="h-full rounded-xl bg-gray-800 overflow-auto p-4 shadow-lg">
-          <TopCacheHits />
-          <TopSeqScans />
-          <SlowestQueries />
+          <TopCacheHits session={session} />
+          <TopSeqScans session={session} />
+          <SlowestQueries session={session} />
         </div>
       </div>
     </div>
