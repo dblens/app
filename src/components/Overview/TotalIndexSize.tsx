@@ -1,13 +1,25 @@
 import React from 'react';
-import DbSession from '../../sessions/DbSession';
 import RankList from '../atoms/RankList';
+// eslint-disable-next-line import/no-cycle
+import { DiskUsageStateType } from './types';
 
-const TotalIndexSize = ({ session }: { session: DbSession }) => {
+const TotalIndexSize = ({
+  data,
+}: {
+  data: DiskUsageStateType['totalTableData'];
+}) => {
+  const totalSize =
+    data?.rows?.reduce((p, c) => p + Number.parseInt(c.size, 10), 0) ?? 0;
+  const list =
+    data?.rows?.map(({ name, size }) => ({
+      field: name,
+      value: size,
+    })) ?? [];
   return (
-    <div className="flex-1 rounded-xl bg-gray-800 overflow-auto p-2 m-2 shadow-lg">
+    <div className="flex-1 rounded-xl bg-gray-800 overflow-auto p-2 m-2 ">
       <h1 className="text-md font-thin">Total Index Size</h1>
-      <h2 className="text-4xl">100 KB</h2>
-      <RankList />
+      <h2 className="text-4xl">{totalSize} KB</h2>
+      <RankList list={list} />
     </div>
   );
 };

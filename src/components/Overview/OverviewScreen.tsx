@@ -3,12 +3,11 @@ import DbSession from '../../sessions/DbSession';
 import TopCacheHits from './TopCacheHits';
 import TopSeqScans from './TopSeqScans';
 import SlowestQueries from './SlowestQueries';
-import TotalTableSize from './TotalTableSize';
-import TableSize from './TableSize';
-import TotalIndexSize from './TotalIndexSize';
 import RecordRanks from './RecordRanks';
 import LongRunningQueries from './IndexUsage';
 import UnusedIndex from './UnusedIndex';
+import DiskUsageSection from './DiskUsageSection';
+import InstalledExtensions from './InstalledExtensions';
 
 const SqlScreen = ({ session }: { session: DbSession }) => {
   return (
@@ -27,19 +26,15 @@ const SqlScreen = ({ session }: { session: DbSession }) => {
           <h1 className="m-12 text-6xl">Charts here</h1>
         </div> */}
 
-        <div className="w-full flex">
-          <TableSize />
-          <TotalIndexSize />
-          <TotalTableSize />
-        </div>
+        <DiskUsageSection session={session} />
+        <h1 className="text-2xl p-4">Records & Indexing</h1>
+
         <div className="w-full flex">
           <RecordRanks />
           <LongRunningQueries />
           <UnusedIndex />
         </div>
-        <div className="w-full rounded-xl bg-gray-800 overflow-auto p-2 m-2 shadow-lg">
-          <h1 className="m-4 text-2xl">Installed Extensions</h1>
-        </div>
+        <InstalledExtensions />
       </div>
       <div className="h-full flex-none p-4" style={{ width: '25vw' }}>
         <div className="h-full rounded-xl bg-gray-800 overflow-auto p-4 shadow-lg">
