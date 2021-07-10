@@ -21,6 +21,11 @@ const RankList = ({
           <span className="text-green-50">{value}</span>
         </li>
       ))}
+      {list?.length === 0 && (
+        <li className="flex w-full text-sm leading-normal">
+          <span className="flex-1 truncate">Insufficient Data</span>
+        </li>
+      )}
     </ul>
   );
 };
