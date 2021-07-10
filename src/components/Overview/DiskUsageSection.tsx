@@ -7,7 +7,7 @@ import TotalTableSize from './TotalTableSize';
 import TableSize from './TableSize';
 import TotalIndexSize from './TotalIndexSize';
 import DbSession, { SqlExecReponseType } from '../../sessions/DbSession';
-import { CustomTooltipProps, DiskUsageStateType } from './types';
+import { DiskUsageStateType } from './types';
 import PieChart from './PieChart';
 import BarChart from './BarChart';
 
@@ -59,8 +59,19 @@ const getBarChartData = (state: DiskUsageStateType) => {
     ...value,
   }));
 
-  return result;
+  return result ?? [];
 };
+
+const Loading = () => (
+  <>
+    <div className="lg:h-48 bg-gray-400 md:h-36 w-full object-cover object-center" />
+    <div className="p-6">
+      <p className="leading-relaxed mb-3 w-full h-3 animate-pulse bg-gray-400" />
+      <p className="leading-relaxed mb-3 w-2/3 h-3 animate-pulse bg-gray-400" />
+      <p className="leading-relaxed mb-3 w-1/2 h-3 animate-pulse bg-gray-400" />
+    </div>
+  </>
+);
 
 const DiskUsageSection = ({ session }: { session: DbSession }) => {
   const [state, setState] = useState<DiskUsageStateType>({});
@@ -68,6 +79,7 @@ const DiskUsageSection = ({ session }: { session: DbSession }) => {
   useEffect(() => {
     const getdata = async () => {
       try {
+        setState({ loading: true });
         const totalTableData = (await session.executeSQL(
           totalTableSize
         )) as SqlExecReponseType<QueryResultRow[]>;
@@ -77,8 +89,9 @@ const DiskUsageSection = ({ session }: { session: DbSession }) => {
         const indexData = (await session.executeSQL(
           indexSizeQuery
         )) as SqlExecReponseType<QueryResultRow[]>;
-        setState({ totalTableData, tableData, indexData });
+        setState({ loading: false, totalTableData, tableData, indexData });
       } catch (error) {
+        setState({ loading: false, error: true });
         console.log(error);
       }
     };
@@ -95,22 +108,25 @@ const DiskUsageSection = ({ session }: { session: DbSession }) => {
     <>
       <h1 className="text-2xl p-4">Disk Usage</h1>
       <div className="w-full rounded-xl bg-gray-800">
-        <div className="p-4">
-          <div className="grid grid-cols-3 gap-2">
-            <div className="col-span-2">
-              <BarChart barchartData={barChartData} />
+        {state?.loading === true && <Loading />}
+        {state?.loading === false && !state?.error && (
+          <div className="p-4">
+            <div className="grid grid-cols-3 gap-2">
+              <div className="col-span-2">
+                <BarChart barchartData={barChartData} />
+              </div>
+              <div className="col">
+                <PieChart pieData={pieData} />
+              </div>
+              {/* <ChartsSection /> */}
             </div>
-            <div className="col">
-              <PieChart pieData={pieData} />
+            <div className="w-full flex">
+              <TableSize data={state?.tableData} />
+              <TotalTableSize data={state?.totalTableData} />
+              <TotalIndexSize data={state?.indexData} />
             </div>
-            {/* <ChartsSection /> */}
           </div>
-          <div className="w-full flex">
-            <TableSize data={state?.tableData} />
-            <TotalTableSize data={state?.totalTableData} />
-            <TotalIndexSize data={state?.indexData} />
-          </div>
-        </div>
+        )}
       </div>
     </>
   );

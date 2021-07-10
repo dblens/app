@@ -13,6 +13,9 @@ SELECT
 sum(heap_blks_hit) / nullif(sum(heap_blks_hit) + sum(heap_blks_read),0) AS ratio
 FROM pg_statio_user_tables;`;
 
+function capitalizeFirstLetter(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 const TopCacheHits = ({ session }: { session: DbSession }) => {
   const [cacheHits, setCacheHits] = useState<
     SqlExecReponseType<QueryResultRow[]>
@@ -31,7 +34,7 @@ const TopCacheHits = ({ session }: { session: DbSession }) => {
   }, []);
   return (
     <>
-      {cacheHits?.status !== 'SUCCESS' && (
+      {cacheHits?.status && cacheHits?.status !== 'SUCCESS' && (
         <h1 className="text -sm p-4 text-red-500 ">
           Ahh! Error fetching info!
         </h1>
@@ -39,7 +42,9 @@ const TopCacheHits = ({ session }: { session: DbSession }) => {
       {cacheHits?.status === 'SUCCESS' &&
         cacheHits?.rows?.map(({ name, ratio }) => (
           <div className="py-4" key={name}>
-            <h1 className="text-xl px-2 font-thin">{name}</h1>
+            <h1 className="text-xl px-2 font-thin">
+              {name && capitalizeFirstLetter(name)}
+            </h1>
             <h1 className="text-5xl px-2 font-light truncate">{ratio}</h1>
           </div>
         ))}

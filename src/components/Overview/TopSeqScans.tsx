@@ -35,7 +35,7 @@ const TopSeqScans = ({ session }: { session: DbSession }) => {
   return (
     <>
       <h1 className="text-xl py-4 font-thin">Top Seq Scans</h1>
-      {sqScans?.status !== 'SUCCESS' && (
+      {sqScans?.status && sqScans?.status !== 'SUCCESS' && (
         <h1 className="text -sm p-4 text-red-500 ">
           Ahh! Error fetching info!
         </h1>

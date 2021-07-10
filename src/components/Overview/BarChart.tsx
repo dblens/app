@@ -15,83 +15,23 @@ import {
 
 import { CustomTooltipProps } from './types';
 
-const data = [
-  {
-    name: 'Page A',
-    tableSize: 4000,
-    totalTableSize: 2400,
-    amt: 2400,
-  },
-  {
-    name: 'Page B',
-    tableSize: 3000,
-    totalTableSize: 1398,
-    amt: 2210,
-  },
-  {
-    name: 'Page C',
-    tableSize: 2000,
-    totalTableSize: 9800,
-    amt: 2290,
-  },
-  {
-    name: 'Page D',
-    tableSize: 2780,
-    totalTableSize: 3908,
-    amt: 2000,
-  },
-  {
-    name: 'Page E',
-    tableSize: 1890,
-    totalTableSize: 4800,
-    amt: 2181,
-  },
-  {
-    name: 'Page A',
-    tableSize: 4000,
-    totalTableSize: 2400,
-    amt: 2400,
-  },
-  {
-    name: 'Page B',
-    tableSize: 3000,
-    totalTableSize: 1398,
-    amt: 2210,
-  },
-  {
-    name: 'Page C',
-    tableSize: 2000,
-    totalTableSize: 9800,
-    amt: 2290,
-  },
-  {
-    name: 'Page D',
-    tableSize: 2780,
-    totalTableSize: 3908,
-    amt: 2000,
-  },
-  {
-    name: 'Page E',
-    tableSize: 1890,
-    totalTableSize: 4800,
-    amt: 2181,
-  },
-];
-
 const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
+  console.log(payload);
   if (active && payload && payload.length) {
     return (
-      <div className="custom-tooltip bg-gray-800 border-gray-300 p-2">
-        <p className="label">{`${payload?.[0]?.name} : ${payload?.[0]?.value} kB`}</p>
+      <div className="custom-tooltip bg-gray-900 border border-gray-300 p-2">
+        <pre className="label">
+          {JSON.stringify(payload?.[0]?.payload, null, 2)}
+        </pre>
       </div>
     );
   }
 
   return null;
 };
-const COLORS = ['#8884d8', '#82ca9d'];
+const COLORS = ['#0088FE', '#00C49F'];
 const BarChart = ({
-  barchartData = data,
+  barchartData = [],
   keys = ['tableSize', 'totalTableSize'],
 }) => (
   <div className="w-full" style={{ height: '33vh' }}>
@@ -110,7 +50,7 @@ const BarChart = ({
         {/* <CartesianGrid strokeDasharray="3 3" /> */}
         <XAxis dataKey="name" />
         {/* <YAxis /> */}
-        <Tooltip />
+        <Tooltip content={<CustomTooltip />} />
         <Legend />
         {keys.map((i, ix) => (
           <Bar key={i} dataKey={i} fill={COLORS[ix % 2]} />

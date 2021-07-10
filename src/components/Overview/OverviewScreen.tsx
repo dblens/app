@@ -38,9 +38,9 @@ const SqlScreen = ({ session }: { session: DbSession }) => {
       </div>
       <div className="h-full flex-none p-4" style={{ width: '25vw' }}>
         <div className="h-full rounded-xl bg-gray-800 overflow-auto p-4 shadow-lg">
+          <TopCacheHits session={session} />
           <TopSeqScans session={session} />
           <SlowestQueries session={session} />
-          <TopCacheHits session={session} />
         </div>
       </div>
     </div>

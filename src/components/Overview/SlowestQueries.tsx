@@ -44,7 +44,7 @@ const SlowestQueries = ({ session }: { session: DbSession }) => {
   return (
     <>
       <h1 className="text-xl py-4 font-thin">Long Running Queries</h1>
-      {slowestQueries?.status !== 'SUCCESS' && (
+      {slowestQueries?.status && slowestQueries?.status !== 'SUCCESS' && (
         <h1 className="text -sm p-4 text-red-500 ">
           Ahh! Error fetching info!
         </h1>
