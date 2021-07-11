@@ -2,7 +2,7 @@
   "name": "db_lens",
   "productName": "DB Lens",
   "description": "A DB client made for developers.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "scripts": {
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
     "build:main": "cross-env NODE_ENV=production webpack --config ./.erb/configs/webpack.config.main.prod.babel.js",
@@ -32,7 +32,7 @@
   },
   "build": {
     "productName": "DB Lens",
-    "appId": "org.db_lens.client",
+    "appId": "app.dblens.mac",
     "protocols": {
       "name": "postgresql",
       "schemes": [
@@ -71,7 +71,8 @@
           "type": "link",
           "path": "/Applications"
         }
-      ]
+      ],
+      "sign": false
     },
     "win": {
       "target": [
