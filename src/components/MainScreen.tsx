@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import DbSession from '../sessions/DbSession';
+import OverviewScreen from './Overview/OverviewScreen';
 import SqlScreen from './SqlScreen';
 import Sidebar from './Sidebar';
 import TableScreen from './TableScreen';
@@ -24,6 +25,7 @@ const MainScreen: React.FC<MainScreenProps> = ({
       <div className="flex w-full h-full">
         <Sidebar {...{ selectedTab, setSelectedTab }} />
         <div className="bg-gray-100 w-full max-w-full h-full max-h-full flex flex-row overflow-hidden font-mono">
+          {selectedTab === 'OVERVIEW' && <OverviewScreen session={session} />}
           {selectedTab === 'SQL' && <SqlScreen session={session} />}
           {selectedTab === 'TABLE' && (
             <TableScreen session={session} selectedTab={selectedTab} />

@@ -25,7 +25,17 @@ const getRecentConnections = () => {
   }
 };
 
+const camelcaseToNormalString = (text = ''): string => {
+  try {
+    const result = text.replace(/([A-Z])/g, ' $1');
+    return result.charAt(0).toUpperCase() + result.slice(1);
+  } catch {
+    return '';
+  }
+};
+
 export default {
   executeSQL,
   getRecentConnections,
+  camelcaseToNormalString,
 };

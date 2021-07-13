@@ -48,7 +48,10 @@ const TableComp = ({
           sortedColumns: pagination?.sortedColumns,
         });
 
-        if (columnNames?.status === 'SUCCESS') {
+        if (
+          columnNames?.status === 'SUCCESS' &&
+          tableRows?.status === 'SUCCESS'
+        ) {
           setTableData({
             tableData: tableRows?.rows,
             columnNames: columnNames?.rows?.map((i) => ({
@@ -56,7 +59,7 @@ const TableComp = ({
               sort: pagination?.sortedColumns?.[i?.column_name],
             })),
           });
-        }
+        } // todo  else
       }
     };
     loadData();

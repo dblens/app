@@ -365,14 +365,15 @@ const ErdContainer: React.FC<ErdContainerProps> = ({
       .catch(console.error);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log(erdData);
 
   return erdData ? (
     <div className="h-full w-full">
       <ERD schema={erdData} />
     </div>
   ) : (
-    'Loading...'
+    <div className="h-full w-full m-auto bg-gray-800 text-gray-300 flex justify-center items-center">
+      <span>Loading...</span>
+    </div>
   );
 };
 
