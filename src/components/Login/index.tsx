@@ -42,33 +42,41 @@ const Login: React.FC = () => {
 
     // didMount
 
-    electron.ipcRenderer.on('CONNECT_RESP', (_, params) => {
-      setLoading(false);
-      if (params?.status === 'CONNECTED') {
-        // console.log('CONNECTED', params);
-        dispatch({
-          type: 'SET_SESSION',
-          payload: new PgSession(params?.uuid),
-        });
-        Telemetry.connect();
-        updateRecentsLS(lastConnectionString);
-      }
-      // TODO else show error message
-    });
+    // electron.ipcRenderer.on('CONNECT_RESP', (_, params) => {
+    //   setLoading(false);
+    //   if (params?.status === 'CONNECTED') {
+    //     // console.log('CONNECTED', params);
+    //     dispatch({
+    //       type: 'SET_SESSION',
+    //       payload: new PgSession(params?.uuid),
+    //     });
+    //     Telemetry.connect();
+    //     updateRecentsLS(lastConnectionString);
+    //   }
+    //   // TODO else show error message
+    // });
     Telemetry.init();
   }, []);
-  const send = (override?: string) => {
+
+  const send = async (override?: string) => {
     // electron.ipcRenderer.send('ping', 'a string', 10);
     const conn = override ?? connectionString;
     if (override) setConnectionString(override);
     if (conn) {
       setLoading(true);
-      electron.ipcRenderer.send(
+      const response = await electron.ipcRenderer.invoke(
         'connect',
         { connectionString: conn, uuid: uuidv4() },
         10
       );
-      lastConnectionString = connectionString;
+      if (response?.status === 'CONNECTED') {
+        dispatch({
+          type: 'SET_SESSION',
+          payload: new PgSession(response?.uuid),
+        });
+        Telemetry.connect();
+        updateRecentsLS(lastConnectionString);
+      }
     }
   };
   useEffect(() => {

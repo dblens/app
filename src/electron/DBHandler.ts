@@ -8,7 +8,7 @@ const connections: Record<
   { client: ClientBase; window: BrowserWindow }
 > = {};
 
-export const connectDB = ({
+export const connectDB = async ({
   window,
   uuid,
   connectionString,
@@ -17,22 +17,32 @@ export const connectDB = ({
   uuid: string;
   connectionString: string;
 }) => {
-  const client = new Client({
+  let client = new Client({
+    connectionString,
+  });
+  try {
+    await client.connect();
+    // console.log('connected >>');
+    connections[uuid] = { client, window };
+    return { status: 'CONNECTED', uuid };
+  } catch (error) {
+    // console.log(error);
+  }
+
+  // retry with ssl
+  client = new Client({
     connectionString,
     ssl: { rejectUnauthorized: false },
   });
-  client.connect((err) => {
-    // console.log('CONNECT_RESP', err, !!err);
-    if (err) {
-      // console.log('CONNECT_RESP');
-      if (window)
-        window.webContents.send('CONNECT_RESP', { status: 'FAILED', uuid });
-    } else {
-      connections[uuid] = { client, window };
-      if (window)
-        window.webContents.send('CONNECT_RESP', { status: 'CONNECTED', uuid });
-    }
-  });
+  try {
+    await client.connect();
+    // console.log('connected 2>>');
+    connections[uuid] = { client, window };
+    return { status: 'CONNECTED', uuid };
+  } catch (error) {
+    // console.log(error);
+  }
+  return { status: 'FAILED', uuid };
 };
 
 export const sqlExecute = async (

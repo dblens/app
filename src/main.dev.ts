@@ -160,14 +160,14 @@ app.on('activate', () => {
 //   console.log('Test');
 // });
 
-ipcMain.on('connect', (_, params) => {
+ipcMain.handle('connect', async (_, params) => {
   console.log('connect');
   // console.log(JSON.stringify({ params }, null, 2));
-  if (mainWindow)
-    connectDB({
-      ...params,
-      window: mainWindow,
-    });
+  const res = await connectDB({
+    ...params,
+    window: mainWindow,
+  });
+  return res;
 });
 
 ipcMain.handle('SQL_EXECUTE', sqlExecute);
