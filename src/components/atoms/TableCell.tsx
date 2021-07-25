@@ -12,7 +12,7 @@ const TableCell = ({ value }: { value: unknown }) => {
     displaytext = JSON.stringify(value);
   } else {
     displaytext = value;
-    toolTipValue = value;
+    if (typeof value === 'string' && value?.length > 20) toolTipValue = value;
   }
   return (
     <td
@@ -33,4 +33,4 @@ const TableCell = ({ value }: { value: unknown }) => {
   );
 };
 
-export default TableCell;
+export default React.memo(TableCell);
