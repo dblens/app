@@ -23,7 +23,7 @@ const SqlScreen = ({ session }: { session: DbSession }) => {
           className="w-full rounded-xl bg-gray-800 overflow-auto p-2 m-2 shadow-lg"
           style={{ height: '30vh' }}
         >
-          <h1 className="m-12 text-6xl">Charts here</h1>
+          <h1 className="m-12 text-5xl">Charts here</h1>
         </div> */}
 
         <DiskUsageSection session={session} />

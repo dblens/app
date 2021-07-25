@@ -84,7 +84,7 @@ const TableComp = ({
 
   if (!selectedTable)
     return (
-      <div className="w-full h-full max-h-full max-w-full bg-gray-800 border-l border-gray-600 text-gray-300 text-sm overflow-auto overflow-x-auto height-adjust-25 flex justify-items-center items-center">
+      <div className="w-full h-full max-h-full max-w-full bg-gray-800 border-l border-gray-600 text-gray-400 text-sm overflow-auto overflow-x-auto height-adjust-25 flex justify-items-center items-center">
         <span className="h-full w-full text-center m-auto p-6">
           Please select a table from the sidebar
         </span>
@@ -98,7 +98,7 @@ const TableComp = ({
     setPagination({ currentPage: 1, currentPageSize: pageSize }); // onPageSizeChange => set pageNo to 1
 
   return (
-    <div className="w-full h-full max-h-full max-w-full bg-gray-800 border-l border-gray-600 text-gray-300 text-sm overflow-auto overflow-x-auto height-adjust-25">
+    <div className="w-full h-full max-h-full max-w-full bg-gray-800 border-l border-gray-600 text-gray-400 text-sm overflow-auto overflow-x-auto height-adjust-25">
       {/* PaginationSection */}
       <div className="w-full bg-gray-800 flex border border-gray-700 header-fixed">
         <div
@@ -172,4 +172,4 @@ const TableComp = ({
   );
 };
 
-export default TableComp;
+export default React.memo(TableComp);

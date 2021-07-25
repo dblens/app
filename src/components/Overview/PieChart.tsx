@@ -38,7 +38,7 @@ const renderCustomizedLabel = ({
 const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
   if (active && payload && payload.length) {
     return (
-      <div className="custom-tooltip bg-gray-800 border border-gray-300 p-2">
+      <div className="custom-tooltip bg-gray-800 border border-gray-400 p-2">
         <p className="label">{`${payload?.[0]?.name} : ${payload?.[0]?.value} kB`}</p>
       </div>
     );

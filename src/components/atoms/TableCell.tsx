@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactText } from 'react';
 import ReactTooltip from 'react-tooltip';
 
 const TableCell = ({ value }: { value: unknown }) => {
@@ -12,6 +12,7 @@ const TableCell = ({ value }: { value: unknown }) => {
     displaytext = JSON.stringify(value);
   } else {
     displaytext = value;
+    toolTipValue = value;
   }
   return (
     <td
@@ -24,7 +25,7 @@ const TableCell = ({ value }: { value: unknown }) => {
       {toolTipValue && (
         <ReactTooltip id={`btn-run-${value}`} type="dark">
           <pre className="font-mono" style={{ height: '40%' }}>
-            {toolTipValue}
+            {toolTipValue as ReactText}
           </pre>
         </ReactTooltip>
       )}

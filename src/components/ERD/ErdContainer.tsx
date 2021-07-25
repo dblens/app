@@ -371,7 +371,7 @@ const ErdContainer: React.FC<ErdContainerProps> = ({
       <ERD schema={erdData} />
     </div>
   ) : (
-    <div className="h-full w-full m-auto bg-gray-800 text-gray-300 flex justify-center items-center">
+    <div className="h-full w-full m-auto bg-gray-800 text-gray-400 flex justify-center items-center">
       <span>Loading...</span>
     </div>
   );

@@ -19,7 +19,7 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
   console.log(payload);
   if (active && payload && payload.length) {
     return (
-      <div className="custom-tooltip bg-gray-900 border border-gray-300 p-2">
+      <div className="custom-tooltip bg-gray-900 border border-gray-400 p-2">
         <pre className="label">
           {JSON.stringify(payload?.[0]?.payload, null, 2)}
         </pre>

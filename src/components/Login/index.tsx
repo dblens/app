@@ -85,8 +85,8 @@ const Login: React.FC = () => {
     (window as any).send = send;
   }, []);
   return (
-    <div className="bg-gray-800 w-screen h-screen flex text-gray-800">
-      <div className="bg-gray-800 md:w-1/12 pt-8 flex">
+    <div className="bg-gray-800 w-screen h-screen flex">
+      <div className="bg-gray-900 md:w-1/12 pt-8 flex">
         <span
           role="img"
           aria-label="app-icon"
@@ -95,11 +95,11 @@ const Login: React.FC = () => {
           ⚡️
         </span>
       </div>
-      <div className="bg-gray-100 w-11/12 flex flex-row">
-        <div className="p-4 mt-24 text-gray-800 items-end w-full">
-          <h1 className="text-2xl text-gray-800">DB Lens</h1>
+      <div className=" w-11/12 flex flex-row">
+        <div className="p-4 mt-24 items-end w-full">
+          <h1 className="text-2xl">DB Lens</h1>
           <input
-            className="w-full bg-gray-200 text-gray-600 p-2 focus:outline-none focus:ring-2 focus:ring-gray-600 flex-grow bg-transparent focus:border-b-0 border-b-2 border-gray-700 mt-6"
+            className="w-full bg-gray-200 p-2 focus:outline-none focus:ring-2 focus:ring-gray-600 flex-grow bg-transparent focus:border-b-0 border-b-2 border-gray-700 mt-6"
             value={connectionString}
             placeholder="postgresql://postgres:postgres@127.0.0.1/postgres"
             onChange={(e) => setConnectionString(e?.target?.value)}
@@ -119,7 +119,7 @@ const Login: React.FC = () => {
               disabled={loading}
               className={`bg-gray-700 p-2 text-gray-200 ${
                 loading && 'cursor-wait'
-              } ${!loading && 'hover:bg-gray-800 hover:text-gray-100'}`}
+              } ${!loading && 'hover:shadow-xl'}`}
             >
               {/* <span role="img" aria-label="books" className="pr-2">
                 ⚡️

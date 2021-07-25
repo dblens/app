@@ -17,7 +17,7 @@ const TableSize = ({
   return (
     <div className="flex-1 rounded-xl bg-gray-800 overflow-auto p-2 m-2 ">
       <h1 className="text-md font-thin">Table Size</h1>
-      <h2 className="text-4xl">{totalSize} KB</h2>
+      <h2 className="text-5xl py-2">{totalSize} KB</h2>
       <RankList list={list} />
     </div>
   );

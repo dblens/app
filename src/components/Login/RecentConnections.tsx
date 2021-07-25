@@ -33,21 +33,21 @@ const RecentConnections: React.FC<RecentConnectionsProps> = ({
   return (
     recents &&
     recents?.length > 0 && (
-      <div className="text-gray-500 pl-1">
+      <div className="pl-1">
         <br />
         <div className="inline-flex justify-between w-full pb-1">
           <div>
             <h1 className="text-md m-auto">Recent Connections</h1>
           </div>
           <button
-            className="p-1 bg-gray-800 text-gray-200"
+            className="p-1 hover:shadow-xl"
             type="button"
             onClick={() => {
               setRecents([]);
               localStorage.setItem('RECENT_CONNECTIONS', JSON.stringify([]));
             }}
           >
-            Clear Recents
+            Clear All
           </button>
         </div>
         <ul className="pl-2 overflow-auto" style={{ maxHeight: 250 }}>
@@ -56,7 +56,7 @@ const RecentConnections: React.FC<RecentConnectionsProps> = ({
             <li key={i} className=" cursor-pointer flex">
               <button
                 type="button"
-                className=" hover:text-gray-800"
+                className=" hover:text-gray-400"
                 data-tip
                 data-for="btn-remove"
                 onClick={(e) => {
@@ -79,7 +79,7 @@ const RecentConnections: React.FC<RecentConnectionsProps> = ({
                   send(i);
                   setConnectionString(i);
                 }}
-                className="pl-2 truncate hover:text-gray-800"
+                className="pl-2 truncate hover:text-gray-400"
               >
                 {i}
               </button>
