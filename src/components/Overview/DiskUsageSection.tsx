@@ -73,8 +73,24 @@ const Loading = () => (
   </>
 );
 
+const getPercentage = (
+  state: DiskUsageStateType,
+  type: 'totalTableData' | 'tableData' | 'indexData'
+) => {
+  const totalSize =
+    state?.[type]?.rows?.reduce((p, c) => p + Number.parseInt(c.size, 10), 0) ??
+    0;
+  const totalTableData =
+    state?.totalTableData?.rows?.reduce(
+      (p, c) => p + Number.parseInt(c.size, 10),
+      0
+    ) ?? 0;
+  return ((totalSize / totalTableData) * 100 ?? 0).toFixed(2);
+};
+
 const DiskUsageSection = ({ session }: { session: DbSession }) => {
   const [state, setState] = useState<DiskUsageStateType>({});
+  const [chartType, setChartType] = useState<string>('INDEX');
 
   useEffect(() => {
     const getdata = async () => {
@@ -118,12 +134,25 @@ const DiskUsageSection = ({ session }: { session: DbSession }) => {
               <div className="col">
                 <PieChart pieData={pieData} />
               </div>
-              {/* <ChartsSection /> */}
             </div>
             <div className="w-full flex">
-              <TableSize data={state?.tableData} />
-              <TotalTableSize data={state?.totalTableData} />
-              <TotalIndexSize data={state?.indexData} />
+              <TotalTableSize
+                data={state?.totalTableData}
+                chartType={chartType}
+                setChartType={setChartType}
+              />
+              <TableSize
+                percentage={getPercentage(state, 'tableData')}
+                data={state?.tableData}
+                chartType={chartType}
+                setChartType={setChartType}
+              />
+              <TotalIndexSize
+                percentage={getPercentage(state, 'indexData')}
+                data={state?.indexData}
+                chartType={chartType}
+                setChartType={setChartType}
+              />
             </div>
           </div>
         )}

@@ -16,7 +16,6 @@ import {
 import { CustomTooltipProps } from './types';
 
 const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
-  console.log(payload);
   if (active && payload && payload.length) {
     return (
       <div className="custom-tooltip bg-gray-900 border border-gray-400 p-2">
@@ -32,7 +31,7 @@ const CustomTooltip = ({ active, payload }: CustomTooltipProps) => {
 const COLORS = ['#0088FE', '#00C49F'];
 const BarChart = ({
   barchartData = [],
-  keys = ['tableSize', 'totalTableSize'],
+  keys = ['totalTableSize', 'tableSize'],
 }) => (
   <div className="w-full" style={{ height: '33vh' }}>
     <ResponsiveContainer width="100%" height="100%">
