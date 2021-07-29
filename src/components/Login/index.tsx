@@ -33,6 +33,8 @@ let lastConnectionString: string;
 const Login: React.FC = () => {
   const [connectionString, setConnectionString] = React.useState<string>('');
   const [loading, setLoading] = React.useState<boolean>(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [error, setError] = React.useState<any>();
   const mounted = useRef(false);
   const [, dispatch] = useAppState();
 
@@ -76,6 +78,9 @@ const Login: React.FC = () => {
         });
         Telemetry.connect();
         updateRecentsLS(lastConnectionString);
+      } else {
+        setError({ status: 'FAILED', error: response?.error?.message });
+        setLoading(false);
       }
     }
   };
@@ -107,6 +112,11 @@ const Login: React.FC = () => {
               if (e.key === 'Enter') send();
             }}
           />
+          {error && (
+            <div className="bg-red-700 my-2 w-full p-2 rounded-lg border-black border">
+              {error?.error || "Couldn't connect to the database"}
+            </div>
+          )}
           <RecentConnections
             send={send}
             setConnectionString={setConnectionString}
