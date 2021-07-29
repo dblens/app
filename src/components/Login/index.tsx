@@ -28,7 +28,6 @@ const updateRecentsLS = (connectionString: string) => {
   if (newValues)
     localStorage.setItem('RECENT_CONNECTIONS', JSON.stringify(newValues));
 };
-let lastConnectionString: string;
 
 const Login: React.FC = () => {
   const [connectionString, setConnectionString] = React.useState<string>('');
@@ -42,21 +41,6 @@ const Login: React.FC = () => {
     if (mounted.current) return;
     mounted.current = true;
 
-    // didMount
-
-    // electron.ipcRenderer.on('CONNECT_RESP', (_, params) => {
-    //   setLoading(false);
-    //   if (params?.status === 'CONNECTED') {
-    //     // console.log('CONNECTED', params);
-    //     dispatch({
-    //       type: 'SET_SESSION',
-    //       payload: new PgSession(params?.uuid),
-    //     });
-    //     Telemetry.connect();
-    //     updateRecentsLS(lastConnectionString);
-    //   }
-    //   // TODO else show error message
-    // });
     Telemetry.init();
   }, []);
 
@@ -77,7 +61,7 @@ const Login: React.FC = () => {
           payload: new PgSession(response?.uuid),
         });
         Telemetry.connect();
-        updateRecentsLS(lastConnectionString);
+        updateRecentsLS(conn);
       } else {
         setError({ status: 'FAILED', error: response?.error?.message });
         setLoading(false);
