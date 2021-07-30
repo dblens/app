@@ -2,7 +2,7 @@
   "name": "db_lens",
   "productName": "DB Lens",
   "description": "A DB client made for developers.",
-  "version": "0.0.1-beta.0",
+  "version": "0.0.1-beta.1",
   "scripts": {
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
     "build:main": "cross-env NODE_ENV=production webpack --config ./.erb/configs/webpack.config.main.prod.babel.js",
