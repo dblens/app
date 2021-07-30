@@ -26,8 +26,8 @@ export const connectDB = async ({
     connections[uuid] = { client, window };
     return { status: 'CONNECTED', uuid };
   } catch (error) {
-    return { status: 'FAILED', uuid, error };
-    // console.log(error);
+    // return { status: 'FAILED', uuid, error };
+    console.log(error);
   }
 
   // retry with ssl
