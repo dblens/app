@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - release
+      - "erb_sync"
 
 jobs:
   publish:
