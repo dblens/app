@@ -41,7 +41,7 @@ export default merge(baseConfig, {
   output: {
     path: webpackPaths.distRendererPath,
     publicPath: './',
-    filename: 'renderer.js'
+    filename: 'renderer.js',
   },
 
   module: {
@@ -72,7 +72,19 @@ export default merge(baseConfig, {
       },
       {
         test: /\.s?(a|c)ss$/,
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              postcssOptions: {
+                plugins: [require('tailwindcss'), require('autoprefixer')],
+              },
+            },
+          },
+        ],
         exclude: /\.module\.s?(c|a)ss$/,
       },
       //Font Loader
