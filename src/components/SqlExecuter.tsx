@@ -68,9 +68,9 @@ const SqlExecuter = ({
   };
 
   return (
-    <div className="p-4 h-full w-full bg-gray-800">
+    <div className="flex flex-col p-4 h-full w-full bg-gray-800">
       <textarea
-        className="w-full h-1/2 font-mono p-2 bg-gray-700 text-gray-200"
+        className="h-1/3 w-full font-mono p-2 bg-gray-700 text-gray-200"
         value={sql}
         onChange={(e) => setSql(e?.target?.value)}
         onKeyDown={(e) => {
@@ -82,7 +82,7 @@ const SqlExecuter = ({
         }}
         tabIndex={0}
       />
-      <div className="flex flex-1 w-full justify-between text-gray-200">
+      <div className="flex flex-1 max-h-10 w-full justify-between text-gray-200">
         <div className="align-center text-xs px-2 pt-2">
           Status:
           <span
