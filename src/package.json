@@ -2,7 +2,7 @@
   "name": "db_lens",
   "productName": "DB Lens",
   "description": "A DB client made for developers.",
-  "version": "0.0.1-beta.1",
+  "version": "0.0.1-beta.5",
   "main": "./main.prod.js",
   "author": {
     "name": "Soorajshankar",
