@@ -21,7 +21,7 @@ const SqlDataViewer = ({
 
   if (rows instanceof Array)
     return (
-      <div className="h-1/3 w-full overflow-auto sql-table-wrapper">
+      <div className="h-2/3 mb-9 w-full max-w-full overflow-auto">
         <Table
           {...{
             columnNames: getColumnNames(rows),
@@ -31,10 +31,7 @@ const SqlDataViewer = ({
       </div>
     );
   return (
-    <pre
-      className="h-1/3 overflow-y-auto bg-gray-700 p-2 text-gray-200 font-mono"
-      style={{ height: '40%' }}
-    >
+    <pre className="h-2/3 mb-9 overflow-y-auto bg-gray-700 p-2 text-gray-200 font-mono">
       {rows && JSON.stringify(rows, null, 2)}
     </pre>
   );

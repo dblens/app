@@ -12,7 +12,7 @@ const SqlScreen = ({ session }: { session: DbSession }) => {
         <SideHeader title="Queries" />
         <SqlHistory setSelectedSql={setSelectedSql} />
       </div>
-      <div className="h-full w-full max-h-full border-l border-gray-600">
+      <div className="border-l border-gray-600 sql-dataview-wrapper">
         <SqlExecuter session={session} selectedSql={selectedSql} />
       </div>
     </div>
