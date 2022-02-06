@@ -33,14 +33,12 @@ const TableComp = ({
   }>({});
 
   const exportData = () => {
+    const fileName = `${selectedSchema}_${selectedTable}_P-${currentPage}_${currentPageSize}-items_${new Date().toISOString()}`;
     electron.ipcRenderer.send(
-      'save',
+      'ExportCSV',
       {
-        selectedSchema,
-        selectedTable,
-        currentPage,
-        currentPageSize,
-        ...tableData,
+        fileName,
+        data: tableData.tableData,
       },
       10
     );

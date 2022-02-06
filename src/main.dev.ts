@@ -160,23 +160,13 @@ app.on('activate', () => {
   if (mainWindow === null) createWindow();
 });
 
-ipcMain.on('save', (event: IpcMainEvent, params: any) => {
-  const {
-    selectedSchema,
-    selectedTable,
-    tableData,
-    currentPage,
-    currentPageSize,
-  } = params;
+ipcMain.on('ExportCSV', (_: IpcMainEvent, params: any) => {
+  const { fileName, data } = params;
 
   dialog
     .showSaveDialog({
       title: 'Select the File Path to save',
-      defaultPath: path.join(
-        __dirname,
-        `../downloads/${selectedSchema}_${selectedTable}_P-${currentPage}_${currentPageSize}-items_${new Date().getMilliseconds()}.csv`
-      ),
-      // defaultPath: path.join(__dirname, '../assets/'),
+      defaultPath: path.join(__dirname, `../downloads/${fileName}.csv`),
       buttonLabel: 'Save',
       // Restricting the user to only Text Files.
       filters: [{ name: 'CSV files', extensions: ['csv'] }],
@@ -192,7 +182,7 @@ ipcMain.on('save', (event: IpcMainEvent, params: any) => {
         const fileName = file.filePath.toString();
         const csvFile = fs.createWriteStream(fileName);
         stream.pipe(csvFile);
-        tableData.forEach((el: Record<string, any>, i: number) => {
+        data.forEach((el: Record<string, any>, i: number) => {
           const parsed: Record<string, any> = {};
           Object.entries(el).forEach(([key, value]: [any, any]) => {
             parsed[key] =
