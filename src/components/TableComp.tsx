@@ -4,8 +4,6 @@ import Table from './molecules/Table';
 import electron from 'electron';
 import ReactTooltip from 'react-tooltip';
 
-// Importing dialog module using remote
-// const dialog = electron.remote.dialog;
 const pageSizes = [10, 50, 100, 1000];
 
 const TableComp = ({
