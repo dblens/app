@@ -17,6 +17,10 @@ import log from 'electron-log';
 import { connectDB, sqlExecute } from './electron/DBHandler';
 
 import MenuBuilder from './menu';
+import { IpcMainEvent } from 'electron/main';
+import { dialog } from 'electron';
+import fs from 'fs';
+const { format } = require('@fast-csv/format');
 
 export default class AppUpdater {
   constructor() {
@@ -156,9 +160,44 @@ app.on('activate', () => {
   if (mainWindow === null) createWindow();
 });
 
-// ipcMain.on('ping', (event: IpcMainEvent, params: any) => {
-//   console.log('Test');
-// });
+ipcMain.on('ExportCSV', (_: IpcMainEvent, params: any) => {
+  const { fileName, data } = params;
+
+  dialog
+    .showSaveDialog({
+      title: 'Select the File Path to save',
+      defaultPath: path.join(__dirname, `../downloads/${fileName}.csv`),
+      buttonLabel: 'Save',
+      // Restricting the user to only Text Files.
+      filters: [{ name: 'CSV files', extensions: ['csv'] }],
+      properties: [],
+    })
+    .then((file: any) => {
+      // Stating whether dialog operation was cancelled or not.
+      console.log(file.canceled);
+      if (!file.canceled) {
+        let items: unknown[] = [];
+
+        const stream = format({ headers: true });
+        const fileName = file.filePath.toString();
+        const csvFile = fs.createWriteStream(fileName);
+        stream.pipe(csvFile);
+        data.forEach((el: Record<string, any>, i: number) => {
+          const parsed: Record<string, any> = {};
+          Object.entries(el).forEach(([key, value]: [any, any]) => {
+            parsed[key] =
+              typeof value === 'object' ? JSON.stringify(value) : value;
+          });
+          items.push(parsed);
+          stream.write(items[i]);
+        });
+        stream.end();
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 
 ipcMain.handle('connect', async (_, params) => {
   console.log('connect');
