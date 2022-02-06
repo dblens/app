@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import DbSession, { ColumnName, SortColumnType } from '../sessions/DbSession';
 import Table from './molecules/Table';
+import electron from 'electron';
+import ReactTooltip from 'react-tooltip';
 
+// Importing dialog module using remote
+// const dialog = electron.remote.dialog;
 const pageSizes = [10, 50, 100, 1000];
 
 const TableComp = ({
@@ -28,6 +32,19 @@ const TableComp = ({
     columnNames?: ColumnName[];
   }>({});
 
+  const exportData = () => {
+    electron.ipcRenderer.send(
+      'save',
+      {
+        selectedSchema,
+        selectedTable,
+        currentPage,
+        currentPageSize,
+        ...tableData,
+      },
+      10
+    );
+  };
   useEffect(() => {
     const loadData = async () => {
       let tableRows;
@@ -108,6 +125,18 @@ const TableComp = ({
           {selectedSchema ?? ''}
           {' / '}
           {selectedTable ?? ''}
+          <button
+            type="button"
+            className="h-full pl-4 pr-4 text-gray-100"
+            onClick={() => exportData()}
+            data-tip
+            data-for="btn-export"
+          >
+            ⬇️
+          </button>
+          <ReactTooltip id="btn-export" type="dark" place="right">
+            <span>Export Current Page</span>
+          </ReactTooltip>
         </div>
         <div
           className="w-auto items-center flex justify-end rounded-md my-2"
