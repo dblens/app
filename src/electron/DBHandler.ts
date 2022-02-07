@@ -3,10 +3,8 @@ import { BrowserWindow } from 'electron';
 import { IpcMainInvokeEvent } from 'electron/main';
 import { Client, ClientBase } from 'pg';
 
-const connections: Record<
-  string,
-  { client: ClientBase; window: BrowserWindow }
-> = {};
+let connections: Record<string, { client: ClientBase; window: BrowserWindow }> =
+  {};
 
 export const connectDB = async ({
   window,
@@ -44,6 +42,12 @@ export const connectDB = async ({
     // console.log(error);
   }
   return { status: 'FAILED', uuid };
+};
+
+export const disconnectDB = async () => {
+  connections = {};
+
+  return { status: 'DISCONNECTED' };
 };
 
 export const sqlExecute = async (

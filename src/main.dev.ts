@@ -24,7 +24,7 @@ import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import fs from 'fs';
 import MenuBuilder from './menu';
-import { connectDB, sqlExecute } from './electron/DBHandler';
+import { connectDB, disconnectDB, sqlExecute } from './electron/DBHandler';
 
 const { format } = require('@fast-csv/format');
 
@@ -214,6 +214,13 @@ ipcMain.handle('connect', async (_, params) => {
     ...params,
     window: mainWindow,
   });
+  return res;
+});
+
+ipcMain.handle('disconnect', async () => {
+  console.log('disconnect');
+  // console.log(JSON.stringify({ params }, null, 2));
+  const res = await disconnectDB();
   return res;
 });
 

@@ -15,6 +15,7 @@ export interface AppState {
 
 export type AppStateActions =
   | { type: 'SET_SESSION'; payload: DbSession }
+  | { type: 'CLEAR_SESSION' }
   | { type: 'SET_HISTORY'; payload: HistoryType[] }
   | { type: 'ADD_HISTORY'; payload: HistoryType }
   | { type: 'REMOVE_HISTORY'; payload: number }
@@ -29,6 +30,8 @@ export function appReducer(
   switch (action.type) {
     case 'SET_SESSION':
       return { ...state, session: action.payload };
+    case 'CLEAR_SESSION':
+      return { ...state, session: undefined };
     case 'SET_HISTORY':
       return { ...state, history: action.payload };
     case 'ADD_HISTORY':
