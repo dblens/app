@@ -2,8 +2,8 @@
 /* eslint-disable no-restricted-globals */
 import React from 'react';
 import electron from 'electron';
-import { useAppState } from '../state/AppProvider';
 import ReactTooltip from 'react-tooltip';
+import { useAppState } from '../state/AppProvider';
 
 interface SidebarProps {
   selectedTab: string;
