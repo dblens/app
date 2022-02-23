@@ -1,4 +1,9 @@
+/* eslint-disable no-alert */
+/* eslint-disable no-restricted-globals */
 import React from 'react';
+import electron from 'electron';
+import ReactTooltip from 'react-tooltip';
+import { useAppState } from '../state/AppProvider';
 
 interface SidebarProps {
   selectedTab: string;
@@ -49,9 +54,35 @@ const Sidebar: React.FC<SidebarProps> = ({
   selectedTab,
   setSelectedTab,
 }: SidebarProps) => {
+  const [, dispatch] = useAppState();
+
+  const disconnect = async () => {
+    if (confirm('Are you sure want to disconnect from the database?')) {
+      const { status } = await electron.ipcRenderer.invoke('disconnect');
+      if (status === 'DISCONNECTED') {
+        dispatch({
+          type: 'CLEAR_SESSION',
+        });
+      }
+    }
+  };
   return (
-    <div className="bg-gray-900 text-gray-100 w-12 pt-8 flex flex-col border border-gray-700 text-xs">
-      <button type="button" className="mb-4">
+    <div className="bg-gray-900 text-gray-100 w-12  flex flex-col border border-gray-700 text-xs">
+      <button
+        type="button"
+        className="m-2 text-sm text-green-600 font-bold animate-ping"
+        onClick={disconnect}
+        data-tip
+        data-for="btn-disconnect"
+      >
+        <span role="img" aria-label="app-icon" className="p-2 font-mono">
+          ●
+        </span>
+      </button>
+      <ReactTooltip id="btn-disconnect" type="dark" place="right">
+        <span>Click to Disconnect from the database</span>
+      </ReactTooltip>
+      <button type="button" className="mb-4 pt-4">
         <span
           role="img"
           aria-label="app-icon"

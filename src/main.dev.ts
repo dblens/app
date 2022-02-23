@@ -11,12 +11,22 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain, screen } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  shell,
+  ipcMain,
+  screen,
+  dialog,
+  IpcMainEvent,
+} from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import { connectDB, sqlExecute } from './electron/DBHandler';
-
+import fs from 'fs';
 import MenuBuilder from './menu';
+import { connectDB, disconnectDB, sqlExecute } from './electron/DBHandler';
+
+const { format } = require('@fast-csv/format');
 
 export default class AppUpdater {
   constructor() {
@@ -156,9 +166,46 @@ app.on('activate', () => {
   if (mainWindow === null) createWindow();
 });
 
-// ipcMain.on('ping', (event: IpcMainEvent, params: any) => {
-//   console.log('Test');
-// });
+ipcMain.on('ExportCSV', (_: IpcMainEvent, params) => {
+  const { fileName, data } = params;
+
+  dialog
+    .showSaveDialog({
+      title: 'Select the File Path to save',
+      defaultPath: path.join(__dirname, `../downloads/${fileName}.csv`),
+      buttonLabel: 'Save',
+      // Restricting the user to only Text Files.
+      filters: [{ name: 'CSV files', extensions: ['csv'] }],
+      properties: [],
+    })
+    .then((file: Electron.SaveDialogReturnValue) => {
+      // Stating whether dialog operation was cancelled or not.
+      console.log(file.canceled);
+      if (!file.canceled) {
+        const items: unknown[] = [];
+
+        const stream = format({ headers: true });
+        const filePath = file?.filePath?.toString() ?? '/Downloads';
+        const csvFile = fs.createWriteStream(filePath);
+        stream.pipe(csvFile);
+        data.forEach((el: Record<string, unknown>, i: number) => {
+          const parsed: Record<string, unknown> = {};
+          Object.entries(el).forEach(([key, value]: [string, unknown]) => {
+            parsed[key] =
+              typeof value === 'object' ? JSON.stringify(value) : value;
+          });
+          items.push(parsed);
+          stream.write(items[i]);
+        });
+        stream.end();
+        return 1;
+      }
+      return 0;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+});
 
 ipcMain.handle('connect', async (_, params) => {
   console.log('connect');
@@ -167,6 +214,13 @@ ipcMain.handle('connect', async (_, params) => {
     ...params,
     window: mainWindow,
   });
+  return res;
+});
+
+ipcMain.handle('disconnect', async () => {
+  console.log('disconnect');
+  // console.log(JSON.stringify({ params }, null, 2));
+  const res = await disconnectDB();
   return res;
 });
 

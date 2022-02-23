@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+/* eslint-disable no-alert */
+/* eslint-disable no-restricted-globals */
+import React, { useEffect, useState } from 'react';
+import electron from 'electron';
 import DbSession from '../sessions/DbSession';
 import OverviewScreen from './Overview/OverviewScreen';
 import SqlScreen from './SqlScreen';
@@ -7,6 +10,7 @@ import TableScreen from './TableScreen';
 import Titlebar from './Titlebar';
 import ErdContainer from './ERD/ErdContainer';
 import SettingsContainer from './Settings/SettingsContainer';
+import { useAppState } from '../state/AppProvider';
 
 interface MainScreenProps {
   session: DbSession;
@@ -18,6 +22,30 @@ const MainScreen: React.FC<MainScreenProps> = ({
   session,
 }: MainScreenProps) => {
   const [selectedTab, setSelectedTab] = useState('OVERVIEW');
+  const [, dispatch] = useAppState();
+
+  const disconnect = async () => {
+    if (confirm('Are you sure want to disconnect from the database?')) {
+      const { status } = await electron.ipcRenderer.invoke('disconnect');
+      if (status === 'DISCONNECTED') {
+        dispatch({
+          type: 'CLEAR_SESSION',
+        });
+      }
+    }
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const escFunction = (e: KeyboardEvent) => {
+    if (e.code === 'Escape' && session) {
+      disconnect();
+    }
+  };
+  useEffect(() => {
+    document.addEventListener('keydown', escFunction, false);
+    return () => {
+      document.removeEventListener('keydown', escFunction, false);
+    };
+  }, [escFunction]);
 
   return (
     <div className="w-screen h-screen max-h-screen text-gray-800 focus:font-bold focus:outline-none">

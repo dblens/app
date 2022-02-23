@@ -58,10 +58,11 @@ a:hover {
   height: calc(100vh - 25px);
   width: calc(100vw - 300px);
 }
-.sql-table-wrapper {
+.sql-dataview-wrapper {
   overflow: auto;
-  min-height: 40%;
+  min-height: 100%;
   height: calc(100vh - 60%);
+  width: calc(100vw - 348px);
 }
 .titlebar-drag-region {
   /*added*/
