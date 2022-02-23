@@ -11,15 +11,21 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain, screen } from 'electron';
+import {
+  app,
+  BrowserWindow,
+  shell,
+  ipcMain,
+  screen,
+  dialog,
+  IpcMainEvent,
+} from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import { connectDB, sqlExecute } from './electron/DBHandler';
-
-import MenuBuilder from './menu';
-import { IpcMainEvent } from 'electron/main';
-import { dialog } from 'electron';
 import fs from 'fs';
+import MenuBuilder from './menu';
+import { connectDB, disconnectDB, sqlExecute } from './electron/DBHandler';
+
 const { format } = require('@fast-csv/format');
 
 export default class AppUpdater {
@@ -160,7 +166,7 @@ app.on('activate', () => {
   if (mainWindow === null) createWindow();
 });
 
-ipcMain.on('ExportCSV', (_: IpcMainEvent, params: any) => {
+ipcMain.on('ExportCSV', (_: IpcMainEvent, params) => {
   const { fileName, data } = params;
 
   dialog
@@ -172,19 +178,19 @@ ipcMain.on('ExportCSV', (_: IpcMainEvent, params: any) => {
       filters: [{ name: 'CSV files', extensions: ['csv'] }],
       properties: [],
     })
-    .then((file: any) => {
+    .then((file: Electron.SaveDialogReturnValue) => {
       // Stating whether dialog operation was cancelled or not.
       console.log(file.canceled);
       if (!file.canceled) {
-        let items: unknown[] = [];
+        const items: unknown[] = [];
 
         const stream = format({ headers: true });
-        const fileName = file.filePath.toString();
-        const csvFile = fs.createWriteStream(fileName);
+        const filePath = file?.filePath?.toString() ?? '/Downloads';
+        const csvFile = fs.createWriteStream(filePath);
         stream.pipe(csvFile);
-        data.forEach((el: Record<string, any>, i: number) => {
-          const parsed: Record<string, any> = {};
-          Object.entries(el).forEach(([key, value]: [any, any]) => {
+        data.forEach((el: Record<string, unknown>, i: number) => {
+          const parsed: Record<string, unknown> = {};
+          Object.entries(el).forEach(([key, value]: [string, unknown]) => {
             parsed[key] =
               typeof value === 'object' ? JSON.stringify(value) : value;
           });
@@ -192,7 +198,9 @@ ipcMain.on('ExportCSV', (_: IpcMainEvent, params: any) => {
           stream.write(items[i]);
         });
         stream.end();
+        return 1;
       }
+      return 0;
     })
     .catch((err) => {
       console.log(err);
@@ -206,6 +214,13 @@ ipcMain.handle('connect', async (_, params) => {
     ...params,
     window: mainWindow,
   });
+  return res;
+});
+
+ipcMain.handle('disconnect', async () => {
+  console.log('disconnect');
+  // console.log(JSON.stringify({ params }, null, 2));
+  const res = await disconnectDB();
   return res;
 });
 
