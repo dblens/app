@@ -4,7 +4,7 @@
   Get more insights from PostgreSQL
 </p>
 
-DB Lens is an **open-source database client** that helps you to explore database, understand data relations more quickly with automatic ER diagrams, visualise and analyse internal DB metrics such as index utilisation sequential scans, slow running queries, storage and many more.
+DB Lens is an **open-source database client** that helps you to explore a database, understand data relations more quickly with automatic ER diagrams, visualise and analyse internal DB metrics such as index utilisation sequential scans, slow running queries, storage and more.
 
 [![GitHub issues](https://img.shields.io/github/issues/dblens/app)](https://github.com/dblens/app/issues)
 [![GitHub stars](https://img.shields.io/github/stars/dblens/app)](https://github.com/dblens/app/stargazers)
@@ -14,16 +14,16 @@ DB Lens is an **open-source database client** that helps you to explore database
 
 - Database Viewer 🔍
 - SQL Playground ⚡️
-- Automatic ER Diagrams on existing schema 💃
+- Automatic ER Diagrams on an existing schema 💃
 - Connect with a click: simply connect to a DB by clicking on the connection string 🪄
-- Usage Analysis: Understand how the database is beign used across tables
+- Usage Analysis: Understand how the database is being used across tables
 - Performance overview: Understand how frequently table/index are scanned and the slow queries.
 
 ## Setup dev env
 
 ### Prerequisites
 
-NodeJS & yarn (NPM should also work but we are maintaining a yarn lock file only
+NodeJS & yarn (NPM should also work but we are maintaining a yarn lock file only)
 
 ### Steps
 
