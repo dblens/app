@@ -2,9 +2,9 @@
   <img src="./assets/icon.png" width="200" />
   <br/>
   Get more insights from PostgreSQL
+
 </p>
 
-![1](https://user-images.githubusercontent.com/8408875/174975064-6683c826-15e5-4ddc-b421-eb45024262ec.jpg)
 
 DB Lens is an **open-source database client** that helps you to explore database, understand data relations more quickly with automatic ER diagrams, visualise and analyse internal DB metrics such as index utilisation sequential scans, slow running queries, storage and many more.
 
@@ -13,18 +13,18 @@ DB Lens is an **open-source database client** that helps you to explore database
 [![GitHub license](https://img.shields.io/github/license/dblens/app)](https://github.com/dblens/app)
 
 ## Features
-- Automatic ER Diagrams on existing schema 💃
+![1](https://user-images.githubusercontent.com/8408875/174975064-6683c826-15e5-4ddc-b421-eb45024262ec.jpg)
+
 ![3](https://user-images.githubusercontent.com/8408875/174975231-01990182-e633-4456-b34a-dad542e6fc28.jpg)
 
-- Database Viewer 🔍
 ![5](https://user-images.githubusercontent.com/8408875/174975214-840c3ba8-57a5-4636-b42f-61f61fb408cc.jpg)
 
-- SQL Playground ⚡️
 ![4](https://user-images.githubusercontent.com/8408875/174975248-63bbeb5e-c830-4193-8c48-7c8570de9fe5.jpg)
+
+![2](https://user-images.githubusercontent.com/8408875/174975318-dbdae2db-ece4-4151-bdad-e94a62f85614.jpg)
 
 - Connect with a click: simply connect to a DB by clicking on the connection string 🪄
 - Usage Analysis: Understand how the database is beign used across tables
-![2](https://user-images.githubusercontent.com/8408875/174975318-dbdae2db-ece4-4151-bdad-e94a62f85614.jpg)
 - Performance overview: Understand how frequently table/index are scanned and the slow queries.
 
 ## Setup dev env
