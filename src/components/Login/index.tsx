@@ -74,7 +74,7 @@ const Login: React.FC = () => {
     (window as any).send = send;
   }, []);
   return (
-    <div className="bg-gray-800 w-screen h-screen flex">
+    <div className="bg-gray-800 w-screen h-screen flex titlebar-drag-region">
       <div className="bg-gray-900 md:w-1/12 pt-8 flex">
         <span
           role="img"
