@@ -13,6 +13,63 @@ type ResponseData = {
   error?: string;
 };
 
+async function getClient(connectionString: string): Promise<Client> {
+  let client = new Client({
+    connectionString,
+  });
+
+  try {
+    await client.connect();
+  } catch (initialError) {
+    console.error("Initial connection error:", initialError);
+    console.log("Retrying with sslmode=require...");
+
+    // Try with sslmode=require
+    client = new Client({
+      connectionString,
+      ssl: { rejectUnauthorized: false },
+    });
+
+    try {
+      await client.connect();
+    } catch (sslError) {
+      console.error("SSL connection error:", sslError);
+      throw new Error(sslError.message);
+    }
+  }
+
+  return client;
+}
+
+async function executeQueries(
+  client: Client,
+  queries: string[]
+): Promise<QueryResult[]> {
+  const results: QueryResult[] = [];
+
+  for (const query of queries) {
+    const startTime = process.hrtime();
+    try {
+      const result = await client.query(query);
+      const duration = process.hrtime(startTime);
+      results.push({
+        status: "SUCCESS",
+        rows: result.rows,
+        duration: duration[0] * 1000 + duration[1] / 1e6, // Convert duration to milliseconds
+      });
+    } catch (error) {
+      console.error("Error executing query:", error);
+      results.push({
+        status: "ERROR",
+        rows: [],
+        duration: 0,
+      });
+    }
+  }
+
+  return results;
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
@@ -32,43 +89,22 @@ export default async function handler(
     return;
   }
 
-  const client = new Client({
-    connectionString,
-  });
-
   try {
-    await client.connect();
-    const results: QueryResult[] = [];
+    const client = await getClient(connectionString);
 
-    for (const query of queries) {
-      const startTime = process.hrtime();
-      try {
-        const result = await client.query(query);
-        const duration = process.hrtime(startTime);
-        results.push({
-          status: "SUCCESS",
-          rows: result.rows,
-          duration: duration[0] * 1000 + duration[1] / 1e6, // Convert duration to milliseconds
-        });
-      } catch (error) {
-        console.error("Error executing query:", error);
-        results.push({
-          status: "ERROR",
-          rows: [],
-          duration: 0,
-        });
-      }
+    try {
+      const results = await executeQueries(client, queries);
+      res.status(200).json({ message: "Queries executed successfully", data: results });
+    } catch (error: any) {
+      console.error("Error executing queries:", error);
+      res.status(500).json({ message: "Error executing queries", error: error?.message });
+    } finally {
+      await client.end();
     }
-
-    res
-      .status(200)
-      .json({ message: "Queries executed successfully", data: results });
   } catch (error: any) {
-    console.error("Error connecting to database:", error);
-    res
-      .status(500)
-      .json({ message: "Error connecting to database", error: error?.message });
-  } finally {
-    await client.end();
+    res.status(500).json({
+      message: "Error connecting to database",
+      error: error.message,
+    });
   }
 }
