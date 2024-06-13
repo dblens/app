@@ -47,7 +47,7 @@ const Sidebar = () => {
   const pathname = usePathname();
 
   // Determine the selected tab based on the current path
-  const selectedTab = pathname?.includes("/sql") ? "SQL" : "OVERVIEW";
+  const selectedTab:any = pathname?.includes("/sql") ? "SQL" : "OVERVIEW";
 
   const setSelectedTab = (ss: string) => {};
 
