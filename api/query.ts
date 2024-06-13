@@ -1,13 +1,10 @@
-export const executeSQL = async (
-  queries: string[],
-  connectionString: string
-) => {
+export const executeSQL = async (queries: string[]) => {
   const response = await fetch("/api/execute_pg", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ queries, connectionString }),
+    body: JSON.stringify({ queries }),
   });
 
   if (!response.ok) {

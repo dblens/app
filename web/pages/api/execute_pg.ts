@@ -21,8 +21,6 @@ async function getClient(connectionString: string): Promise<Client> {
   try {
     await client.connect();
   } catch (initialError) {
-    console.error("Initial connection error:", initialError);
-    console.log("Retrying with sslmode=require...");
 
     // Try with sslmode=require
     client = new Client({
@@ -32,7 +30,7 @@ async function getClient(connectionString: string): Promise<Client> {
 
     try {
       await client.connect();
-    } catch (sslError) {
+    } catch (sslError: any) {
       console.error("SSL connection error:", sslError);
       throw new Error(sslError.message);
     }
@@ -74,12 +72,14 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
+  const connectionString = process.env.CONNECTION_STRING;
+
   if (req.method !== "POST") {
     res.status(405).json({ message: "Method not allowed" });
     return;
   }
 
-  const { queries, connectionString } = req.body;
+  const { queries } = req.body;
 
   if (!Array.isArray(queries)) {
     res.status(400).json({ message: "Invalid queries" });
@@ -94,10 +94,14 @@ export default async function handler(
 
     try {
       const results = await executeQueries(client, queries);
-      res.status(200).json({ message: "Queries executed successfully", data: results });
+      res
+        .status(200)
+        .json({ message: "Queries executed successfully", data: results });
     } catch (error: any) {
       console.error("Error executing queries:", error);
-      res.status(500).json({ message: "Error executing queries", error: error?.message });
+      res
+        .status(500)
+        .json({ message: "Error executing queries", error: error?.message });
     } finally {
       await client.end();
     }

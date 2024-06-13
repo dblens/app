@@ -39,10 +39,7 @@ const SqlExecutor = () => {
   const post = async () => {
     setLoading(true);
     console.log(process.env.CONNECTION_STRING);
-    executeSQL(
-      [sql],
-      "postgres://"
-    )
+    executeSQL([sql])
       .then((data) => {
         setLoading(false);
         if (data?.data?.[0]?.status) {
