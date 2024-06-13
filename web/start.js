@@ -23,12 +23,17 @@ process.env.CONNECTION_STRING = connectionString;
 const app = next({ dev });
 const handle = app.getRequestHandler();
 
-app.prepare().then(() => {
+app.prepare().then(async () => {
   createServer((req, res) => {
     const parsedUrl = parse(req.url, true);
     handle(req, res, parsedUrl);
-  }).listen(3253, (err) => {
+  }).listen(3253, async (err) => {
     if (err) throw err;
-    console.log('> Ready on http://localhost:3253');
+    console.log('DB lens | Opening http://localhost:3253');
+    
+    // Dynamically import the 'open' package
+    const open = await import('open');
+    // Open the URL in the default web browser
+    open.default('http://localhost:3253');
   });
 });
