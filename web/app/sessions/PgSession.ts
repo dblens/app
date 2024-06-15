@@ -1,11 +1,12 @@
-import utils from '../components/utils/utils';
 import DbSession, {
   ColumnName,
   ErdDataType,
   SortColumnType,
   SqlExecReponseType,
   TableType,
-} from './DbSession';
+} from "./DbSession";
+
+import { executeSQL } from "../../../api/query";
 
 class PgSession implements DbSession {
   id: string;
@@ -14,9 +15,15 @@ class PgSession implements DbSession {
     this.id = message;
   }
 
-  executeSQL = (sql: string): Promise<SqlExecReponseType> =>
-    new Promise<SqlExecReponseType>((resolve, reject) => {
-      utils.executeSQL(sql, this.id).then(resolve).catch(reject);
+  executeSQL = (sql: string): Promise<SqlExecReponseType<any>> =>
+    new Promise<SqlExecReponseType<any>>((resolve, reject) => {
+      executeSQL([sql], this.id)
+        .then((data) => {
+          data?.data?.[0]
+            ? resolve(data?.data?.[0])
+            : reject(new Error("Failed to execute query"));
+        })
+        .catch(reject);
     });
 
   getDBSchemas = (): Promise<string[]> =>
@@ -24,8 +31,7 @@ class PgSession implements DbSession {
       const sql = `SELECT schema_name
       FROM information_schema.schemata
       WHERE "schema_name" NOT LIKE 'pg_%' AND schema_name <> 'information_schema';`;
-      utils
-        .executeSQL(sql, this.id)
+      this.executeSQL(sql)
         .then((data) => {
           if (data?.rows && Array.isArray(data?.rows)) {
             const allSchamas = data?.rows
@@ -33,7 +39,7 @@ class PgSession implements DbSession {
               .map((i) => i.schema_name);
             return resolve(allSchamas);
           }
-          return reject(new Error('Failed to parse the schemas'));
+          return reject(new Error("Failed to parse the schemas"));
         })
         .catch(reject);
     });
@@ -57,8 +63,7 @@ class PgSession implements DbSession {
         ON ccu.constraint_name = tc.constraint_name
         AND ccu.table_schema = tc.table_schema;
   `;
-      utils
-        .executeSQL(sql, this.id)
+      this.executeSQL(sql)
         .then((data) => {
           console.log(data);
           return resolve(data as SqlExecReponseType<ErdDataType[]>);
@@ -71,8 +76,7 @@ class PgSession implements DbSession {
     new Promise<TableType[]>((resolve, reject) => {
       const sql = `SELECT * FROM information_schema.tables
       WHERE table_schema = '${schema}'`;
-      utils
-        .executeSQL(sql, this.id)
+      this.executeSQL(sql)
         .then((data) => {
           if (data?.rows && Array.isArray(data?.rows)) {
             const allSchamas = data?.rows.filter(
@@ -80,7 +84,7 @@ class PgSession implements DbSession {
             ) as TableType[];
             return resolve(allSchamas);
           }
-          return reject(new Error('Failed to parse the schemas'));
+          return reject(new Error("Failed to parse the schemas"));
         })
         .catch(reject);
     });
@@ -104,15 +108,14 @@ class PgSession implements DbSession {
         const offset = (pagenumber - 1) * size;
         let sql = `SELECT * FROM "${schema}"."${table}" `;
         if (sortedColumns) {
-          sql += ' ORDER BY ';
+          sql += " ORDER BY ";
           sql += Object.entries(sortedColumns)
             .map(([col, sort]) => `${col} ${sort}`)
-            .join(',');
+            .join(",");
         }
 
         sql += ` LIMIT ${size} OFFSET ${offset};`;
-        utils
-          .executeSQL(sql, this.id)
+        this.executeSQL(sql)
           .then((data) => {
             const tableData = data as unknown;
             return resolve(
@@ -140,8 +143,7 @@ class PgSession implements DbSession {
       TABLE_NAME = '${table}'
       AND table_schema = '${schema}';`;
 
-      utils
-        .executeSQL(sql, this.id)
+      this.executeSQL(sql)
         .then((data) => {
           const columnNames = data as unknown;
           return resolve(columnNames as { status: string; rows: ColumnName[] });
