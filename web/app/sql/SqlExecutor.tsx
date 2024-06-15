@@ -3,6 +3,7 @@ import { QueryResultRow } from "pg";
 import React, { useState, useRef, useEffect } from "react";
 
 import { executeSQL } from "../../../api/query";
+import SqlDataViewer from "./SqlDataViewer";
 
 // import { v4 as uuidv4 } from "uuid";
 
@@ -137,10 +138,10 @@ const SqlExecutor = () => {
           <span>Tip: Ctrl+ Enter to execute SQL</span>
         </ReactTooltip> */}
       </div>
-      <pre className="flex-1 w-full overflow-auto bg-gray-700 text-gray-200 p-2">
+      {/* <pre className="flex-1 w-full overflow-auto bg-gray-700 text-gray-200 p-2">
         {JSON.stringify(state?.rows, null, 2)}
-      </pre>
-      {/* <SqlDataViewer rows={state?.rows} loading={loading} /> */}
+      </pre> */}
+      <SqlDataViewer rows={state?.rows} loading={loading} />
     </div>
   );
 };

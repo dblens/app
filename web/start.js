@@ -3,7 +3,8 @@
 const next = require('next');
 const { createServer } = require('http');
 const { parse } = require('url');
-const { argv } = require('process');
+const { argv, cwd, chdir } = require('process');
+const path = require('path');
 
 const dev = process.env.NODE_ENV !== 'production';
 
@@ -19,6 +20,10 @@ console.log(`Using connection string: ${connectionString}`);
 
 // Set the environment variable
 process.env.CONNECTION_STRING = connectionString;
+
+// Change working directory to the script's directory if necessary
+const scriptDir = path.dirname(__filename);
+chdir(scriptDir);
 
 const app = next({ dev });
 const handle = app.getRequestHandler();
