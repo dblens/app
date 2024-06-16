@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
-import SqlExecutor from "./SqlExecutor";
+import { AppProvider } from "../state/AppProvider";
+import SqlScreen from "./SqlScreen";
 
 export default function Home() {
   useEffect(() => {}, []);
@@ -11,7 +12,9 @@ export default function Home() {
 
       // className="flex min-h-screen flex-col items-center justify-between p-24">
     >
-      <SqlExecutor />
+      <AppProvider>
+        <SqlScreen />
+      </AppProvider>
     </main>
   );
 }

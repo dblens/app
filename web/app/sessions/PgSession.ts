@@ -6,7 +6,7 @@ import DbSession, {
   TableType,
 } from "./DbSession";
 
-import { executeSQL } from "../../../api/query";
+import { executeSQL } from "../../api/query";
 
 class PgSession implements DbSession {
   id: string;

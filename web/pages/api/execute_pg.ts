@@ -13,7 +13,23 @@ type ResponseData = {
   error?: string;
 };
 
+interface ClientMap {
+  [key: string]: Client;
+}
+let cachedClient = {} as ClientMap;
+
 async function getClient(connectionString: string): Promise<Client> {
+  // generate cache key from connectionstring
+  const cacheKey = "123456789"; // right now only one client is there, but this is to support multiple clients in future
+  console.log(
+    "Checking for cached pg connection",
+    JSON.stringify(Object.keys(cachedClient))
+  );
+  if (cachedClient[cacheKey]) {
+    console.log("checking if the client is connected");
+    return cachedClient[cacheKey] as Client;
+  }
+  console.log("fallback to new connection");
   let client = new Client({
     connectionString,
   });
@@ -21,7 +37,6 @@ async function getClient(connectionString: string): Promise<Client> {
   try {
     await client.connect();
   } catch (initialError) {
-
     // Try with sslmode=require
     client = new Client({
       connectionString,
@@ -35,6 +50,8 @@ async function getClient(connectionString: string): Promise<Client> {
       throw new Error(sslError.message);
     }
   }
+  // cache the client connection
+  cachedClient[cacheKey] = client;
 
   return client;
 }
@@ -103,7 +120,7 @@ export default async function handler(
         .status(500)
         .json({ message: "Error executing queries", error: error?.message });
     } finally {
-      await client.end();
+      // await client.end();
     }
   } catch (error: any) {
     res.status(500).json({
