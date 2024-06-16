@@ -1,46 +1,77 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<p align="center">
+  <img src="./assets/icon.png" width="200" />
+  <br/>
+  Get more insights from PostgreSQL
 
-## Getting Started
+</p>
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+DB Lens is an **open-source database client** that helps you to explore database, understand data relations more quickly with automatic ER diagrams, visualise and analyse internal DB metrics such as index utilisation sequential scans, slow running queries, storage and many more.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+[![GitHub issues](https://img.shields.io/github/issues/dblens/app)](https://github.com/dblens/app/issues)
+[![GitHub stars](https://img.shields.io/github/stars/dblens/app)](https://github.com/dblens/app/stargazers)
+[![GitHub license](https://img.shields.io/github/license/dblens/app)](https://github.com/dblens/app)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Don't want to install?
 
-## Packaging
-
+Try running 
 ```sh
-npm run build
+npx dblens <connection_string>
+# npx dblens postgres://user:pass@host/db
+```
+from your terminal
 
-npm 
+## Features
+>Note : Some features are not available on the browser version yet.
+
+![1](https://user-images.githubusercontent.com/8408875/174975064-6683c826-15e5-4ddc-b421-eb45024262ec.jpg)
+
+![3](https://user-images.githubusercontent.com/8408875/174975231-01990182-e633-4456-b34a-dad542e6fc28.jpg)
+
+![5](https://user-images.githubusercontent.com/8408875/174975214-840c3ba8-57a5-4636-b42f-61f61fb408cc.jpg)
+
+![4](https://user-images.githubusercontent.com/8408875/174975248-63bbeb5e-c830-4193-8c48-7c8570de9fe5.jpg)
+
+![2](https://user-images.githubusercontent.com/8408875/174975318-dbdae2db-ece4-4151-bdad-e94a62f85614.jpg)
+
+- Connect with a click: simply connect to a DB by clicking on the connection string 🪄
+- Usage Analysis: Understand how the database is beign used across tables
+- Performance overview: Understand how frequently table/index are scanned and the slow queries.
+
+## Setup dev env
+
+### Prerequisites
+
+NodeJS & yarn (NPM should also work but we are maintaining a yarn lock file only
+
+### Steps
+
+- install dependencies
 
 ```
+yarn install
+```
 
+- to run the application
 
-## Learn More
+```
+yarn start
+```
 
-To learn more about Next.js, take a look at the following resources:
+- to build and package the application
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+yarn package
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Branching
 
-## Deploy on Vercel
+Pull requests are the best way to propose changes to the codebase (we use [Github Flow](https://guides.github.com/introduction/flow/index.html)). We actively welcome your pull requests:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. Fork the repo and create your branch from `main`.
+2. If you've added code that should be tested, add tests.
+3. If you've changed APIs, update the documentation.
+4. Ensure the test suite passes.
+5. Make sure your code lints.
+6. Issue that pull request!

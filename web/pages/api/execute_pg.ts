@@ -18,7 +18,7 @@ interface ClientMap {
 }
 let cachedClient = {} as ClientMap;
 
-async function getClient(connectionString: string): Promise<Client> {
+export async function getPgConnection(connectionString: string): Promise<Client> {
   // generate cache key from connectionstring
   const cacheKey = "123456789"; // right now only one client is there, but this is to support multiple clients in future
   console.log(
@@ -107,7 +107,7 @@ export default async function handler(
   }
 
   try {
-    const client = await getClient(connectionString);
+    const client = await getPgConnection(connectionString);
 
     try {
       const results = await executeQueries(client, queries);
