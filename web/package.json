@@ -1,6 +1,6 @@
-{
+s{
   "name": "dblens",
-  "version": "0.0.1-alpha.6",
+  "version": "0.0.1-alpha.6ss",
   "main": "start.js",
   "scripts": {
     "dev": "next dev",

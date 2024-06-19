@@ -12,13 +12,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPgConnection = void 0;
 const express = require("express");
-const opn = require('opn');
 const path = require("path");
 const minimist = require("minimist");
 const pg_1 = require("pg");
 const execute_pg_1 = require("./execute_pg");
 const cors = require("cors"); // Import CORS middleware
-const bodyParser = require('body-parser');
+const opn = require('opn');
 const app = express();
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -33,25 +32,21 @@ if (!connectionString) {
 let cachedClient = {};
 function getPgConnection(connectionString) {
     return __awaiter(this, void 0, void 0, function* () {
-        // generate cache key from connectionstring
-        const cacheKey = "123456789"; // right now only one client is there, but this is to support multiple clients in future
-        // console.log(
-        //   "Checking for cached pg connection",
-        //   JSON.stringify(Object.keys(cachedClient))
-        // );
+        const cacheKey = "123456789"; // Generate cache key from connection string
         if (cachedClient[cacheKey]) {
-            console.log("checking if the client is connected");
+            // console.log("Using cached PostgreSQL connection.");
             return cachedClient[cacheKey];
         }
-        console.log("fallback to new connection");
+        // console.log("Establishing new PostgreSQL connection...");
         let client = new pg_1.Client({
             connectionString,
         });
         try {
             yield client.connect();
+            console.log("Connected to PostgreSQL database.");
         }
         catch (initialError) {
-            console.log("Try with sslmode=require");
+            console.log("Attempting connection with sslmode=require...");
             // Try with sslmode=require
             client = new pg_1.Client({
                 connectionString,
@@ -59,13 +54,14 @@ function getPgConnection(connectionString) {
             });
             try {
                 yield client.connect();
+                console.log("Connected to PostgreSQL database with SSL.");
             }
             catch (sslError) {
                 console.error("SSL connection error:", sslError);
                 throw new Error(sslError.message);
             }
         }
-        // cache the client connection
+        // Cache the client connection
         cachedClient[cacheKey] = client;
         return client;
     });
@@ -73,16 +69,14 @@ function getPgConnection(connectionString) {
 exports.getPgConnection = getPgConnection;
 const args = minimist(pArgs);
 const port = args.port || process.env.PORT || 3253;
-// Function to connect to the PostgreSQL database
+// Function to connect to the PostgreSQL database and start the server
 const connectToDB = () => __awaiter(void 0, void 0, void 0, function* () {
     const client = yield getPgConnection(connectionString);
     try {
-        // await client.connect();
-        console.log("Connected to the database");
-        console.log("starting server...");
+        // console.log("Database connection established successfully.");
+        console.log("Starting dblens server...");
         // Path to the static files
-        // const staticPath: string = path.join(__dirname, "../web/out");
-        const staticPath = path.join(__dirname, "../../web/out");
+        const staticPath = path.join(__dirname, "./out");
         // Serve static files from the 'web/out' folder
         app.use(express.static(staticPath));
         // Serve index.html for the root route
@@ -93,20 +87,19 @@ const connectToDB = () => __awaiter(void 0, void 0, void 0, function* () {
         app.get("*", (req, res) => {
             res.sendFile(path.join(staticPath, "index.html"));
         });
-        // Serve index.html for all other routes (to support client-side routing)
+        // API endpoint for executing PostgreSQL queries
         app.post("/api/execute_pg", (0, execute_pg_1.executePgHandler)(client));
+        // Start the Express server
         const server = app.listen(port, () => {
-            console.log(`Server listening on port ${port}`);
-            console.log(`Opening dblens on http://localhost:${port}`);
-            // opn(`http://localhost:${port}`); // Open the browser
-            opn(`https://local.dblens.app`); // Open the browser
+            console.log(`Server is running on http://localhost:${port}`);
+            console.log(`Opening dblens in the default browser...`);
+            opn(`https://local.dblens.app`); // Adjust URL as needed
         });
     }
     catch (error) {
-        console.error("Error connecting to the database:", error.message);
-        console.error("Failed to connect to the database. Exiting...");
+        console.error("Error starting dblens server:", error.message);
         process.exit(1);
     }
 });
-// Call the function to connect to the database
+// Call the function to connect to the database and start the server
 connectToDB();

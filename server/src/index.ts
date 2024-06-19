@@ -81,7 +81,7 @@ const connectToDB = async (): Promise<void> => {
     console.log("Starting dblens server...");
 
     // Path to the static files
-    const staticPath: string = path.join(__dirname, "../../web/out");
+    const staticPath: string = path.join(__dirname, "./out");
 
     // Serve static files from the 'web/out' folder
     app.use(express.static(staticPath));
