@@ -1,11 +1,11 @@
 {
   "name": "dblens",
-  "version": "0.0.1-alpha.5",
+  "version": "0.0.1-alpha.6",
   "main": "start.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "serve ./out",
     "lint": "next lint"
   },
   "bin": {
@@ -32,6 +32,7 @@
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "postcss": "^8",
+    "serve": "^14.2.3",
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
     "uuid": "^9.0.1"

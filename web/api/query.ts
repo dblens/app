@@ -1,5 +1,5 @@
 export const executeSQL = async (queries: string[], id?: string) => {
-  const response = await fetch("/api/execute_pg", {
+  const response = await fetch("http://localhost:3253/api/execute_pg", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
