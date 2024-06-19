@@ -13,27 +13,35 @@ const getColumnNames = (rows: QueryResultRow): ColumnName[] => {
 const SqlDataViewer = ({
   rows,
   loading,
+  viewMode,
 }: {
   rows: QueryResultRow;
   loading: boolean;
+  viewMode: string;
 }) => {
   if (loading) return <h1>Loading...</h1>;
 
-  if (rows instanceof Array)
-    return (
-      <div className="h-2/3 mb-9 w-full max-w-full overflow-auto">
-        <Table
-          {...{
-            columnNames: getColumnNames(rows),
-            tableData: rows,
-          }}
-        />
-      </div>
-    );
   return (
-    <pre className="h-2/3 mb-9 overflow-y-auto bg-gray-700 p-2 text-gray-200 font-mono">
-      {rows && JSON.stringify(rows, null, 2)}
-    </pre>
+    <div className="h-2/3 mb-9 w-full max-w-full overflow-auto">
+      {viewMode === "table" ? (
+        rows instanceof Array ? (
+          <Table
+            {...{
+              columnNames: getColumnNames(rows),
+              tableData: rows,
+            }}
+          />
+        ) : (
+          <pre className="overflow-y-auto bg-gray-700 p-2 text-gray-200 font-mono">
+            {JSON.stringify(rows, null, 2)}
+          </pre>
+        )
+      ) : (
+        <pre className="overflow-y-auto bg-gray-700 p-2 text-gray-200 font-mono">
+          {JSON.stringify(rows, null, 2)}
+        </pre>
+      )}
+    </div>
   );
 };
 

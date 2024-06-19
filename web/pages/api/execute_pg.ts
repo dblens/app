@@ -18,7 +18,9 @@ interface ClientMap {
 }
 let cachedClient = {} as ClientMap;
 
-export async function getPgConnection(connectionString: string): Promise<Client> {
+export async function getPgConnection(
+  connectionString: string
+): Promise<Client> {
   // generate cache key from connectionstring
   const cacheKey = "123456789"; // right now only one client is there, but this is to support multiple clients in future
   console.log(
@@ -67,11 +69,25 @@ async function executeQueries(
     try {
       const result = await client.query(query);
       const duration = process.hrtime(startTime);
-      results.push({
-        status: "SUCCESS",
-        rows: result.rows,
-        duration: duration[0] * 1000 + duration[1] / 1e6, // Convert duration to milliseconds
-      });
+      console.log("result");
+      console.log(JSON.stringify(result, null, 2));
+      // if type of result is array, then rows need to be merged from root level result array
+      if (Array.isArray(result)) {
+        const rows = result.reduce((acc, val) => {
+          return acc.concat(val.rows);
+        }, []);
+        results.push({
+          status: "SUCCESS",
+          rows,
+          duration: duration[0] * 1000 + duration[1] / 1e6, // Convert duration to milliseconds
+        });
+        continue;
+      } else
+        results.push({
+          status: "SUCCESS",
+          rows: result.rows,
+          duration: duration[0] * 1000 + duration[1] / 1e6, // Convert duration to milliseconds
+        });
     } catch (error) {
       console.error("Error executing query:", error);
       results.push({

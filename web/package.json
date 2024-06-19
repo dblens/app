@@ -12,6 +12,7 @@
     "dblens": "./start.js"
   },
   "dependencies": {
+    "@monaco-editor/react": "^4.6.0",
     "dagre": "^0.8.5",
     "next": "14.2.3",
     "open": "^10.1.0",

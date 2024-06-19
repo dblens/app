@@ -1,15 +1,13 @@
 "use client";
 import { QueryResultRow } from "pg";
-import React, { useState, useRef, useEffect } from "react";
-
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import SqlDataViewer from "./SqlDataViewer";
 import PgSession from "../sessions/PgSession";
 import ReactTooltip from "react-tooltip";
 import DbSession from "../sessions/DbSession";
 import { useAppState } from "../state/AppProvider";
 import { hashString } from "@/utils";
-
-// import { v4 as uuidv4 } from "uuid";
+import SqlEditor from "./SqlEditor";
 
 const getSize = (ss?: QueryResultRow[] | string) => {
   if (!ss) return "";
@@ -41,8 +39,9 @@ const SqlExecutor = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [sql, setSql] = useState("SELECT NOW();");
   const [, dispatch] = useAppState();
+  const [viewMode, setViewMode] = useState("table");
 
-  const ctrlRef = useRef<boolean>(false);
+  const sqlRef = useRef(sql);
 
   useEffect(() => {
     // current sql value from text area gets replaced when the user select a SQL value from hostory sidebar
@@ -51,11 +50,16 @@ const SqlExecutor = ({
     }
   }, [selectedSql]);
 
-  const post = async () => {
+  useEffect(() => {
+    sqlRef.current = sql;
+  }, [sql]);
+
+  const post = useCallback(async () => {
+    const currentSql = sqlRef.current;
+    console.log("post", currentSql);
     setLoading(true);
-    console.log(process.env.CONNECTION_STRING);
     session
-      .executeSQL(sql)
+      .executeSQL(currentSql)
       .then((data) => {
         setLoading(false);
         if (data.status) {
@@ -71,14 +75,10 @@ const SqlExecutor = ({
           type: "ADD_HISTORY",
           payload: {
             time: new Date(),
-            sql,
-            uuid: hashString(sql),
+            sql: currentSql,
+            uuid: hashString(currentSql),
           },
         });
-        // eslint-disable-next-line no-console
-        // console.log(status, rows);
-        // if (status === "SUCCESS") setstate({ status, rows, duration });
-        // else setstate({ rows, status, duration });
         return true;
       })
       .catch((e) => {
@@ -88,26 +88,17 @@ const SqlExecutor = ({
           rows: "Failed to execute query",
           duration: 0,
         });
-        // eslint-disable-next-line no-console
         console.error(e);
       });
+  }, [session, dispatch]);
+
+  const toggleViewMode = () => {
+    setViewMode((prevMode) => (prevMode === "table" ? "json" : "table"));
   };
 
   return (
     <div className="flex flex-col p-4 h-full w-full bg-gray-800">
-      <textarea
-        className="h-1/3 w-full font-mono p-2 bg-gray-700 text-gray-200"
-        value={sql}
-        onChange={(e) => setSql(e?.target?.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Control" || e.key === "Meta") ctrlRef.current = true;
-          else if (e.key === "Enter" && ctrlRef.current && !loading) post();
-        }}
-        onKeyUp={(e) => {
-          if (e.key === "Control" || e.key === "Meta") ctrlRef.current = false;
-        }}
-        tabIndex={0}
-      />
+      <SqlEditor sql={sql} setSql={setSql} post={post} loading={loading} />
       <div>
         <div className="flex flex-1 max-h-10 w-full justify-between text-gray-200">
           <div className="align-center text-xs px-2 pt-2">
@@ -136,30 +127,47 @@ const SqlExecutor = ({
               </>
             ) : null}
           </div>
-          <button
-            onClick={post}
-            type="button"
-            disabled={loading}
-            className={`p-2 hover:bg-gray-700 hover:text-gray-100 ${
-              loading && "cursor-wait"
-            }`}
-            data-tip
-            data-for="btn-run"
-          >
-            {loading ? (
-              <span role="img" className="font-mono" aria-label="run_icon">
-                ⚡️
-              </span>
-            ) : (
-              "Run"
-            )}
-          </button>
-          <ReactTooltip id="btn-run" type="info">
-            <span>Tip: Ctrl+ Enter to execute SQL</span>
-          </ReactTooltip>
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={toggleViewMode}
+              className={`p-2 hover:bg-gray-700 hover:text-gray-100`}
+              data-tip
+              data-for="btn-toggle-view"
+            >
+              {viewMode === "table" ? "{}" : "📄"}
+            </button>
+            <ReactTooltip id="btn-toggle-view" type="info">
+              <span> {viewMode === "table" ? "Show JSON" : "Show Table"}</span>
+            </ReactTooltip>
+            <button
+              onClick={post}
+              type="button"
+              disabled={loading}
+              className={`p-2 hover:bg-gray-700 hover:text-gray-100 ${
+                loading && "cursor-wait"
+              }`}
+              data-tip
+              data-for="btn-run"
+            >
+              {loading ? (
+                <span role="img" className="font-mono" aria-label="run_icon">
+                  ⚡️
+                </span>
+              ) : (
+                "Run"
+              )}
+            </button>
+            <ReactTooltip id="btn-run" type="info">
+              <span>Tip: Ctrl+ Enter to execute SQL</span>
+            </ReactTooltip>
+          </div>
         </div>
 
-        <SqlDataViewer rows={state?.rows} loading={loading} />
+        <SqlDataViewer
+          rows={state?.rows}
+          loading={loading}
+          viewMode={viewMode}
+        />
       </div>
     </div>
   );

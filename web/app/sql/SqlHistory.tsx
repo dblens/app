@@ -10,8 +10,16 @@ const SqlHistory = ({
 }) => {
   const [state, dispatch] = useAppState();
   useEffect(() => {
-    if (localStorage)
-      localStorage.setItem("SQL_HISTORY", JSON.stringify(state.history));
+    if (localStorage) {
+      const historyWithTimestamps = state?.history?.map((item) => ({
+        ...item,
+        time: new Date(item.time).toISOString(),
+      }));
+      localStorage.setItem(
+        "SQL_HISTORY",
+        JSON.stringify(historyWithTimestamps)
+      );
+    }
   }, [state.history]);
 
   return (

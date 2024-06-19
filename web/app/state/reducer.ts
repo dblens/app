@@ -34,12 +34,28 @@ export function appReducer(
       return { ...state, session: undefined };
     case "SET_HISTORY":
       return { ...state, history: action.payload };
-    case "ADD_HISTORY":
-      if (action?.payload?.sql === state?.history?.[0]?.sql) return state;
-      return {
-        ...state,
-        history: [action.payload, ...(state?.history ?? [])],
-      };
+    case "ADD_HISTORY": {
+      const history = state.history ?? [];
+      const existingHistoryIndex = history.findIndex(
+        (item) => item.sql === action.payload.sql
+      );
+
+      if (existingHistoryIndex !== -1) {
+        const updatedHistory = history.map((item, index) =>
+          index === existingHistoryIndex ? { ...item, time: new Date() } : item
+        );
+
+        return {
+          ...state,
+          history: updatedHistory,
+        };
+      } else {
+        return {
+          ...state,
+          history: [action.payload, ...history],
+        };
+      }
+    }
     case "REMOVE_HISTORY":
       const newHistory = [...(state.history ?? [])];
       newHistory?.splice(action.payload, 1);
