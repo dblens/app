@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
+const isStaticBuild = process.env.IS_STATIC_BUILD === "true"; // Use a custom environment variable
 const nextConfig = {
-  output: 'export',
-  distDir: "out", // This is the default value, so it's optional to specify if 'out' is desired
+  ...(isStaticBuild ? { output: "export", distDir: "out" } : {}),
 };
 
 export default nextConfig;
