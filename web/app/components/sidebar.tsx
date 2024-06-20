@@ -48,8 +48,14 @@ const Sidebar = () => {
   const router = useRouter();
 
   // Determine the selected tab based on the current path
-  const selectedTab: any = "SQL";
-  // const selectedTab: any = pathname?.includes("/sql") ? "SQL" : "SQL";
+  let selectedTab: string = "SQL";
+  if (pathname?.includes("/sql")) {
+    selectedTab = "SQL";
+  }else if (pathname?.includes("/overview")) {
+    selectedTab = "OVERVIEW";
+  }else if (pathname?.includes("/overview")) {
+    selectedTab = "OVERVIEW";
+  }
 
   const setSelectedTab = (ss: string) => {
     router.push(`/${ss.toLowerCase()}`);
@@ -96,8 +102,7 @@ const Sidebar = () => {
           selectedTab === "OVERVIEW" &&
           "border-l-4 border-green-600 text-green-600 font-bold"
         }`}
-        onClick={() => setSelectedTab("")}
-        // onClick={() => setSelectedTab("OVERVIEW")}
+        onClick={() => setSelectedTab("OVERVIEW")}
       >
         <OverViewIcon />
       </button>

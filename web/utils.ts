@@ -14,3 +14,14 @@ export const hashString = (str: string, seed = 0) => {
 
   return 4294967296 * (2097151 & h2) + (h1 >>> 0);
 };
+
+export const niceBytes = (x: number) => {
+  const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+  let l = 0;
+  let n = parseInt(x as any, 10) || 0;
+  // eslint-disable-next-line no-plusplus
+  while (n >= 1024 && ++l) {
+    n /= 1024;
+  }
+  return `${n.toFixed(n < 10 && l > 0 ? 1 : 0)} ${units[l]}`;
+};
