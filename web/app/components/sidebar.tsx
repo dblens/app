@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const OverViewIcon = () => (
   <svg
@@ -45,11 +45,15 @@ const TableIcon = () => (
 
 const Sidebar = () => {
   const pathname = usePathname();
+  const router = useRouter();
 
   // Determine the selected tab based on the current path
-  const selectedTab:any = pathname?.includes("/sql") ? "SQL" : "OVERVIEW";
+  const selectedTab: any = "SQL";
+  // const selectedTab: any = pathname?.includes("/sql") ? "SQL" : "SQL";
 
-  const setSelectedTab = (ss: string) => {};
+  const setSelectedTab = (ss: string) => {
+    router.push(`/${ss.toLowerCase()}`);
+  };
 
   const disconnect = async () => {
     // if (confirm('Are you sure want to disconnect from the database?')) {
@@ -92,7 +96,8 @@ const Sidebar = () => {
           selectedTab === "OVERVIEW" &&
           "border-l-4 border-green-600 text-green-600 font-bold"
         }`}
-        onClick={() => setSelectedTab("OVERVIEW")}
+        onClick={() => setSelectedTab("")}
+        // onClick={() => setSelectedTab("OVERVIEW")}
       >
         <OverViewIcon />
       </button>
@@ -112,7 +117,8 @@ const Sidebar = () => {
           selectedTab === "TABLE" &&
           "border-l-4 border-green-600 text-green-600 font-bold"
         }`}
-        onClick={() => setSelectedTab("TABLE")}
+        onClick={() => setSelectedTab("")}
+        // onClick={() => setSelectedTab("TABLE")}
       >
         <TableIcon />
       </button>
@@ -122,7 +128,8 @@ const Sidebar = () => {
           selectedTab === "ERD" &&
           "border-l-4 border-green-600 text-green-600 font-bold"
         }`}
-        onClick={() => setSelectedTab("ERD")}
+        onClick={() => setSelectedTab("")}
+        // onClick={() => setSelectedTab("ERD")}
       >
         ER
       </button>
@@ -132,7 +139,8 @@ const Sidebar = () => {
           selectedTab === "SETTINGS" &&
           "border-l-4 border-green-600 text-green-600 font-bold"
         }`}
-        onClick={() => setSelectedTab("SETTINGS")}
+        onClick={() => setSelectedTab("")}
+        // onClick={() => setSelectedTab("SETTINGS")}
       >
         <span
           role="img"

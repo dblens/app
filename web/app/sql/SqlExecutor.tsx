@@ -8,6 +8,7 @@ import DbSession from "../sessions/DbSession";
 import { useAppState } from "../state/AppProvider";
 import { hashString } from "@/utils";
 import SqlEditor from "./SqlEditor";
+import CopyBtn from "../components/atoms/CopyBtn";
 
 const getSize = (ss?: QueryResultRow[] | string) => {
   if (!ss) return "";
@@ -132,6 +133,7 @@ const SqlExecutor = ({
             ) : null}
           </div>
           <div className="flex items-center space-x-2">
+            <CopyBtn textToCopy={state?.rows} />
             <button
               onClick={toggleViewMode}
               className={`p-2 hover:bg-gray-700 hover:text-gray-100`}

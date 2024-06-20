@@ -36,10 +36,12 @@ jobs:
 
       - name: Install dependencies
         run: |
+          cd electron
           yarn install --prefer-offline
 
       - name: Install dependencies
         run: |
+          cd electron
           yarn install
 
       - name: Publish releases
@@ -52,4 +54,5 @@ jobs:
           # This is used for uploading release assets to github
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          cd electron
           yarn postinstall && yarn build && yarn electron-builder --publish always --win --mac --linux
