@@ -33,6 +33,7 @@ const SqlExecutor = ({
 }) => {
   const [state, setstate] = useState({
     status: "",
+    description: null as any,
     rows: null as QueryResultRow[] | string | null,
     duration: 0,
   });
@@ -65,6 +66,7 @@ const SqlExecutor = ({
         if (data.status) {
           console.log(data);
           setstate({
+            description: data?.description,
             status: data?.status,
             rows: data?.rows ?? null,
             duration: data?.duration ?? 0,
@@ -85,7 +87,9 @@ const SqlExecutor = ({
         setLoading(false);
         setstate({
           status: "ERROR",
-          rows: "Failed to execute query",
+          rows: [],
+          description:
+            "Failed to execute query, check your command is still running",
           duration: 0,
         });
         console.error(e);
@@ -106,7 +110,7 @@ const SqlExecutor = ({
             <span
               className={`px-2 ${
                 state?.status === "SUCCESS" && "text-green-600"
-              }`}
+              } ${state?.status === "ERROR" && "text-red-600"}`}
             >
               {state?.status ?? ""}
             </span>
@@ -164,6 +168,8 @@ const SqlExecutor = ({
         </div>
 
         <SqlDataViewer
+          description={state?.description}
+          status={state?.status}
           rows={state?.rows}
           loading={loading}
           viewMode={viewMode}

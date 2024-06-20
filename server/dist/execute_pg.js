@@ -41,6 +41,7 @@ function executeQueries(client, queries) {
                 console.error("Error executing query:", error);
                 results.push({
                     status: "ERROR",
+                    description: error,
                     rows: [],
                     duration: 0,
                 });
@@ -52,11 +53,14 @@ function executeQueries(client, queries) {
 const executePgHandler = (client) => (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { queries } = req.body;
     // console.log(queries)
+    const results = yield executeQueries(client, queries);
     try {
-        const results = yield executeQueries(client, queries);
         res
             .status(200)
-            .json({ message: "Queries executed successfully", data: results });
+            .json({
+            message: "Queries execution completed, please check individual query status from the results",
+            data: results,
+        });
         return;
     }
     catch (error) {
@@ -64,9 +68,6 @@ const executePgHandler = (client) => (req, res) => __awaiter(void 0, void 0, voi
         res
             .status(500)
             .json({ message: "Error executing queries", error: error === null || error === void 0 ? void 0 : error.message });
-    }
-    finally {
-        // await client.end();
     }
 });
 exports.executePgHandler = executePgHandler;

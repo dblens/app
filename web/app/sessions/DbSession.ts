@@ -1,9 +1,10 @@
-import { QueryResultRow } from 'pg';
+import { QueryResultRow } from "pg";
 
 export type SqlExecReponseType<T> = {
   status: string;
   rows: T;
   duration: number;
+  description?: string;
 };
 export type TableType = {
   index?: number;
@@ -12,7 +13,7 @@ export type TableType = {
 };
 export type TableDataType = Record<string, unknown>;
 
-export type SortType = 'asc' | 'desc' | 'none';
+export type SortType = "asc" | "desc" | "none";
 
 export type ColumnName = {
   column_name: string;

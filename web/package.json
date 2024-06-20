@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "build:static": "cross-env IS_STATIC_BUILD=true next build",
+    "build:": "cross-env IS_STATIC_BUILD=true next build",
+    "build:setup:assets": "npm run build:static && rm -rf ../server/dist/out && mv out ../server/dist/",
     "start": "next start",
     "start:static": "serve ./out",
     "lint": "next lint"

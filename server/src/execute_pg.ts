@@ -4,6 +4,7 @@ import { Request, Response } from "express";
 type QueryResult = {
   status: string;
   rows: any[];
+  description?: any;
   duration: number;
 };
 
@@ -45,6 +46,7 @@ async function executeQueries(
       console.error("Error executing query:", error);
       results.push({
         status: "ERROR",
+        description: error,
         rows: [],
         duration: 0,
       });
@@ -59,18 +61,20 @@ export const executePgHandler =
     const { queries } = req.body;
     // console.log(queries)
 
+    const results = await executeQueries(client, queries);
     try {
-      const results = await executeQueries(client, queries);
       res
         .status(200)
-        .json({ message: "Queries executed successfully", data: results });
-        return 
+        .json({
+          message:
+            "Queries execution completed, please check individual query status from the results",
+          data: results,
+        });
+      return;
     } catch (error: any) {
       console.error("Error executing queries:", error);
       res
         .status(500)
         .json({ message: "Error executing queries", error: error?.message });
-    } finally {
-      // await client.end();
     }
   };
