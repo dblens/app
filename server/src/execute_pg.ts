@@ -25,35 +25,91 @@ async function executeQueries(
     try {
       const result = await client.query(query);
       const duration = process.hrtime(startTime);
-      // if type of result is array, then rows need to be merged from root level result array
+
       if (Array.isArray(result)) {
-        const rows = result.reduce((acc, val) => {
-          return acc.concat(val.rows);
-        }, []);
+        const rows = result.reduce((acc, val) => acc.concat(val.rows), []);
         results.push({
           status: "SUCCESS",
           rows,
           duration: duration[0] * 1000 + duration[1] / 1e6, // Convert duration to milliseconds
         });
-        continue;
-      } else
+      } else {
         results.push({
           status: "SUCCESS",
           rows: result.rows,
           duration: duration[0] * 1000 + duration[1] / 1e6, // Convert duration to milliseconds
         });
+      }
     } catch (error) {
       console.error("Error executing query:", error);
-      results.push({
-        status: "ERROR",
-        description: error,
-        rows: [],
-        duration: 0,
-      });
+
+      if (isConnectionError(error)) {
+        console.log("Connection error detected. Retrying query...");
+        try {
+          // Reconnect the client
+          client = await getPgConnection();
+          const result = await client.query(query);
+          const duration = process.hrtime(startTime);
+
+          if (Array.isArray(result)) {
+            const rows = result.reduce((acc, val) => acc.concat(val.rows), []);
+            results.push({
+              status: "SUCCESS",
+              rows,
+              duration: duration[0] * 1000 + duration[1] / 1e6, // Convert duration to milliseconds
+            });
+          } else {
+            results.push({
+              status: "SUCCESS",
+              rows: result.rows,
+              duration: duration[0] * 1000 + duration[1] / 1e6, // Convert duration to milliseconds
+            });
+          }
+        } catch (retryError) {
+          console.error("Error executing query on retry:", retryError);
+          results.push({
+            status: "ERROR",
+            description: retryError,
+            rows: [],
+            duration: 0,
+          });
+        }
+      } else {
+        results.push({
+          status: "ERROR",
+          description: error,
+          rows: [],
+          duration: 0,
+        });
+      }
     }
   }
 
   return results;
+}
+
+// Utility function to check for connection errors
+function isConnectionError(error: any): boolean {
+  // Implement logic to check if the error is a connection error
+  // This could be based on error codes, messages, or other properties
+  // Example:
+  // return error.code === 'ECONNRESET' || error.code === 'ENOTFOUND';
+  return (
+    error.code === "ECONNRESET" ||
+    error.code === "ENOTFOUND" ||
+    error.message.includes("Connection terminated")
+  );
+}
+
+// Dummy getPgConnection function for illustration
+async function getPgConnection(): Promise<Client> {
+  // Implement your logic to establish and return a new client connection
+  // Example:
+  const newClient = new Client({
+    connectionString: process.env.DATABASE_URL,
+  });
+  await newClient.connect();
+  return newClient;
 }
 
 export const executePgHandler =
@@ -63,13 +119,11 @@ export const executePgHandler =
 
     const results = await executeQueries(client, queries);
     try {
-      res
-        .status(200)
-        .json({
-          message:
-            "Queries execution completed, please check individual query status from the results",
-          data: results,
-        });
+      res.status(200).json({
+        message:
+          "Queries execution completed, please check individual query status from the results",
+        data: results,
+      });
       return;
     } catch (error: any) {
       console.error("Error executing queries:", error);

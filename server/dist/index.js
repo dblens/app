@@ -15,9 +15,10 @@ const express = require("express");
 const path = require("path");
 const minimist = require("minimist");
 const pg_1 = require("pg");
+const fs = require("fs");
 const execute_pg_1 = require("./execute_pg");
 const cors = require("cors"); // Import CORS middleware
-const opn = require('opn');
+const opn = require("opn");
 const app = express();
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -30,10 +31,10 @@ if (!connectionString) {
     process.exit(1);
 }
 let cachedClient = {};
-function getPgConnection(connectionString) {
+function getPgConnection({ noCache = false, connectionString, }) {
     return __awaiter(this, void 0, void 0, function* () {
         const cacheKey = "123456789"; // Generate cache key from connection string
-        if (cachedClient[cacheKey]) {
+        if (cachedClient[cacheKey] && !noCache) {
             // console.log("Using cached PostgreSQL connection.");
             return cachedClient[cacheKey];
         }
@@ -63,6 +64,13 @@ function getPgConnection(connectionString) {
         }
         // Cache the client connection
         cachedClient[cacheKey] = client;
+        // Add error handling for the client
+        client.on("error", (err) => __awaiter(this, void 0, void 0, function* () {
+            console.error("PostgreSQL client error:", err.message);
+            console.log("Reconnecting to PostgreSQL...");
+            delete cachedClient[cacheKey]; // Remove the faulty client from cache
+            cachedClient[cacheKey] = yield getPgConnection({ connectionString }); // Reconnect
+        }));
         return client;
     });
 }
@@ -71,7 +79,7 @@ const args = minimist(pArgs);
 const port = args.port || process.env.PORT || 3253;
 // Function to connect to the PostgreSQL database and start the server
 const connectToDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    const client = yield getPgConnection(connectionString);
+    const client = yield getPgConnection({ connectionString });
     try {
         // console.log("Database connection established successfully.");
         console.log("Starting dblens server...");
@@ -83,9 +91,15 @@ const connectToDB = () => __awaiter(void 0, void 0, void 0, function* () {
         app.get("/", (req, res) => {
             res.sendFile(path.join(staticPath, "index.html"));
         });
-        // Serve index.html for all other routes (to support client-side routing)
+        // Dynamic route to serve anystring.html if present, otherwise 404
         app.get("*", (req, res) => {
-            res.sendFile(path.join(staticPath, "index.html"));
+            const requestedFile = path.join(staticPath, `${req.path.substring(1)}.html`);
+            if (fs.existsSync(requestedFile)) {
+                res.sendFile(requestedFile);
+            }
+            else {
+                res.status(404).sendFile(path.join(staticPath, "404.html"));
+            }
         });
         // API endpoint for executing PostgreSQL queries
         app.post("/api/execute_pg", (0, execute_pg_1.executePgHandler)(client));
@@ -103,3 +117,20 @@ const connectToDB = () => __awaiter(void 0, void 0, void 0, function* () {
 });
 // Call the function to connect to the database and start the server
 connectToDB();
+// Gracefully handle process exit
+process.on("SIGINT", () => {
+    console.log("SIGINT received, closing PostgreSQL connection and shutting down.");
+    Object.values(cachedClient).forEach((client) => __awaiter(void 0, void 0, void 0, function* () {
+        if (client)
+            yield client.end();
+    }));
+    process.exit(0);
+});
+process.on("SIGTERM", () => {
+    console.log("SIGTERM received, closing PostgreSQL connection and shutting down.");
+    Object.values(cachedClient).forEach((client) => __awaiter(void 0, void 0, void 0, function* () {
+        if (client)
+            yield client.end();
+    }));
+    process.exit(0);
+});
