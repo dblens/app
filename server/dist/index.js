@@ -35,7 +35,7 @@ function getPgConnection({ noCache = false, connectionString, }) {
     return __awaiter(this, void 0, void 0, function* () {
         const cacheKey = "123456789"; // Generate cache key from connection string
         if (cachedClient[cacheKey] && !noCache) {
-            // console.log("Using cached PostgreSQL connection.");
+            console.log("Using cached PostgreSQL connection.");
             return cachedClient[cacheKey];
         }
         // console.log("Establishing new PostgreSQL connection...");
@@ -102,7 +102,7 @@ const connectToDB = () => __awaiter(void 0, void 0, void 0, function* () {
             }
         });
         // API endpoint for executing PostgreSQL queries
-        app.post("/api/execute_pg", (0, execute_pg_1.executePgHandler)(client));
+        app.post("/api/execute_pg", execute_pg_1.executePgHandler);
         // Start the Express server
         const server = app.listen(port, () => {
             console.log(`Server is running on http://localhost:${port}`);

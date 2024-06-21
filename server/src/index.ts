@@ -118,7 +118,7 @@ const connectToDB = async (): Promise<void> => {
     });
 
     // API endpoint for executing PostgreSQL queries
-    app.post("/api/execute_pg", executePgHandler(client));
+    app.post("/api/execute_pg", executePgHandler);
 
     // Start the Express server
     const server = app.listen(port, () => {

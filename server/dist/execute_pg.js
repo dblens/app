@@ -10,7 +10,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.executePgHandler = void 0;
-const pg_1 = require("pg");
+const _1 = require(".");
 function executeQueries(client, queries) {
     return __awaiter(this, void 0, void 0, function* () {
         const results = [];
@@ -41,7 +41,7 @@ function executeQueries(client, queries) {
                     console.log("Connection error detected. Retrying query...");
                     try {
                         // Reconnect the client
-                        client = yield getPgConnection();
+                        client = yield (0, _1.getPgConnection)({});
                         const result = yield client.query(query);
                         const duration = process.hrtime(startTime);
                         if (Array.isArray(result)) {
@@ -91,23 +91,13 @@ function isConnectionError(error) {
     // return error.code === 'ECONNRESET' || error.code === 'ENOTFOUND';
     return (error.code === "ECONNRESET" ||
         error.code === "ENOTFOUND" ||
+        error.code === "EHOSTUNREACH" ||
         error.message.includes("Connection terminated"));
 }
-// Dummy getPgConnection function for illustration
-function getPgConnection() {
-    return __awaiter(this, void 0, void 0, function* () {
-        // Implement your logic to establish and return a new client connection
-        // Example:
-        const newClient = new pg_1.Client({
-            connectionString: process.env.DATABASE_URL,
-        });
-        yield newClient.connect();
-        return newClient;
-    });
-}
-const executePgHandler = (client) => (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const executePgHandler = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { queries } = req.body;
     // console.log(queries)
+    const client = yield (0, _1.getPgConnection)({});
     const results = yield executeQueries(client, queries);
     try {
         res.status(200).json({

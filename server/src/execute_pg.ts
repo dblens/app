@@ -1,5 +1,6 @@
 import { Client } from "pg";
 import { Request, Response } from "express";
+import { getPgConnection } from ".";
 
 type QueryResult = {
   status: string;
@@ -47,7 +48,7 @@ async function executeQueries(
         console.log("Connection error detected. Retrying query...");
         try {
           // Reconnect the client
-          client = await getPgConnection();
+          client = await getPgConnection({});
           const result = await client.query(query);
           const duration = process.hrtime(startTime);
 
@@ -97,38 +98,29 @@ function isConnectionError(error: any): boolean {
   return (
     error.code === "ECONNRESET" ||
     error.code === "ENOTFOUND" ||
+    error.code === "EHOSTUNREACH" ||
     error.message.includes("Connection terminated")
   );
 }
 
-// Dummy getPgConnection function for illustration
-async function getPgConnection(): Promise<Client> {
-  // Implement your logic to establish and return a new client connection
-  // Example:
-  const newClient = new Client({
-    connectionString: process.env.DATABASE_URL,
-  });
-  await newClient.connect();
-  return newClient;
-}
+export const executePgHandler = async (req: Request, res: Response) => {
+  const { queries } = req.body;
+  // console.log(queries)
 
-export const executePgHandler =
-  (client: Client) => async (req: Request, res: Response) => {
-    const { queries } = req.body;
-    // console.log(queries)
+  const client = await getPgConnection({});
 
-    const results = await executeQueries(client, queries);
-    try {
-      res.status(200).json({
-        message:
-          "Queries execution completed, please check individual query status from the results",
-        data: results,
-      });
-      return;
-    } catch (error: any) {
-      console.error("Error executing queries:", error);
-      res
-        .status(500)
-        .json({ message: "Error executing queries", error: error?.message });
-    }
-  };
+  const results = await executeQueries(client, queries);
+  try {
+    res.status(200).json({
+      message:
+        "Queries execution completed, please check individual query status from the results",
+      data: results,
+    });
+    return;
+  } catch (error: any) {
+    console.error("Error executing queries:", error);
+    res
+      .status(500)
+      .json({ message: "Error executing queries", error: error?.message });
+  }
+};
