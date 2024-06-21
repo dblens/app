@@ -142,13 +142,13 @@ const DiskUsageSection = ({ session }: { session: DbSession }) => {
                 setChartType={setChartType}
               />
               <TableSize
-                percentage={getPercentage(state, 'tableData')}
+                // percentage={getPercentage(state, 'tableData')}
                 data={state?.tableData}
                 chartType={chartType}
                 setChartType={setChartType}
               />
               <TotalIndexSize
-                percentage={getPercentage(state, 'indexData')}
+                // percentage={getPercentage(state, 'indexData')}
                 data={state?.indexData}
                 chartType={chartType}
                 setChartType={setChartType}

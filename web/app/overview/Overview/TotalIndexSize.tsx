@@ -10,7 +10,7 @@ const TotalIndexSize = ({
   chartType,
   setChartType,
 }: {
-  percentage: ReactText;
+  percentage?: ReactText;
   data: DiskUsageStateType["totalTableData"];
   chartType: string;
   setChartType: (v: string) => void;
