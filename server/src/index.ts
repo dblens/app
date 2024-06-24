@@ -13,8 +13,31 @@ const app = express();
 // Middleware to parse JSON bodies
 app.use(express.json());
 
-// Enable CORS for all origins
-app.use(cors());
+
+// Define the allowed origins
+const allowedOrigins = [/^http:\/\/localhost(:\d+)?$/, /\.dblens\.app$/];
+
+// Configure CORS
+app.use(cors({
+    origin: function (origin, callback) {
+        // If no origin (e.g. mobile apps or curl requests), allow it
+        if (!origin) return callback(null, true);
+        
+        // Check if the origin matches any of the allowed origins
+        const isAllowed = allowedOrigins.some(pattern => {
+            if (pattern instanceof RegExp) {
+                return pattern.test(origin);
+            }
+            return pattern === origin;
+        });
+
+        if (isAllowed) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    }
+}));
 
 const pArgs: string[] = process.argv.slice(2);
 const connectionString: string | null = pArgs[0] || null; // The first argument passed
