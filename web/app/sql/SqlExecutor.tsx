@@ -28,9 +28,11 @@ const session = new PgSession("PG");
 const SqlExecutor = ({
   session,
   selectedSql,
+  activeTabId,
 }: {
   session: DbSession;
   selectedSql?: string;
+  activeTabId?: number;
 }) => {
   const [state, setstate] = useState({
     status: "",
@@ -51,6 +53,27 @@ const SqlExecutor = ({
       setSql(selectedSql);
     }
   }, [selectedSql]);
+
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      localStorage.setItem(`sql_${activeTabId}`, sql);
+    }, 500);
+
+    return () => clearTimeout(debounce);
+  }, [sql]);
+
+  useEffect(() => {
+    const sql = localStorage.getItem(`sql_${activeTabId}`);
+    if (sql) {
+      setSql(sql);
+      setstate({
+        status: "",
+        description: null as any,
+        rows: null as QueryResultRow[] | string | null,
+        duration: 0,
+      });
+    }
+  }, [activeTabId]);
 
   useEffect(() => {
     sqlRef.current = sql;

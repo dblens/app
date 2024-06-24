@@ -1,15 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { ReactText, useEffect, useState } from 'react';
+import React, { ReactText, useEffect, useState } from "react";
 
-import { QueryResultRow } from 'pg';
+import { QueryResultRow } from "pg";
 
-import TotalTableSize from './TotalTableSize';
-import TableSize from './TableSize';
-import TotalIndexSize from './TotalIndexSize';
-import DbSession, { SqlExecReponseType } from '../../sessions/DbSession';
-import { DiskUsageStateType } from './types';
-import PieChart from './PieChart';
-import BarChart from './BarChart';
+import TotalTableSize from "./TotalTableSize";
+import TableSize from "./TableSize";
+import TotalIndexSize from "./TotalIndexSize";
+import DbSession, { SqlExecReponseType } from "../../sessions/DbSession";
+import { DiskUsageStateType } from "./types";
+import PieChart from "./PieChart";
+import BarChart from "./BarChart";
+import { calculateTotalBytes } from "@/utils";
 
 const totalTableSize = `SELECT c.relname AS name,
 pg_size_pretty(pg_total_relation_size(c.oid)) AS size
@@ -75,22 +76,21 @@ const Loading = () => (
 
 const getPercentage = (
   state: DiskUsageStateType,
-  type: 'totalTableData' | 'tableData' | 'indexData'
+  type: "tableData" | "indexData"
 ) => {
-  const totalSize =
-    state?.[type]?.rows?.reduce((p, c) => p + Number.parseInt(c.size, 10), 0) ??
-    0;
-  const totalTableData =
-    state?.totalTableData?.rows?.reduce(
-      (p, c) => p + Number.parseInt(c.size, 10),
-      0
-    ) ?? 0;
+  const totalSize = calculateTotalBytes(
+    state?.[type]?.rows?.map(({ size }) => size)
+  );
+
+  const totalTableData = calculateTotalBytes(
+    state?.totalTableData?.rows?.map(({ size }) => size)
+  );
   return ((totalSize / totalTableData) * 100 ?? 0).toFixed(2);
 };
 
 const DiskUsageSection = ({ session }: { session: DbSession }) => {
   const [state, setState] = useState<DiskUsageStateType>({});
-  const [chartType, setChartType] = useState<string>('INDEX');
+  const [chartType, setChartType] = useState<string>("INDEX");
 
   useEffect(() => {
     const getdata = async () => {
@@ -142,13 +142,13 @@ const DiskUsageSection = ({ session }: { session: DbSession }) => {
                 setChartType={setChartType}
               />
               <TableSize
-                // percentage={getPercentage(state, 'tableData')}
+                percentage={getPercentage(state, "tableData")}
                 data={state?.tableData}
                 chartType={chartType}
                 setChartType={setChartType}
               />
               <TotalIndexSize
-                // percentage={getPercentage(state, 'indexData')}
+                percentage={getPercentage(state, 'indexData')}
                 data={state?.indexData}
                 chartType={chartType}
                 setChartType={setChartType}

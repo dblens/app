@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Sidebar from "./components/sidebar";
 import Titlebar from "./components/TitleBar";
+import { CSPostHogProvider } from "./providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,17 +19,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <div className="w-screen h-screen max-h-screen text-gray-800 focus:font-bold focus:outline-none">
-          <Titlebar />
-          <div className="flex w-full h-full">
-            <Sidebar />
-            <div className="bg-gray-100 w-full max-w-full h-full max-h-full flex flex-row overflow-hidden font-mono">
-              {children}
+      <CSPostHogProvider>
+        <body className={inter.className}>
+          <div className="w-screen h-screen max-h-screen text-gray-800 focus:font-bold focus:outline-none">
+            <Titlebar />
+            <div className="flex w-full h-full">
+              <Sidebar />
+              <div className="bg-gray-100 w-full max-w-full h-full max-h-full flex flex-row overflow-hidden font-mono">
+                {children}
+              </div>
             </div>
           </div>
-        </div>
-      </body>
+        </body>
+      </CSPostHogProvider>
     </html>
   );
 }
