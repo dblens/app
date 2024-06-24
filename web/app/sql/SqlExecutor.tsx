@@ -97,14 +97,15 @@ const SqlExecutor = ({
           });
         }
 
-        dispatch({
-          type: "ADD_HISTORY",
-          payload: {
-            time: new Date(),
-            sql: currentSql,
-            uuid: hashString(currentSql),
-          },
-        });
+        if (data.status === "SUCCESS")
+          dispatch({
+            type: "ADD_HISTORY",
+            payload: {
+              time: new Date(),
+              sql: currentSql,
+              uuid: hashString(currentSql),
+            },
+          });
         return true;
       })
       .catch((e) => {
