@@ -3,6 +3,7 @@ import SqlExecutor from "./SqlExecutor";
 import SqlHistory from "./SqlHistory";
 import SideHeader from "../components/atoms/SideHeader";
 import PgSession from "../sessions/PgSession";
+import Tabs from "./Tabs";
 
 const SqlScreen = () => {
   const [tabs, setTabs] = useState([{ id: 1, title: "Query 1" }]);
@@ -10,10 +11,14 @@ const SqlScreen = () => {
   const [selectedSql, setSelectedSql] = useState<string>("");
   const session = new PgSession("PG");
 
+  // Track maximum tab id separately
+  const [maxTabId, setMaxTabId] = useState(1);
+
   const addTab = () => {
-    const newTabId = tabs.length + 1;
+    const newTabId = maxTabId + 1; // Use maxTabId to generate new id
     setTabs([...tabs, { id: newTabId, title: `Query ${newTabId}` }]);
     setActiveTabId(newTabId);
+    setMaxTabId(newTabId); // Update maxTabId
   };
 
   const removeTab = (id) => {
@@ -35,6 +40,7 @@ const SqlScreen = () => {
     }
   }, [activeTabId]);
 
+  // Adjustments can be made here if needed, such as handling SQL changes
   // const handleSqlChange = (newSql) => {
   //   setSelectedSql(newSql);
   //   localStorage.setItem(`sql_${activeTabId}`, newSql);
@@ -47,36 +53,13 @@ const SqlScreen = () => {
         <SqlHistory setSelectedSql={setSelectedSql} />
       </div>
       <div className="border-l border-gray-600 sql-dataview-wrapper w-full">
-        <div className="tabs flex p-2">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              className={`tab px-4 py-2 ${
-                tab.id === activeTabId
-                  ? "bg-gray-700 text-white"
-                  : "bg-gray-600 text-gray-300"
-              }`}
-              onClick={() => setActiveTabId(tab.id)}
-            >
-              {tab.title}
-              <span
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeTab(tab.id);
-                }}
-                className="ml-2 text-red-500 cursor-pointer"
-              >
-                x
-              </span>
-            </button>
-          ))}
-          <button
-            onClick={addTab}
-            className="px-4 py-2 bg-gray-600 text-gray-300"
-          >
-            +
-          </button>
-        </div>
+        <Tabs
+          tabs={tabs}
+          activeTabId={activeTabId}
+          setActiveTabId={setActiveTabId}
+          removeTab={removeTab}
+          addTab={addTab}
+        />
         <SqlExecutor
           session={session}
           selectedSql={selectedSql}

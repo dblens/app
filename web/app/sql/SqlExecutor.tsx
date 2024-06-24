@@ -125,7 +125,7 @@ const SqlExecutor = ({
   };
 
   return (
-    <div className="flex flex-col p-4 h-full w-full bg-gray-800">
+    <div className="flex flex-col pl-2 h-full w-full bg-gray-800">
       <SqlEditor sql={sql} setSql={setSql} post={post} loading={loading} />
       <div>
         <div className="flex flex-1 max-h-10 w-full justify-between text-gray-200">
