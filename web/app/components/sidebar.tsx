@@ -1,7 +1,8 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 
 import { usePathname, useRouter } from "next/navigation";
+import PgSession from "../sessions/PgSession";
 
 const OverViewIcon = () => (
   <svg
@@ -42,18 +43,39 @@ const TableIcon = () => (
     <path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18" />
   </svg>
 );
+let counter = 0;
 
 const Sidebar = () => {
   const pathname = usePathname();
   const router = useRouter();
 
+  useEffect(() => {
+    counter++;
+    if (counter == 1) {
+      const session = new PgSession("PG");
+      session
+        .executeSQL("SELECT 1;")
+        .then((_) => {
+          // request resolved from the localserver, do nothing 
+          // console.log(_);
+        })
+        .catch((err) => {
+          alert(
+            `Looks like you are not connected to the database. Please connect to the database by executing  the following from terminal 
+npx dblens <postgres_connection_string>`
+          );
+          console.error(err);
+        });
+    }
+  }, []);
+
   // Determine the selected tab based on the current path
   let selectedTab: string = "SQL";
   if (pathname?.includes("/sql")) {
     selectedTab = "SQL";
-  }else if (pathname?.includes("/overview")) {
+  } else if (pathname?.includes("/overview")) {
     selectedTab = "OVERVIEW";
-  }else if (pathname?.includes("/overview")) {
+  } else if (pathname?.includes("/overview")) {
     selectedTab = "OVERVIEW";
   }
 
