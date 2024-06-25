@@ -23,7 +23,7 @@ const SqlHistory = ({
   }, [state.history]);
 
   return (
-    <ul className="h-full overflow-auto p-2">
+    <ul className="h-full overflow-auto p-2" data-ph-no-capture>
       {state?.history?.map((i, ix) => (
         <li className="w-full text-left hover:bg-gray-700 flex" key={i?.uuid}>
           <button
