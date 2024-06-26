@@ -9,7 +9,7 @@ export type SqlExecReponseType<T> = {
 export type TableType = {
   index?: number;
   table_name: string;
-  table_type?: string;
+  table_type: string;
 };
 export type TableDataType = Record<string, unknown>;
 

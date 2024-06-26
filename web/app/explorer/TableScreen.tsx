@@ -11,7 +11,7 @@ const TableScreen = ({ session }: { session: DbSession }) => {
   const [selectedSchema, setSelectedSchema] = useState<string>();
 
   const [tables, settables] = useState<TableType[]>([]);
-  const [selectedTable, setSelectedTable] = useState<TableType>();
+  const [selectedTable, setSelectedTable] = useState<TableType>({} as any);
 
   useEffect(() => {
     session
