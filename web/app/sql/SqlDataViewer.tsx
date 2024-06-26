@@ -10,6 +10,25 @@ const getColumnNames = (rows: QueryResultRow): ColumnName[] => {
   }));
 };
 
+const CodeViewer = ({
+  code,
+  mode = "code",
+}: {
+  code: string;
+  mode?: "code" | "error";
+}) => {
+  return (
+    <pre
+      className={`overflow-auto bg-gray-700 p-2 font-mono max-w-2/3 ${
+        code == "error" ? "text-red-200" : "text-gray-200"
+      }`}
+      style={{maxWidth: "100%"}}
+    >
+      {JSON.stringify(code, null, 2)}
+    </pre>
+  );
+};
+
 const SqlDataViewer = ({
   description,
   status,
@@ -25,15 +44,14 @@ const SqlDataViewer = ({
 }) => {
   if (loading) return <h1>Loading...</h1>;
   if (status == "ERROR") {
-    return (
-      <pre className="overflow-y-auto bg-gray-700 p-2 text-red-200 font-mono">
-        {JSON.stringify(description, null, 2)}
-      </pre>
-    );
+    return <CodeViewer mode={"error"} code={description} />;
   }
 
   return (
-    <div className="h-2/3 mb-9 w-full max-w-full overflow-auto">
+    <div
+      className="h-2/3 w-full max-w-full overflow-auto overflow-x-scroll"
+      style={{ height: "inherit" }}
+    >
       {viewMode === "table" ? (
         rows instanceof Array ? (
           <Table
@@ -43,14 +61,10 @@ const SqlDataViewer = ({
             }}
           />
         ) : (
-          <pre className="overflow-y-auto bg-gray-700 p-2 text-gray-200 font-mono">
-            {JSON.stringify(rows, null, 2)}
-          </pre>
+          <CodeViewer code={rows} />
         )
       ) : (
-        <pre className="overflow-y-auto bg-gray-700 p-2 text-gray-200 font-mono">
-          {JSON.stringify(rows, null, 2)}
-        </pre>
+        <CodeViewer code={rows} />
       )}
     </div>
   );

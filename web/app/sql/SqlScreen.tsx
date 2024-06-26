@@ -72,7 +72,7 @@ const SqlScreen = () => {
         <SideHeader title="Queries" />
         <SqlHistory setSelectedSql={setSelectedSql} />
       </div>
-      <div className="border-l border-gray-600 sql-dataview-wrapper w-full">
+      <div className="border-l border-gray-600 sql-dataview-wrapper w-4/5">
         <Tabs
           tabs={tabs}
           activeTabId={activeTabId}

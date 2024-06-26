@@ -31,7 +31,7 @@ const Tabs: React.FC<TabsProps> = ({
   };
 
   return (
-    <div className="tabs flex mx-2 mb-1 border border-gray-300">
+    <div className="tabs flex mx-2 border border-gray-300">
       {tabs.map((tab) => (
         <div
           key={tab.id}

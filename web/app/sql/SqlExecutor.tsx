@@ -126,9 +126,16 @@ const SqlExecutor = ({
   };
 
   return (
-    <div className="flex flex-col pl-2 h-full w-full bg-gray-800">
+    <div
+      className="flex flex-col pl-2 h-full w-full bg-gray-800 max-h-full"
+      // style={{
+      //   maxHeight: "calc(100vh - 53px)",
+      // }}
+    >
+      <div className="h-1/3">
       <SqlEditor sql={sql} setSql={setSql} post={post} loading={loading} />
-      <div>
+      </div>
+      <div className="h-2/3">
         <div className="flex flex-1 max-h-10 w-full justify-between text-gray-200">
           <div className="align-center text-xs px-2 pt-2">
             Status:

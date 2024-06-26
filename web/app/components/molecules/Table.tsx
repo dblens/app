@@ -30,50 +30,60 @@ const Table: React.FC<TableCompProps> = ({
   };
 
   return (
-    <table className="w-full border border-gray-600">
-      <tr className="bg-gray-900">
-        {columnNames?.map(
-          ({ visible = true, column_name: colName = "", sort }, index) =>
-            visible && (
-              <th
-                key={colName}
-                className={`border bg-gray-900 border-gray-600 ${colName} ${
-                  !sort && "text-transparent"
-                } hover:text-gray-200 cursor-pointer`}
-                style={{ minWidth: 200 }}
-                onClick={() => onSortColumn(index)}
-              >
-                <div className={`absolute p-1 ${sort && "text-blue-600"}`}>
-                  <SortIcon mode={sort} />
-                </div>
-                <div className="w-full p-3 px-4 text-gray-200">{colName}</div>
-              </th>
-            )
-        )}
-      </tr>
-      {tableData?.map((row, ix) => (
-        <tr
-          className="hover:bg-gray-700 hover:text-gray-100"
-          key={(row?.id ?? `col_${ix}`) as string}
-        >
-          {columnNames?.map(({ visible = true, column_name }) => {
-            const cell = row?.[column_name];
-            return (
-              visible && (
-                <TableCell
-                  key={`${selectedSchema}_${selectedTable}_${column_name}_${
-                    typeof cell === "object"
-                      ? JSON.stringify(cell)
-                      : (cell as string)
-                  }`}
-                  value={cell}
-                />
-              )
-            );
-          })}
-        </tr>
-      ))}
-    </table>
+    <div className="overflow-x-auto max-w-full">
+      <table className="border border-gray-600 h-full w-full table-fixed">
+        <thead>
+          <tr className="bg-gray-900">
+            {columnNames?.map(
+              ({ visible = true, column_name: colName = "", sort }, index) =>
+                visible && (
+                  <th
+                    key={colName}
+                    className={`border bg-gray-900 border-gray-600 ${colName} ${
+                      !sort && "text-transparent"
+                    } hover:text-gray-200 cursor-pointer`}
+                    style={{ minWidth: 200, width: 200 }} // Fixed minimum width
+                    onClick={() => onSortColumn(index)}
+                  >
+                    <div
+                      className={`relative p-1 ${sort ? "text-blue-600" : ""}`}
+                    >
+                      <SortIcon mode={sort} />
+                    </div>
+                    <div className="w-full p-3 px-4 text-gray-200">
+                      {colName}
+                    </div>
+                  </th>
+                )
+            )}
+          </tr>
+        </thead>
+        <tbody>
+          {tableData?.map((row, ix) => (
+            <tr
+              className="hover:bg-gray-700 hover:text-gray-100"
+              key={(row?.id ?? `col_${ix}`) as string}
+            >
+              {columnNames?.map(({ visible = true, column_name }) => {
+                const cell = row?.[column_name];
+                return (
+                  visible && (
+                    <TableCell
+                      key={`${selectedSchema}_${selectedTable}_${column_name}_${
+                        typeof cell === "object"
+                          ? JSON.stringify(cell)
+                          : (cell as string)
+                      }`}
+                      value={cell}
+                    />
+                  )
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 };
 Table.defaultProps = {

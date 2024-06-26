@@ -68,7 +68,7 @@ const SqlEditor = ({ sql, setSql, post, loading }) => {
 
   return (
     <Editor
-      height="33vh"
+      // height="33vh"
       defaultLanguage="sql"
       value={sql}
       onChange={(value) => setSql(value)}
