@@ -77,6 +77,8 @@ npx dblens <postgres_connection_string>`
     selectedTab = "OVERVIEW";
   } else if (pathname?.includes("/overview")) {
     selectedTab = "OVERVIEW";
+  } else if (pathname?.includes("/explorer")) {
+    selectedTab = "EXPLORER";
   }
 
   const setSelectedTab = (ss: string) => {
@@ -141,11 +143,10 @@ npx dblens <postgres_connection_string>`
       <button
         type="button"
         className={`text-xs h-20 focus:ring-0 pl-1 hover:bg-gray-600 ${
-          selectedTab === "TABLE" &&
+          selectedTab === "EXPLORER" &&
           "border-l-4 border-green-600 text-green-600 font-bold"
         }`}
-        onClick={() => setSelectedTab("")}
-        // onClick={() => setSelectedTab("TABLE")}
+        onClick={() => setSelectedTab("EXPLORER")}
       >
         <TableIcon />
       </button>
