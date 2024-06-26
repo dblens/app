@@ -23,7 +23,7 @@ export default function RootLayout({
         <body className={inter.className}>
           <div className="w-screen h-screen max-h-screen text-gray-800 focus:font-bold focus:outline-none">
             <Titlebar />
-            <div className="flex w-full h-full">
+            <div className="flex w-full h-full" style={{ paddingTop: 25 }}>
               <Sidebar />
               <div className="bg-gray-100 w-full max-w-full h-full max-h-full flex flex-row overflow-hidden font-mono">
                 {children}
