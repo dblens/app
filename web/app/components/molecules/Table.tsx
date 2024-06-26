@@ -1,4 +1,3 @@
-/* eslint-disable react/require-default-props */
 import React from "react";
 import { ColumnName, SortColumnType, SortType } from "../../sessions/DbSession";
 import SortIcon from "../atoms/SortIcon";
@@ -30,8 +29,8 @@ const Table: React.FC<TableCompProps> = ({
   };
 
   return (
-    <div className="overflow-x-auto max-w-full">
-      <table className="border border-gray-600 h-full w-full table-fixed">
+    <div className="">
+      <table className="border border-gray-600 h-full w-full table-fixed overflow-x-scroll">
         <thead>
           <tr className="bg-gray-900">
             {columnNames?.map(
@@ -42,7 +41,13 @@ const Table: React.FC<TableCompProps> = ({
                     className={`border bg-gray-900 border-gray-600 ${colName} ${
                       !sort && "text-transparent"
                     } hover:text-gray-200 cursor-pointer`}
-                    style={{ minWidth: 200, width: 200 }} // Fixed minimum width
+                    style={{
+                      minWidth: 200,
+                      width: 200,
+                      position: 'sticky',
+                      top: 0,
+                      zIndex: 10,
+                    }} // Fixed minimum width and sticky position
                     onClick={() => onSortColumn(index)}
                   >
                     <div
