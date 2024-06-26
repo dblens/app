@@ -56,6 +56,7 @@ const TableList = ({
           key={t?.table_name}
           onClick={() => setSelectedTable(t)}
           type="button"
+          data-ph-no-capture
         >
           {t?.table_name}
         </button>
