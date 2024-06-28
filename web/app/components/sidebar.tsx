@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 
 import { usePathname, useRouter } from "next/navigation";
 import PgSession from "../sessions/PgSession";
+import ReactTooltip from "react-tooltip";
 
 const OverViewIcon = () => (
   <svg
@@ -56,7 +57,7 @@ const Sidebar = () => {
       session
         .executeSQL("SELECT 1;")
         .then((_) => {
-          // request resolved from the localserver, do nothing 
+          // request resolved from the localserver, do nothing
           // console.log(_);
         })
         .catch((err) => {
@@ -79,6 +80,8 @@ npx dblens <postgres_connection_string>`
     selectedTab = "OVERVIEW";
   } else if (pathname?.includes("/explorer")) {
     selectedTab = "EXPLORER";
+  } else if (pathname?.includes("/erd")) {
+    selectedTab = "ERD";
   }
 
   const setSelectedTab = (ss: string) => {
@@ -94,6 +97,29 @@ npx dblens <postgres_connection_string>`
     //     });
     //   }
     // }
+  };
+  const ToolTip = ({ text }) => (
+    <ReactTooltip id={`btn-${text}`} type="info">
+      <span>{text}</span>
+    </ReactTooltip>
+  );
+
+  const SideButton = ({ tabName, children }) => {
+    return (
+      <button
+        type="button"
+        className={`text-xs h-20 pl-1 focus:ring-0 hover:bg-gray-600 ${
+          selectedTab === tabName &&
+          "border-l-4 border-green-600 text-green-600 font-bold"
+        }`}
+        onClick={() => setSelectedTab(tabName)}
+        data-tip
+        data-for={`btn-${tabName}`}
+      >
+        {children}
+        <ToolTip text={tabName} />
+      </button>
+    );
   };
   return (
     <div className="bg-gray-900 text-gray-100 w-12  flex flex-col border border-gray-700 text-xs">
@@ -120,47 +146,17 @@ npx dblens <postgres_connection_string>`
           ⚡️
         </span>
       </button>
-      <button
-        type="button"
-        className={`text-xs h-20 pl-1 focus:ring-0 hover:bg-gray-600 ${
-          selectedTab === "OVERVIEW" &&
-          "border-l-4 border-green-600 text-green-600 font-bold"
-        }`}
-        onClick={() => setSelectedTab("OVERVIEW")}
-      >
+
+      <SideButton tabName="OVERVIEW">
         <OverViewIcon />
-      </button>
-      <button
-        type="button"
-        className={`text-xs h-20 focus:ring-0 hover:bg-gray-600 ${
-          selectedTab === "SQL" &&
-          "border-l-4 border-green-600 text-green-600 font-bold"
-        }`}
-        onClick={() => setSelectedTab("SQL")}
-      >
-        SQL
-      </button>
-      <button
-        type="button"
-        className={`text-xs h-20 focus:ring-0 pl-1 hover:bg-gray-600 ${
-          selectedTab === "EXPLORER" &&
-          "border-l-4 border-green-600 text-green-600 font-bold"
-        }`}
-        onClick={() => setSelectedTab("EXPLORER")}
-      >
+      </SideButton>
+      <SideButton tabName="SQL">SQL</SideButton>
+      <SideButton tabName="EXPLORER">
         <TableIcon />
-      </button>
-      <button
-        type="button"
-        className={`text-xs h-20 focus:ring-0 hover:bg-gray-600 ${
-          selectedTab === "ERD" &&
-          "border-l-4 border-green-600 text-green-600 font-bold"
-        }`}
-        onClick={() => setSelectedTab("")}
-        // onClick={() => setSelectedTab("ERD")}
-      >
+      </SideButton>
+      <SideButton tabName="ERD">
         ER
-      </button>
+      </SideButton>
       <button
         type="button"
         className={`text-xs h-20 focus:ring-0 hover:bg-gray-600 ${
