@@ -1,3 +1,4 @@
+"use-client";
 import React, { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import SqlExecutor from "./SqlExecutor";
@@ -5,6 +6,7 @@ import SqlHistory from "./SqlHistory";
 import SideHeader from "../components/atoms/SideHeader";
 import PgSession from "../sessions/PgSession";
 import Tabs from "./Tabs";
+import dynamic from "next/dynamic";
 
 const SqlScreen = () => {
   const router = useRouter();
@@ -88,9 +90,11 @@ const SqlScreen = () => {
     if (sqlQuery) {
       setSelectedSql(decodeURIComponent(sqlQuery));
       // Remove the query parameter from the URL
-      const currentUrl = new URL(window.location.href);
-      currentUrl.searchParams.delete("sql");
-      router.replace(currentUrl.toString());
+      if (typeof window !== "undefined") {
+        const currentUrl = new URL(window.location.href);
+        currentUrl.searchParams.delete("sql");
+        router.replace(currentUrl.toString());
+      }
     }
   }, [searchParams, router]);
 
@@ -118,4 +122,6 @@ const SqlScreen = () => {
   );
 };
 
-export default SqlScreen;
+export default dynamic(() => Promise.resolve(SqlScreen), {
+  ssr: false,
+});
