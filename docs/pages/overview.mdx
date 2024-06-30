@@ -1,0 +1,88 @@
+# Overivew Page
+
+Overview page helps you understand the state of your database at a glance. Idea
+is to provide a quick summary of the database, objects, and statistics.
+
+## Disk Usage
+
+Disk Usage section provides a visual representation of the disk space used by
+the database. It shows the total disk space used by the database, along with the
+space used by each table.
+
+![Disk Usage Screenshot](/Overview_DiskUsage.png)
+
+## Records and Indexing
+
+Records and Indexing section provides a summary of the total number of records
+in the database, along with the number of indexes and unused indexes.
+
+![Records and Indexing Screenshot](/Overview_RecordsIndexing.png)
+
+### Record Ranks
+
+Record Ranks section provides a list of tables with the highest number of
+records. It helps you identify the tables that need optimization or indexing to
+improve the performance of the database.
+
+### Index Usage
+
+Index Usage section provides a list of indexes with the number of scans and
+tuples fetched. It helps you understand the performance of the indexes and
+identify the indexes that need optimization.
+
+### Unused Indexes
+
+Unused Indexes section provides a list of indexes that are not being used in the
+database. It helps you identify the indexes that can be removed to improve the
+performance of the database.
+
+## Extensions
+
+Extensions section provides a list of available and installed extensions in the
+database with the version. It also helps you manage the extensions by providing
+options to install or uninstall them.
+
+![Extensions Screenshot](/Overview_Extensions.png)
+
+### How to install an extension?
+
+To install an extension,
+
+1. Click on the extension version next to the extension name and details.
+2. It will open a dialog box for confirmation. Click on `Ok` button.
+3. This will open a new tab in the SQL editor with the command to install the
+   extension.
+4. Click on the `Run` button to install the extension.
+5. Upon successful installation, you will see a success message in the SQL
+   editor.
+
+### How to uninstall an extension?
+
+To uninstall an extension,
+
+1. Click on the extension version next to the installed extension name and
+   details.
+2. It will open a dialog box for confirmation. Click on `Ok` button.
+3. This will open a new tab in the SQL editor with the command to uninstall the
+   extension.
+4. Click on the `Run` button to uninstall the extension.
+5. Upon successful uninstallation, you will see a success message in the SQL
+   editor.
+
+## Query Hit Rates
+
+Query Hit Rates section provides a summary of the index hit rates for the
+database. It helps you understand the performance of the database and understand
+the need for indexing.
+
+## Top Sequential Scans
+
+Top Sequential Scans section provides a list of tables with the highest number
+of sequential scans. It helps you identify the tables that need indexing to
+improve the performance of the database.
+
+## Long Running Queries
+
+Long Running Queries section provides a list of queries that are running for a
+long time. It helps you identify the queries that need optimization to improve
+the performance of the database.
