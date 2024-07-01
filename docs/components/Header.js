@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 // import { Link } from "react-router-dom";
-import logo from "../public/images/favicon.png";
 function Header() {
   const [top, setTop] = useState(true);
 
@@ -24,7 +23,7 @@ function Header() {
           {/* Site branding */}
           <div className="flex-shrink-0 mr-4 flex flex-row">
             {/* <Link to="/" className="block" aria-label="DB Lens"> */}
-              <img alt="logo" height={50} width={50} src={logo} />
+            <img alt="logo" height={50} width={50} src="/images/favicon.png" />
             {/* </Link> */}
             <span className="font-bold m-auto text-2xl">DB Lens</span>
           </div>
@@ -43,16 +42,14 @@ function Header() {
               </a>
             </span>
             <span className="pt-2">
-              <a
-                className="github-button pt-2"
-                href="https://github.com/dblens/app"
-                // data-color-scheme="no-preference: light; light: light; dark: light;"
-                data-size="large"
-                data-show-count="true"
-                aria-label="Star dblens/app on GitHub"
-              >
-                Star
-              </a>
+              <iframe
+                src="https://ghbtns.com/github-btn.html?user=dblens&repo=app&type=star&count=true&size=large"
+                frameborder="0"
+                scrolling="0"
+                width="170"
+                height="30"
+                title="GitHub"
+              ></iframe>
             </span>
           </div>
           {/* Site navigation */}

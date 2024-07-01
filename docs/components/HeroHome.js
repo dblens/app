@@ -65,7 +65,9 @@ function HeroHome() {
               className="text-4xl md:text-5xl font-extrabold leading-tighter tracking-tighter mb-4"
               data-aos="zoom-y-out"
             >
-              Open-source database client for <br /> Mac, Windows & Linux
+              Modern <span className="text-blue-600">PostgreSQL</span> explorer{" "}
+              <br />
+              simplified for everyone
               {/* <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-teal-400">DB Lens</span> */}
             </h1>
             <div className="max-w-3xl mx-auto">
@@ -82,45 +84,71 @@ function HeroHome() {
                 data-aos="zoom-y-out"
                 data-aos-delay="150"
               >
-                Download beta for
+                Quickstart with:
               </p>
               <div
                 className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center pt-2"
                 data-aos="zoom-y-out"
                 data-aos-delay="300"
               >
-                <div>
-                  <a
-                    className="btn text-white bg-blue-600 hover:bg-blue-700 w-full mb-4 sm:w-auto sm:mb-0 ml-2"
-                    href="https://github.com/dblens/app/releases/download/v0.0.1-beta.2/DB-Lens-0.0.1-beta.2.dmg"
+                <div className="bg-gray-900 text-white p-4 rounded-lg shadow-lg text-sm flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
                   >
-                    <DownloadIcon />
-                    Mac
-                  </a>
-                  <a
-                    className="btn text-blue-600 border border-blue-600 hover:bg-blue-100 w-full mb-4 sm:w-auto sm:mb-0 ml-2"
-                    href="https://github.com/dblens/app/releases/download/v0.0.1-beta.2/DB-Lens-Setup-0.0.1-beta.2.exe"
-                  >
-                    <DownloadIcon />
-                    Windows
-                  </a>
-                  <a
-                    className="btn text-white bg-blue-600 hover:bg-blue-700 w-full mb-4 sm:w-auto sm:mb-0 ml-2"
-                    href="https://github.com/dblens/app/releases/download/v0.0.1-beta.2/DB-Lens-0.0.1-beta.2.AppImage"
-                  >
-                    <DownloadIcon />
-                    Linux
-                  </a>
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M12 11c.45 0 .883.18 1.207.503.324.324.503.756.503 1.207s-.18.883-.503 1.207c-.324.324-.756.503-1.207.503s-.883-.18-1.207-.503A1.702 1.702 0 0110 12.71c0-.451.18-.883.503-1.207.324-.324.756-.503 1.207-.503zm0 0V7m0 10h0"
+                    />
+                  </svg>
+                  <code>npx dblens &lt;connection_string&gt;</code>
                 </div>
-                {/* <div>
-                  <a
-                    className="btn text-white bg-gray-900 hover:bg-gray-800 w-full sm:w-auto sm:ml-4"
-                    href="#0"
-                  >
-                    Learn more
-                  </a>
-                </div> */}
+                <a
+                  href="/docs/quickstart"
+                  className=" mx-2 btn text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded shadow-lg"
+                >
+                  → Read Docs
+                </a>
               </div>
+              <div
+                className="mt-4"
+                data-aos="zoom-y-out"
+                data-aos-delay="300"
+              ></div>
+              {/* <div
+      className="max-w-xs mx-auto sm:max-w-none sm:flex sm:justify-center pt-2"
+      data-aos="zoom-y-out"
+      data-aos-delay="300"
+    >
+      <div>
+        <a
+          className="btn text-white bg-blue-600 hover:bg-blue-700 w-full mb-4 sm:w-auto sm:mb-0 ml-2"
+          href="https://github.com/dblens/app/releases/download/v0.0.1-beta.2/DB-Lens-0.0.1-beta.2.dmg"
+        >
+          <DownloadIcon />
+          Mac
+        </a>
+        <a
+          className="btn text-blue-600 border border-blue-600 hover:bg-blue-100 w-full mb-4 sm:w-auto sm:mb-0 ml-2"
+          href="https://github.com/dblens/app/releases/download/v0.0.1-beta.2/DB-Lens-Setup-0.0.1-beta.2.exe"
+        >
+          <DownloadIcon />
+          Windows
+        </a>
+        <a
+          className="btn text-white bg-blue-600 hover:bg-blue-700 w-full mb-4 sm:w-auto sm:mb-0 ml-2"
+          href="https://github.com/dblens/app/releases/download/v0.0.1-beta.2/DB-Lens-0.0.1-beta.2.AppImage"
+        >
+          <DownloadIcon />
+          Linux
+        </a>
+      </div>
+    </div> */}
             </div>
           </div>
 
