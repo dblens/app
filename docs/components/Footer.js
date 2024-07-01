@@ -40,7 +40,7 @@ function Footer() {
             <ul className="text-sm">
               <li className="mb-2">
                 <a
-                  href="https://discord.gg/6RrqXsXm"
+                  href="https://discord.com/invite/PZT4C5mk"
                   className="text-gray-600 hover:text-gray-900 transition duration-150 ease-in-out"
                 >
                   Discord
@@ -260,7 +260,7 @@ function Footer() {
             </li>
             <li className="ml-4">
               <a
-                href="https://discord.gg/6RrqXsXm"
+                href="https://discord.com/invite/PZT4C5mk"
                 className="flex justify-center items-center text-gray-600 hover:text-gray-900 bg-white hover:bg-white-100 rounded-full shadow transition duration-150 ease-in-out"
                 aria-label="Discord"
               >
