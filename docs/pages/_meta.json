@@ -1,14 +1,9 @@
 {
-  "index": "Introduction",
-  "quickstart": "Quick Start",
-  "overview": "Overview Page",
-  "sql": "SQL Page",
-  "explorer": "Explorer Page",
-  "erd": "ER Diagram Page",
+  "docs": "DB Lens",
   "contact": {
-    "title": "Support ↗",
+    "title": "Contact ↗",
     "type": "page",
-    "href": "https://discord.gg/PZT4C5mk",
+    "href": "https://twitter.com/shuding_",
     "newWindow": true
   }
 }
