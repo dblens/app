@@ -18,6 +18,7 @@ const pg_1 = require("pg");
 const fs = require("fs");
 const execute_pg_1 = require("./execute_pg");
 const cors = require("cors"); // Import CORS middleware
+const getAiSuggestion_1 = require("./getAiSuggestion");
 const opn = require("opn");
 const app = express();
 // Middleware to parse JSON bodies
@@ -98,11 +99,16 @@ function getPgConnection({ noCache = false, connectionString, }) {
 exports.getPgConnection = getPgConnection;
 const args = minimist(pArgs);
 const port = args.port || process.env.PORT || 3253;
-// Function to connect to the PostgreSQL database and start the server
+// Function to connect to the PostgreSQL database
 const connectToDB = () => __awaiter(void 0, void 0, void 0, function* () {
     const client = yield getPgConnection({ connectionString });
+    return client;
+});
+// Function to start the server
+const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // console.log("Database connection established successfully.");
+        yield connectToDB();
+        console.log("Database connection established successfully.");
         console.log("Starting dblens server...");
         // Path to the static files
         const staticPath = path.join(__dirname, "./out");
@@ -124,6 +130,7 @@ const connectToDB = () => __awaiter(void 0, void 0, void 0, function* () {
         });
         // API endpoint for executing PostgreSQL queries
         app.post("/api/execute_pg", execute_pg_1.executePgHandler);
+        app.post("/api/get_ai_suggestion", getAiSuggestion_1.getAiSuggestionHandler);
         // Start the Express server
         const server = app.listen(port, () => {
             console.log(`Server is running on http://localhost:${port}`);
@@ -136,8 +143,8 @@ const connectToDB = () => __awaiter(void 0, void 0, void 0, function* () {
         process.exit(1);
     }
 });
-// Call the function to connect to the database and start the server
-connectToDB();
+// Call the function to start the server
+startServer();
 // Gracefully handle process exit
 process.on("SIGINT", () => {
     console.log("SIGINT received, closing PostgreSQL connection and shutting down.");

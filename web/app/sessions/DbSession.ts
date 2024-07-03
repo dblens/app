@@ -31,6 +31,17 @@ export type ErdDataType = {
   foreign_column_name: string;
 };
 
+export interface DbObject {
+  object_type: string;
+  object_name: string;
+  table_name: string;
+  object_detail: string;
+}
+export interface AiSuggestion {
+  query: string;
+  reason: string;
+}
+
 export type SortColumnType = Record<string, SortType>; // key is the colName
 interface DbSession {
   id: string;
@@ -38,6 +49,8 @@ interface DbSession {
     sql: string
   ) => Promise<SqlExecReponseType<QueryResultRow[] | string>>;
   getDBSchemas: () => Promise<string[]>;
+  getAllDbObjects: () => Promise<DbObject[]>;
+  getAiFix: (query:string, error:string) => Promise<AiSuggestion>;
   getErdData: () => Promise<SqlExecReponseType<ErdDataType[]>>;
   getAllTables: (schema: string) => Promise<TableType[]>;
   getTableData: ({

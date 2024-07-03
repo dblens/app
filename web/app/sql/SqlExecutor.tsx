@@ -95,17 +95,23 @@ const SqlExecutor = ({
             rows: data?.rows ?? null,
             duration: data?.duration ?? 0,
           });
-        }
 
-        if (data.status === "SUCCESS")
-          dispatch({
-            type: "ADD_HISTORY",
-            payload: {
-              time: new Date(),
-              sql: currentSql,
-              uuid: hashString(currentSql),
-            },
-          });
+          if (data.status === "SUCCESS")
+            dispatch({
+              type: "ADD_HISTORY",
+              payload: {
+                time: new Date(),
+                sql: currentSql,
+                uuid: hashString(currentSql),
+              },
+            });
+          // else if (false && data.status === "ERROR" && data?.description) {
+          //   console.log(">> AI Fixing");
+          //   session.getAiFix(currentSql, data?.description).then((data) => {
+          //     console.log(">> AI Fix", data);
+          //   });
+          // }
+        }
         return true;
       })
       .catch((e) => {
@@ -133,7 +139,7 @@ const SqlExecutor = ({
       // }}
     >
       <div className="h-1/3">
-      <SqlEditor sql={sql} setSql={setSql} post={post} loading={loading} />
+        <SqlEditor sql={sql} setSql={setSql} post={post} loading={loading} />
       </div>
       <div className="h-2/3">
         <div className="flex flex-1 max-h-10 w-full justify-between text-gray-200">

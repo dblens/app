@@ -6,13 +6,13 @@ import { Client } from "pg";
 import * as fs from "fs";
 import { executePgHandler } from "./execute_pg";
 import * as cors from "cors"; // Import CORS middleware
+import { getAiSuggestionHandler } from "./getAiSuggestion";
 const opn = require("opn");
 
 const app = express();
 
 // Middleware to parse JSON bodies
 app.use(express.json());
-
 
 // Define the allowed origins
 const allowedOrigins = [/^http:\/\/localhost(:\d+)?$/, /\.dblens\.app$/];
@@ -108,12 +108,17 @@ export async function getPgConnection({
 const args = minimist(pArgs);
 const port: number = args.port || process.env.PORT || 3253;
 
-// Function to connect to the PostgreSQL database and start the server
-const connectToDB = async (): Promise<void> => {
+// Function to connect to the PostgreSQL database
+const connectToDB = async (): Promise<Client> => {
   const client = await getPgConnection({ connectionString });
+  return client;
+};
 
+// Function to start the server
+const startServer = async (): Promise<void> => {
   try {
-    // console.log("Database connection established successfully.");
+    await connectToDB();
+    console.log("Database connection established successfully.");
     console.log("Starting dblens server...");
 
     // Path to the static files
@@ -142,6 +147,7 @@ const connectToDB = async (): Promise<void> => {
 
     // API endpoint for executing PostgreSQL queries
     app.post("/api/execute_pg", executePgHandler);
+    app.post("/api/get_ai_suggestion", getAiSuggestionHandler);
 
     // Start the Express server
     const server = app.listen(port, () => {
@@ -155,8 +161,8 @@ const connectToDB = async (): Promise<void> => {
   }
 };
 
-// Call the function to connect to the database and start the server
-connectToDB();
+// Call the function to start the server
+startServer();
 
 // Gracefully handle process exit
 process.on("SIGINT", () => {
