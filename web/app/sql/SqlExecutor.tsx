@@ -1,14 +1,16 @@
-"use client";
-import { QueryResultRow } from "pg";
+// SqlExecutor.tsx
 import React, { useState, useRef, useEffect, useCallback } from "react";
+import { QueryResultRow } from "pg";
 import SqlDataViewer from "./SqlDataViewer";
-import PgSession from "../sessions/PgSession";
-import ReactTooltip from "react-tooltip";
-import DbSession from "../sessions/DbSession";
-import { useAppState } from "../state/AppProvider";
-import { hashString } from "@/utils";
+import ErrorViewer from "./ErrorViewer";
 import SqlEditor from "./SqlEditor";
 import CopyBtn from "../components/atoms/CopyBtn";
+import ReactTooltip from "react-tooltip";
+import { useAppState } from "../state/AppProvider";
+import { hashString } from "@/utils";
+import PgSession from "../sessions/PgSession";
+import DbSession from "../sessions/DbSession";
+import { useIsAiAvailable } from "@/api/query";
 
 const getSize = (ss?: QueryResultRow[] | string) => {
   if (!ss) return "";
@@ -26,15 +28,13 @@ const getTimeHeat = (duration = 0) => {
 const session = new PgSession("PG");
 
 const SqlExecutor = ({
-  session,
   selectedSql,
   activeTabId,
 }: {
-  session: DbSession;
   selectedSql?: string;
   activeTabId?: number;
 }) => {
-  const [state, setstate] = useState({
+  const [state, setState] = useState({
     status: "",
     description: null as any,
     rows: null as QueryResultRow[] | string | null,
@@ -44,11 +44,9 @@ const SqlExecutor = ({
   const [sql, setSql] = useState("SELECT NOW();");
   const [, dispatch] = useAppState();
   const [viewMode, setViewMode] = useState("table");
-
   const sqlRef = useRef(sql);
 
   useEffect(() => {
-    // current sql value from text area gets replaced when the user select a SQL value from hostory sidebar
     if (selectedSql) {
       setSql(selectedSql);
     }
@@ -66,7 +64,7 @@ const SqlExecutor = ({
     const sql = localStorage.getItem(`sql_${activeTabId}`);
     if (sql) {
       setSql(sql);
-      setstate({
+      setState({
         status: "",
         description: null as any,
         rows: null as QueryResultRow[] | string | null,
@@ -81,63 +79,97 @@ const SqlExecutor = ({
 
   const post = useCallback(async () => {
     const currentSql = sqlRef.current;
-    console.log("post", currentSql);
     setLoading(true);
     session
       .executeSQL(currentSql)
       .then((data) => {
         setLoading(false);
-        if (data.status) {
-          console.log(data);
-          setstate({
+        if (data.status === "SUCCESS") {
+          setState({
             description: data?.description,
             status: data?.status,
             rows: data?.rows ?? null,
             duration: data?.duration ?? 0,
           });
 
-          if (data.status === "SUCCESS")
-            dispatch({
-              type: "ADD_HISTORY",
-              payload: {
-                time: new Date(),
-                sql: currentSql,
-                uuid: hashString(currentSql),
-              },
-            });
-          // else if (false && data.status === "ERROR" && data?.description) {
-          //   console.log(">> AI Fixing");
-          //   session.getAiFix(currentSql, data?.description).then((data) => {
-          //     console.log(">> AI Fix", data);
-          //   });
-          // }
+          dispatch({
+            type: "ADD_HISTORY",
+            payload: {
+              time: new Date(),
+              sql: currentSql,
+              uuid: hashString(currentSql),
+            },
+          });
+        } else {
+          setState({
+            status: "ERROR",
+            rows: [],
+            description: data,
+            duration: 0,
+          });
         }
-        return true;
       })
       .catch((e) => {
         setLoading(false);
-        setstate({
+        setState({
           status: "ERROR",
           rows: [],
-          description:
-            "Failed to execute query, check your command is still running",
+          description: e,
           duration: 0,
         });
         console.error(e);
       });
   }, [session, dispatch]);
 
+  const handleFixQuery = useCallback(async () => {
+    const currentSql = sqlRef.current;
+    const { query, reason } = await session.getAiFix(
+      currentSql,
+      state?.description
+    );
+    console.log("Fixing query", query, reason);
+
+    if (
+      confirm(
+        `AI Suggestion:\n${formatMultilineReason(
+          reason
+        )}\n\nDo you want to paste this suggestion on to your SQL editor?`
+      )
+    ) {
+      console.log("Fixing query", query);
+      setSql(
+        `-- AI Generated SQL Below\n-- Reasoning:\n${formatMultilineReason(
+          reason
+        )}
+-- WARNING: Please review the generated SQL before executing. AI suggestions may not always be accurate.
+
+${query}`
+      );
+      setState({
+        status: "",
+        description: null as any,
+        rows: null as QueryResultRow[] | string | null,
+        duration: 0,
+      });
+      return { query, reason };
+    }
+    return false;
+  }, [session, state?.description]);
+
+  // Function to format multiline reason with '-- ' at the beginning of each line
+  const formatMultilineReason = (reason) => {
+    return reason
+      .split("\n")
+      .map((line) => `-- ${line}`)
+      .join("\n");
+  };
+
   const toggleViewMode = () => {
     setViewMode((prevMode) => (prevMode === "table" ? "json" : "table"));
   };
 
   return (
-    <div
-      className="flex flex-col pl-2 h-full w-full bg-gray-800 max-h-full"
-      // style={{
-      //   maxHeight: "calc(100vh - 53px)",
-      // }}
-    >
+    <div className="flex flex-col pl-2 h-full w-full bg-gray-800 max-h-full">
       <div className="h-1/3">
         <SqlEditor sql={sql} setSql={setSql} post={post} loading={loading} />
       </div>
@@ -205,14 +237,17 @@ const SqlExecutor = ({
             </ReactTooltip>
           </div>
         </div>
-
-        <SqlDataViewer
-          description={state?.description}
-          status={state?.status}
-          rows={state?.rows}
-          loading={loading}
-          viewMode={viewMode}
-        />
+        {state?.status === "ERROR" ? (
+          <ErrorViewer error={state?.description} onFixQuery={handleFixQuery} />
+        ) : (
+          <SqlDataViewer
+            description={state?.description}
+            status={state?.status}
+            rows={state?.rows}
+            loading={loading}
+            viewMode={viewMode}
+          />
+        )}
       </div>
     </div>
   );

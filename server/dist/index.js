@@ -11,6 +11,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getPgConnection = void 0;
+require("dotenv/config");
 const express = require("express");
 const path = require("path");
 const minimist = require("minimist");
@@ -19,6 +20,7 @@ const fs = require("fs");
 const execute_pg_1 = require("./execute_pg");
 const cors = require("cors"); // Import CORS middleware
 const getAiSuggestion_1 = require("./getAiSuggestion");
+const isAiAvailable_1 = require("./isAiAvailable");
 const opn = require("opn");
 const app = express();
 // Middleware to parse JSON bodies
@@ -32,7 +34,7 @@ app.use(cors({
         if (!origin)
             return callback(null, true);
         // Check if the origin matches any of the allowed origins
-        const isAllowed = allowedOrigins.some(pattern => {
+        const isAllowed = allowedOrigins.some((pattern) => {
             if (pattern instanceof RegExp) {
                 return pattern.test(origin);
             }
@@ -42,9 +44,9 @@ app.use(cors({
             callback(null, true);
         }
         else {
-            callback(new Error('Not allowed by CORS'));
+            callback(new Error("Not allowed by CORS"));
         }
-    }
+    },
 }));
 const pArgs = process.argv.slice(2);
 const connectionString = pArgs[0] || null; // The first argument passed
@@ -131,11 +133,19 @@ const startServer = () => __awaiter(void 0, void 0, void 0, function* () {
         // API endpoint for executing PostgreSQL queries
         app.post("/api/execute_pg", execute_pg_1.executePgHandler);
         app.post("/api/get_ai_suggestion", getAiSuggestion_1.getAiSuggestionHandler);
+        app.post("/api/is_ai_available", isAiAvailable_1.isAiAvailableHandler);
         // Start the Express server
         const server = app.listen(port, () => {
             console.log(`Server is running on http://localhost:${port}`);
             console.log(`Opening dblens in the default browser...`);
-            opn(`https://local.dblens.app`); // Adjust URL as needed
+            // ping https://local.dblens.app and if available open it otherwise open http://localhost:3253
+            fetch("https://local.dblens.app")
+                .then(() => {
+                opn(`https://local.dblens.app`); // Adjust URL as needed
+            })
+                .catch(() => {
+                opn(`http://localhost:${port}`); // Adjust URL as needed
+            });
         });
     }
     catch (error) {

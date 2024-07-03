@@ -5,7 +5,8 @@
     "main": "dist/index.js",
     "scripts": {
         "build": "tsc",
-        "start": "node dist/index.js",
+        "start": "tsc && node dist/index.js",
+        "dev": "ts-node src/index.ts",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "bin": {
@@ -21,6 +22,7 @@
     "dependencies": {
         "body-parser": "^1.20.2",
         "cors": "^2.8.5",
+        "dotenv": "^16.4.5",
         "express": "^4.19.2",
         "minimist": "^1.2.8",
         "openai": "^4.52.2",
@@ -33,6 +35,7 @@
         "@types/minimist": "^1.2.5",
         "@types/opn": "^5.5.0",
         "@types/pg": "^8.6.4",
+        "ts-node": "^10.9.2",
         "typescript": "^4.5.5"
     }
 }

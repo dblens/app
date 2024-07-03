@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+import 'dotenv/config';
+
 import * as express from "express";
 import * as path from "path";
 import * as minimist from "minimist";
@@ -7,6 +9,7 @@ import * as fs from "fs";
 import { executePgHandler } from "./execute_pg";
 import * as cors from "cors"; // Import CORS middleware
 import { getAiSuggestionHandler } from "./getAiSuggestion";
+import { isAiAvailableHandler } from "./isAiAvailable";
 const opn = require("opn");
 
 const app = express();
@@ -18,26 +21,28 @@ app.use(express.json());
 const allowedOrigins = [/^http:\/\/localhost(:\d+)?$/, /\.dblens\.app$/];
 
 // Configure CORS
-app.use(cors({
+app.use(
+  cors({
     origin: function (origin, callback) {
-        // If no origin (e.g. mobile apps or curl requests), allow it
-        if (!origin) return callback(null, true);
-        
-        // Check if the origin matches any of the allowed origins
-        const isAllowed = allowedOrigins.some(pattern => {
-            if (pattern instanceof RegExp) {
-                return pattern.test(origin);
-            }
-            return pattern === origin;
-        });
+      // If no origin (e.g. mobile apps or curl requests), allow it
+      if (!origin) return callback(null, true);
 
-        if (isAllowed) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
+      // Check if the origin matches any of the allowed origins
+      const isAllowed = allowedOrigins.some((pattern) => {
+        if (pattern instanceof RegExp) {
+          return pattern.test(origin);
         }
-    }
-}));
+        return pattern === origin;
+      });
+
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+  })
+);
 
 const pArgs: string[] = process.argv.slice(2);
 const connectionString: string | null = pArgs[0] || null; // The first argument passed
@@ -148,12 +153,20 @@ const startServer = async (): Promise<void> => {
     // API endpoint for executing PostgreSQL queries
     app.post("/api/execute_pg", executePgHandler);
     app.post("/api/get_ai_suggestion", getAiSuggestionHandler);
+    app.post("/api/is_ai_available", isAiAvailableHandler);
 
     // Start the Express server
     const server = app.listen(port, () => {
       console.log(`Server is running on http://localhost:${port}`);
       console.log(`Opening dblens in the default browser...`);
-      opn(`https://local.dblens.app`); // Adjust URL as needed
+      // ping https://local.dblens.app and if available open it otherwise open http://localhost:3253
+      fetch("https://local.dblens.app")
+        .then(() => {
+          opn(`https://local.dblens.app`); // Adjust URL as needed
+        })
+        .catch(() => {
+          opn(`http://localhost:${port}`); // Adjust URL as needed
+        });
     });
   } catch (error: any) {
     console.error("Error starting dblens server:", error.message);

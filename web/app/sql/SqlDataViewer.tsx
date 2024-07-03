@@ -30,22 +30,17 @@ const CodeViewer = ({
 };
 
 const SqlDataViewer = ({
-  description,
   status,
   rows,
   loading,
   viewMode,
 }: {
-  description?: any;
   status: string;
   rows: QueryResultRow;
   loading: boolean;
   viewMode: string;
 }) => {
   if (loading) return <h1>Loading...</h1>;
-  if (status == "ERROR") {
-    return <CodeViewer mode={"error"} code={description} />;
-  }
 
   return (
     <div
