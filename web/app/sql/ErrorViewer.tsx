@@ -7,7 +7,7 @@ const ErrorViewer = ({
   onFixQuery,
 }: {
   error: any;
-  onFixQuery: () => Promise<{ query: string; reason: string } | null>;
+  onFixQuery: () => Promise<{ query: string; reason: string } | boolean | null>;
 }) => {
   const { aiAvailable } = useIsAiAvailable();
   const [loading, setLoading] = useState(false);
@@ -18,7 +18,10 @@ const ErrorViewer = ({
 
   const fetchAiSuggestion = async () => {
     setLoading(true);
-    const suggestion = await onFixQuery();
+    const suggestion = (await onFixQuery()) as {
+      query: string;
+      reason: string;
+    };
     setLoading(false);
     if (suggestion) {
       setAiResponse(suggestion);
@@ -40,7 +43,9 @@ const ErrorViewer = ({
               }`}
               disabled={loading}
             >
-              {loading ? "🪄 Fetching AI suggestion..." : "Get AI Suggestion 🪄"}
+              {loading
+                ? "🪄 Fetching AI suggestion..."
+                : "Get AI Suggestion 🪄"}
             </button>
           )}
           {aiResponse && (

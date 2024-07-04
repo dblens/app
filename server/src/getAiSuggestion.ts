@@ -1,20 +1,20 @@
 import { Request, Response } from "express";
 import OpenAI from "openai";
 
-interface SQLFix {
+export interface SuggestionType {
   query: string;
   reason: string;
 }
 
 // Remove triple backticks if they are part of the input
 
-function parseJsonSafely(jsonString: string): SQLFix | null {
+function parseJsonSafely(jsonString: string): SuggestionType | null {
   const cleanedJsonString = jsonString.replace(
     /^```json\s*([\s\S]*)```$/,
     "$1"
   );
   try {
-    const parsed: SQLFix = JSON.parse(cleanedJsonString);
+    const parsed: SuggestionType = JSON.parse(cleanedJsonString);
     return parsed;
   } catch (error) {
     console.error("Failed to parse JSON string:", error);

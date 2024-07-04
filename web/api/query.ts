@@ -66,7 +66,7 @@ export const useIsAiAvailable = () => {
       try {
         const result = await isAiAvailable();
         setAiAvailable(result?.status === "AVAILABLE");
-      } catch (err) {
+      } catch (err: any) {
         setError(err.message);
       } finally {
         setLoading(false);
