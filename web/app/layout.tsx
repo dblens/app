@@ -1,9 +1,11 @@
+"use-client";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Sidebar from "./components/sidebar";
 import Titlebar from "./components/TitleBar";
 import { CSPostHogProvider } from "./providers";
+import WelcomeModal from "./components/WelcomeModal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <CSPostHogProvider>
+        <WelcomeModal />
         <body className={inter.className}>
           <div className="w-screen h-screen max-h-screen text-gray-800 focus:font-bold focus:outline-none">
             <Titlebar />

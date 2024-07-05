@@ -78,6 +78,7 @@ const SqlEditor = ({ sql, setSql, post, loading }) => {
         fontFamily: "monospace",
         automaticLayout: true,
       }}
+      style={{ zIndex: 10 }}
       onMount={handleEditorMount}
     />
   );
