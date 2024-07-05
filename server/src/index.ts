@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import 'dotenv/config';
+import "dotenv/config";
 
 import * as express from "express";
 import * as path from "path";
@@ -15,7 +15,7 @@ const opn = require("opn");
 const app = express();
 
 // Middleware to parse JSON bodies
-app.use(express.json());
+app.use(express.json({ limit: "1mb" }));
 
 // Define the allowed origins
 const allowedOrigins = [/^http:\/\/localhost(:\d+)?$/, /\.dblens\.app$/];

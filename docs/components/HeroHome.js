@@ -263,12 +263,7 @@ function HeroHome() {
               handleClose={() => setVideoModalOpen(false)}
             >
               <div className="relative pb-9/16">
-                <iframe
-                  className="absolute w-full h-full"
-                  src="https://player.vimeo.com/video/581295562"
-                  title="Video"
-                  allowFullScreen
-                ></iframe>
+                <DbLensDemo />
               </div>
             </Modal>
           </div>
@@ -279,3 +274,23 @@ function HeroHome() {
 }
 
 export default HeroHome;
+
+const DbLensDemo = () => {
+  return (
+    <div style={{ padding: "64.65% 0 0 0", position: "relative" }}>
+      <iframe
+        src="https://player.vimeo.com/video/978356790?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479"
+        frameBorder="0"
+        allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
+        style={{
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+        }}
+        title="DB Lens Demo"
+      ></iframe>
+    </div>
+  );
+};

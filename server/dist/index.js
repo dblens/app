@@ -24,7 +24,7 @@ const isAiAvailable_1 = require("./isAiAvailable");
 const opn = require("opn");
 const app = express();
 // Middleware to parse JSON bodies
-app.use(express.json());
+app.use(express.json({ limit: "1mb" }));
 // Define the allowed origins
 const allowedOrigins = [/^http:\/\/localhost(:\d+)?$/, /\.dblens\.app$/];
 // Configure CORS
