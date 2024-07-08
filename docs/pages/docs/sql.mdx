@@ -14,6 +14,25 @@ To execute a query, simply write your query in the SQL editor and click on the
 > Tip: You can also use `Ctrl + Enter` or `Cmd + Enter` to execute the query for
 > quick access.
 
+## AI Fixes
+
+DB Lens uses AI to provide you with suggestions and fixes for your queries. You
+can view the suggestions by clicking on the `Get AI Suggestion 🪄` button.
+
+![SQL Execute](/docs/SQL_AIFixes.png)
+
+> AI Fixes are currently generated with OpenAI, and are in beta, to enable this,
+> you need to have an OpenAI API key set in your command execution environment.
+>
+> ```bash
+> export OPENAI_API_KEY=<your-openai-api-key>
+> npx dblens <your-db-connection-string>
+> ```
+
+> By enabling this, you agree to the OpenAI API terms of service and your
+> errored query, Error response, and DB schema will be used to generate the
+> suggestions.
+
 ## Toggle between Tabular and JSON View
 
 You can toggle between the tabular and JSON view of the query results by
