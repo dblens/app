@@ -22,6 +22,8 @@ npx dblens <connection_string>
 ```
 from your terminal
 
+Read more from the official documentation from https://dblens.app/docs/quickstart
+
 ## Features
 ![1](https://user-images.githubusercontent.com/8408875/174975064-6683c826-15e5-4ddc-b421-eb45024262ec.jpg)
 
