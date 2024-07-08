@@ -1,0 +1,14 @@
+{
+  "index": "Introduction",
+  "quickstart": "Quick Start",
+  "overview": "Overview Page",
+  "sql": "SQL Page",
+  "explorer": "Explorer Page",
+  "erd": "ER Diagram Page",
+  "contact": {
+    "title": "Support ↗",
+    "type": "page",
+    "href": "https://discord.gg/PZT4C5mk",
+    "newWindow": true
+  }
+}

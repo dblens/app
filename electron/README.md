@@ -12,18 +12,6 @@ DB Lens is an **open-source database client** that helps you to explore database
 [![GitHub stars](https://img.shields.io/github/stars/dblens/app)](https://github.com/dblens/app/stargazers)
 [![GitHub license](https://img.shields.io/github/license/dblens/app)](https://github.com/dblens/app)
 
-
-## Don't want to install?
-
-Try running 
-```sh
-npx dblens <connection_string>
-# npx dblens postgres://user:pass@host/db
-```
-from your terminal
-
-Read more from the official documentation from https://dblens.app/docs/quickstart
-
 ## Features
 ![1](https://user-images.githubusercontent.com/8408875/174975064-6683c826-15e5-4ddc-b421-eb45024262ec.jpg)
 

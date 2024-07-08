@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Buttons */
+.btn,
+.btn-sm {
+    font-weight: 500; /* font-medium */
+    display: inline-flex; /* inline-flex */
+    align-items: center; /* items-center */
+    justify-content: center; /* justify-center */
+    border: 1px solid transparent; /* border border-transparent */
+    border-radius: 0.375rem; /* rounded (default Tailwind rounding is 0.375rem or 6px) */
+    line-height: 1.25; /* leading-snug */
+    transition: all 0.15s ease-in-out; /* transition duration-150 ease-in-out */
+}
+
+.btn {
+    padding-left: 2rem; /* px-8 (1rem = 4px, so 2rem = 8px) */
+    padding-right: 2rem; /* px-8 */
+    padding-top: 0.75rem; /* py-3 (1rem = 4px, so 0.75rem = 3px) */
+    padding-bottom: 0.75rem; /* py-3 */
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-lg */
+}
+
+.btn-sm {
+    padding-left: 1rem; /* px-4 */
+    padding-right: 1rem; /* px-4 */
+    padding-top: 0.5rem; /* py-2 */
+    padding-bottom: 0.5rem; /* py-2 */
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow */
+}
