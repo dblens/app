@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/icon.png" width="200" />
+  <img src="./electron/assets/icon.png" width="200" />
   <br/>
   Get more insights from PostgreSQL
 
