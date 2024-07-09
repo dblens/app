@@ -7,7 +7,7 @@ const config: DocsThemeConfig = {
     link: "https://github.com/dblens/app",
   },
   chat: {
-    link: "https://discord.gg/n6fNgRdX",
+    link: "https://discord.gg/JRZvKqDxsy",
   },
   useNextSeoProps() {
     return {
