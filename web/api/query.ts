@@ -1,7 +1,31 @@
+/**
+ * Frontend API Client for Database Operations
+ *
+ * This module handles communication between the React frontend and the local
+ * Express server that was started by the CLI command.
+ *
+ * Architecture:
+ * Frontend (React) → HTTP Request → Local Server (Express) → PostgreSQL
+ *
+ * The server runs on localhost:3253 by default and provides REST API endpoints
+ * for database operations. All database credentials and connections are handled
+ * server-side for security.
+ */
 import { useEffect, useState } from "react";
 
+// API host - defaults to local server started by CLI
 const host = process.env.NEXT_PUBLIC_API_HOST || "http://localhost:3253";
 
+/**
+ * Execute SQL queries against the connected database
+ *
+ * This function sends SQL queries to the local server which executes them
+ * using the PostgreSQL connection established during CLI startup.
+ *
+ * @param queries - Array of SQL query strings to execute
+ * @param id - Optional identifier for tracking (unused currently)
+ * @returns Promise with query results and execution metadata
+ */
 export const executeSQL = async (queries: string[], id?: string) => {
   const response = await fetch(`${host}/api/execute_pg`, {
     method: "POST",

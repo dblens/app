@@ -1,3 +1,16 @@
+/**
+ * PostgreSQL Query Execution Handler
+ *
+ * This module handles SQL query execution requests from the frontend.
+ * It uses the cached PostgreSQL connection established during server startup.
+ *
+ * Flow:
+ * 1. Frontend sends POST request to /api/execute_pg with queries array
+ * 2. This handler gets the cached PostgreSQL connection
+ * 3. Executes each query sequentially
+ * 4. Returns results with timing and status information
+ * 5. Handles connection errors with automatic retry logic
+ */
 import { Client } from "pg";
 import { Request, Response } from "express";
 import { getPgConnection } from ".";
@@ -103,13 +116,36 @@ function isConnectionError(error: any): boolean {
   );
 }
 
+/**
+ * Main API handler for PostgreSQL query execution
+ *
+ * This is the primary endpoint that the frontend uses to execute SQL queries.
+ * It receives an array of SQL queries and executes them sequentially using
+ * the cached database connection established during server startup.
+ *
+ * Request format:
+ * POST /api/execute_pg
+ * Body: { queries: ["SELECT * FROM users;", "SELECT COUNT(*) FROM orders;"] }
+ *
+ * Response format:
+ * {
+ *   message: "Queries execution completed...",
+ *   data: [
+ *     { status: "SUCCESS", rows: [...], duration: 123.45 },
+ *     { status: "ERROR", description: {...}, rows: [], duration: 0 }
+ *   ]
+ * }
+ */
 export const executePgHandler = async (req: Request, res: Response) => {
   const { queries } = req.body;
   // console.log(queries)
 
+  // Get the cached PostgreSQL connection (established during server startup)
   const client = await getPgConnection({});
 
+  // Execute all queries and collect results
   const results = await executeQueries(client, queries);
+
   try {
     res.status(200).json({
       message:
