@@ -4,8 +4,9 @@ const withNextra = require("nextra")({
 });
 
 module.exports = withNextra({
-  // Enable static export
-  // exportTrailingSlash: true,
+  // Enable static export for Cloudflare Pages
+  output: 'export',
+  trailingSlash: true,
   // Disable image optimization for static export compatibility
   images: {
     unoptimized: true,
