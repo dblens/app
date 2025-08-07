@@ -95,17 +95,17 @@ function TestTablePageContent() {
   ];
 
   const columnNames: ColumnName[] = [
-    { column_name: "id", visible: true },
-    { column_name: "name", visible: true },
-    { column_name: "email", visible: true },
-    { column_name: "short_text", visible: true },
-    { column_name: "long_text", visible: true },
-    { column_name: "json_object", visible: true },
-    { column_name: "array_data", visible: true },
-    { column_name: "date_field", visible: true },
-    { column_name: "number_field", visible: true },
-    { column_name: "boolean_field", visible: true },
-    { column_name: "null_field", visible: true }
+    { column_name: "id", data_type: "integer", visible: true },
+    { column_name: "name", data_type: "text", visible: true },
+    { column_name: "email", data_type: "text", visible: true },
+    { column_name: "short_text", data_type: "text", visible: true },
+    { column_name: "long_text", data_type: "text", visible: true },
+    { column_name: "json_object", data_type: "json", visible: true },
+    { column_name: "array_data", data_type: "integer[]", visible: true },
+    { column_name: "date_field", data_type: "timestamp", visible: true },
+    { column_name: "number_field", data_type: "numeric", visible: true },
+    { column_name: "boolean_field", data_type: "boolean", visible: true },
+    { column_name: "null_field", data_type: "text", visible: true }
   ];
 
   return (
