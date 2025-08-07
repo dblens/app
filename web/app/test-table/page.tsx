@@ -2,8 +2,10 @@
 import React from "react";
 import Table from "../components/molecules/Table";
 import { ColumnName } from "../sessions/DbSession";
+import { SidebarProvider } from "../contexts/SidebarContext";
+import RightSidebar from "../components/organisms/RightSidebar";
 
-export default function TestTablePage() {
+function TestTablePageContent() {
   // Test data with various data types
   const testData = [
     {
@@ -107,20 +109,20 @@ export default function TestTablePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-800 p-8">
+    <div className="min-h-screen bg-gray-800 p-8 relative">
       <div className="max-w-full mx-auto">
         <h1 className="text-3xl font-bold text-white mb-6">
-          Expandable Table Test Page
+          VS Code-Style Sidebar Table Test
         </h1>
-        
+
         <div className="mb-6 text-gray-300">
           <h2 className="text-xl font-semibold mb-3">Test Features:</h2>
           <ul className="list-disc list-inside space-y-2">
-            <li>✅ <strong>Long Text Expansion:</strong> Text longer than 50 characters shows expand button</li>
-            <li>✅ <strong>JSON Object Expansion:</strong> Complex objects can be expanded to view formatted JSON</li>
-            <li>✅ <strong>Copy to Clipboard:</strong> Click the copy button in expanded content</li>
-            <li>✅ <strong>Keyboard Navigation:</strong> Use Enter or Space to expand/collapse</li>
-            <li>✅ <strong>Smooth Animations:</strong> CSS transitions for expand/collapse</li>
+            <li>✅ <strong>Row Selection:</strong> Click any row to view details in right sidebar</li>
+            <li>✅ <strong>Keyboard Navigation:</strong> Use ↑↓ arrow keys to navigate between rows</li>
+            <li>✅ <strong>Detailed View:</strong> JSON objects and long text displayed with formatting</li>
+            <li>✅ <strong>Copy to Clipboard:</strong> Copy individual field values</li>
+            <li>✅ <strong>Keyboard Shortcuts:</strong> Esc to close, Cmd+B to toggle left sidebar</li>
             <li>✅ <strong>Various Data Types:</strong> Strings, numbers, booleans, dates, arrays, objects, null</li>
           </ul>
         </div>
@@ -130,18 +132,28 @@ export default function TestTablePage() {
             columnNames={columnNames}
             tableData={testData}
             selectedSchema="test"
-            selectedTable="expandable_demo"
+            selectedTable="sidebar_demo"
             onSort={() => {}}
           />
         </div>
 
         <div className="mt-6 text-gray-400 text-sm">
           <p>
-            <strong>Instructions:</strong> Click the + button next to long text or JSON objects to expand them.
-            Use keyboard navigation (Enter/Space) for accessibility. Try copying content from expanded cells.
+            <strong>Instructions:</strong> Click any row to open the details sidebar.
+            Use ↑↓ keys to navigate rows when sidebar is open. Press Esc to close sidebar.
           </p>
         </div>
       </div>
+
+      <RightSidebar />
     </div>
+  );
+}
+
+export default function TestTablePage() {
+  return (
+    <SidebarProvider>
+      <TestTablePageContent />
+    </SidebarProvider>
   );
 }

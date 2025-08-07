@@ -7,10 +7,13 @@ import SideHeader from "../components/atoms/SideHeader";
 import PgSession from "../sessions/PgSession";
 import Tabs from "./Tabs";
 import dynamic from "next/dynamic";
+import { useSidebar } from "../contexts/SidebarContext";
+import RightSidebar from "../components/organisms/RightSidebar";
 
 const SqlScreen = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { isLeftSidebarOpen, isRightSidebarOpen } = useSidebar();
 
   const initialTabs =
     typeof window !== "undefined" && localStorage.getItem("sql_tabs")
@@ -99,12 +102,22 @@ const SqlScreen = () => {
   }, [searchParams, router]);
 
   return (
-    <div className="flex w-full h-full text-gray-200">
-      <div className="h-full bg-gray-800 w-1/5" style={{ minWidth: "20%" }}>
-        <SideHeader title="Queries" />
-        <SqlHistory setSelectedSql={setSelectedSql} />
-      </div>
-      <div className="border-l border-gray-600 sql-dataview-wrapper w-4/5">
+    <div className="flex w-full h-full text-gray-200 relative">
+      {/* Left Sidebar */}
+      {isLeftSidebarOpen && (
+        <div className="h-full bg-gray-800 flex-shrink-0" style={{ minWidth: "20%", width: "20%" }}>
+          <SideHeader title="Queries" />
+          <SqlHistory setSelectedSql={setSelectedSql} />
+        </div>
+      )}
+
+      {/* Main Content */}
+      <div
+        className="border-l border-gray-600 sql-dataview-wrapper flex-1"
+        style={{
+          marginRight: isRightSidebarOpen ? '384px' : '0' // 384px = 24rem (w-96)
+        }}
+      >
         <Tabs
           tabs={tabs}
           activeTabId={activeTabId}
@@ -118,6 +131,9 @@ const SqlScreen = () => {
           activeTabId={activeTabId}
         />
       </div>
+
+      {/* Right Sidebar */}
+      <RightSidebar />
     </div>
   );
 };

@@ -3,6 +3,7 @@ import DbSession, { ColumnName, SortColumnType } from "../sessions/DbSession";
 
 import ReactTooltip from "react-tooltip";
 import Table from "../components/molecules/Table";
+import { useSidebar } from "../contexts/SidebarContext";
 
 const pageSizes = [10, 50, 100, 1000];
 
@@ -29,6 +30,8 @@ const TableComp = ({
     tableData?: Record<string, unknown>[];
     columnNames?: ColumnName[];
   }>({});
+
+  const { toggleLeftSidebar, isLeftSidebarOpen } = useSidebar();
 
   const exportData = () => {
     const fileName = `${selectedSchema}_${selectedTable}_P-${currentPage}_${currentPageSize}-items_${new Date().toISOString()}`;
@@ -114,6 +117,23 @@ const TableComp = ({
     <div className="w-full h-full max-h-full max-w-full bg-gray-800 border-l border-gray-600 text-gray-400 text-sm overflow-auto overflow-x-scroll height-adjust-25">
       {/* PaginationSection */}
       <div className="w-full bg-gray-800 flex border border-gray-700 header-fixed">
+        <div className="flex items-center">
+          {/* Sidebar Toggle Button */}
+          <button
+            type="button"
+            className="h-full px-3 text-gray-100 hover:text-white transition-colors"
+            onClick={toggleLeftSidebar}
+            data-tip
+            data-for="btn-toggle-sidebar"
+            title={isLeftSidebarOpen ? 'Hide sidebar (Cmd+B)' : 'Show sidebar (Cmd+B)'}
+          >
+            {isLeftSidebarOpen ? '◀' : '▶'}
+          </button>
+          <ReactTooltip id="btn-toggle-sidebar" type="dark" place="bottom">
+            <span>{isLeftSidebarOpen ? 'Hide sidebar (Cmd+B)' : 'Show sidebar (Cmd+B)'}</span>
+          </ReactTooltip>
+        </div>
+
         <div
           className="w-full bg-gray-800 flex my-auto px-4 text-base font-normal truncate"
           style={{ height: 25 }}
@@ -173,6 +193,8 @@ const TableComp = ({
               setCurrentPageSize(Number.parseInt(e.target.value, 10))
             }
             value={currentPageSize}
+            title="Rows per page"
+            aria-label="Rows per page"
           >
             {pageSizes.map((i) => (
               <option key={i} value={i}>

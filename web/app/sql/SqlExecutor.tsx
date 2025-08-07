@@ -11,6 +11,7 @@ import { hashString } from "@/utils";
 import PgSession from "../sessions/PgSession";
 import DbSession from "../sessions/DbSession";
 import { useIsAiAvailable } from "@/api/query";
+import { useSidebar } from "../contexts/SidebarContext";
 
 const getSize = (ss?: QueryResultRow[] | string) => {
   if (!ss) return "";
@@ -45,6 +46,7 @@ const SqlExecutor = ({
   const [, dispatch] = useAppState();
   const [viewMode, setViewMode] = useState("table");
   const sqlRef = useRef(sql);
+  const { toggleLeftSidebar, isLeftSidebarOpen } = useSidebar();
 
   useEffect(() => {
     if (selectedSql) {
@@ -175,8 +177,24 @@ ${query}`
       </div>
       <div className="h-2/3">
         <div className="flex flex-1 max-h-10 w-full justify-between text-gray-200">
-          <div className="align-center text-xs px-2 pt-2">
-            Status:
+          <div className="flex items-center">
+            {/* Sidebar Toggle Button */}
+            <button
+              type="button"
+              className="mr-3 px-2 py-1 text-gray-100 hover:text-white transition-colors"
+              onClick={toggleLeftSidebar}
+              data-tip
+              data-for="btn-toggle-sidebar"
+              title={isLeftSidebarOpen ? 'Hide sidebar (Cmd+B)' : 'Show sidebar (Cmd+B)'}
+            >
+              {isLeftSidebarOpen ? '◀' : '▶'}
+            </button>
+            <ReactTooltip id="btn-toggle-sidebar" type="dark" place="bottom">
+              <span>{isLeftSidebarOpen ? 'Hide sidebar (Cmd+B)' : 'Show sidebar (Cmd+B)'}</span>
+            </ReactTooltip>
+
+            <div className="align-center text-xs px-2 pt-2">
+              Status:
             <span
               className={`px-2 ${
                 state?.status === "SUCCESS" && "text-green-600"
@@ -200,10 +218,12 @@ ${query}`
                 </span>
               </>
             ) : null}
+            </div>
           </div>
           <div className="flex items-center space-x-2">
             <CopyBtn textToCopy={state?.rows} />
             <button
+              type="button"
               onClick={toggleViewMode}
               className={`p-2 hover:bg-gray-700 hover:text-gray-100`}
               data-tip

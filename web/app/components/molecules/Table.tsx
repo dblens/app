@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ColumnName, SortColumnType, SortType } from "../../sessions/DbSession";
 import SortIcon from "../atoms/SortIcon";
 import TableCell from "../atoms/TableCell";
+import { useSidebar } from "../../contexts/SidebarContext";
 
 interface TableCompProps {
   columnNames: ColumnName[];
@@ -19,6 +20,18 @@ const Table: React.FC<TableCompProps> = ({
   // eslint-disable-next-line no-console
   onSort = console.warn,
 }: TableCompProps) => {
+  const {
+    openRightSidebar,
+    selectedRowIndex,
+    updateTableData,
+    isRightSidebarOpen
+  } = useSidebar();
+
+  // Update sidebar context when table data changes
+  useEffect(() => {
+    updateTableData(tableData);
+  }, [tableData, updateTableData]);
+
   const onSortColumn = (ix: number) => {
     const column = columnNames[ix];
     let newSort: SortType;
@@ -26,6 +39,10 @@ const Table: React.FC<TableCompProps> = ({
     else if (column?.sort === "asc") newSort = "desc";
     else newSort = "none";
     onSort({ [column?.column_name]: newSort });
+  };
+
+  const handleRowClick = (rowIndex: number, rowData: Record<string, unknown>) => {
+    openRightSidebar(rowIndex, rowData, tableData);
   };
 
   return (
@@ -63,31 +80,40 @@ const Table: React.FC<TableCompProps> = ({
           </tr>
         </thead>
         <tbody>
-          {tableData?.map((row, ix) => (
-            <tr
-              className="hover:bg-gray-700 hover:text-gray-100"
-              key={(row?.id ?? `col_${ix}`) as string}
-            >
-              {columnNames?.map(({ visible = true, column_name }) => {
-                const cell = row?.[column_name];
-                const rowId = `${selectedSchema}_${selectedTable}_${ix}`;
-                return (
-                  visible && (
-                    <TableCell
-                      key={`${selectedSchema}_${selectedTable}_${column_name}_${
-                        typeof cell === "object"
-                          ? JSON.stringify(cell)
-                          : (cell as string)
-                      }`}
-                      value={cell}
-                      rowId={rowId}
-                      columnName={column_name}
-                    />
-                  )
-                );
-              })}
-            </tr>
-          ))}
+          {tableData?.map((row, ix) => {
+            const isSelected = selectedRowIndex === ix && isRightSidebarOpen;
+            return (
+              <tr
+                className={`cursor-pointer transition-colors duration-150 ${
+                  isSelected
+                    ? 'bg-blue-900 bg-opacity-50 text-white'
+                    : 'hover:bg-gray-700 hover:text-gray-100'
+                }`}
+                key={(row?.id ?? `col_${ix}`) as string}
+                onClick={() => handleRowClick(ix, row)}
+                title="Click to view details in sidebar"
+              >
+                {columnNames?.map(({ visible = true, column_name }) => {
+                  const cell = row?.[column_name];
+                  const rowId = `${selectedSchema}_${selectedTable}_${ix}`;
+                  return (
+                    visible && (
+                      <TableCell
+                        key={`${selectedSchema}_${selectedTable}_${column_name}_${
+                          typeof cell === "object"
+                            ? JSON.stringify(cell)
+                            : (cell as string)
+                        }`}
+                        value={cell}
+                        rowId={rowId}
+                        columnName={column_name}
+                      />
+                    )
+                  );
+                })}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>

@@ -5,13 +5,17 @@ import SchemaList from "./SchemaList";
 import TableList from "./TableList";
 import TableComp from "./TableComp";
 import SideHeader from "../components/atoms/SideHeader";
+import { SidebarProvider, useSidebar } from "../contexts/SidebarContext";
+import RightSidebar from "../components/organisms/RightSidebar";
 
-const TableScreen = ({ session }: { session: DbSession }) => {
+const TableScreenContent = ({ session }: { session: DbSession }) => {
   const [schemaList, setSchemaList] = useState<string[]>([]);
   const [selectedSchema, setSelectedSchema] = useState<string>();
 
   const [tables, settables] = useState<TableType[]>([]);
   const [selectedTable, setSelectedTable] = useState<TableType>({} as any);
+
+  const { isLeftSidebarOpen, isRightSidebarOpen } = useSidebar();
 
   useEffect(() => {
     session
@@ -34,11 +38,12 @@ const TableScreen = ({ session }: { session: DbSession }) => {
         .catch(console.error);
     }
   }, [selectedSchema, session]);
+
   return (
-    <div className="flex w-full h-full">
-      <div className="h-full bg-gray-800" style={{ width: 300 }}>
-        {/* {selectedTab === 'SQL' && <SideHeader title="Queries" />} */}
-        <>
+    <div className="flex w-full h-full relative">
+      {/* Left Sidebar */}
+      {isLeftSidebarOpen && (
+        <div className="h-full bg-gray-800 flex-shrink-0" style={{ width: 300 }}>
           <SideHeader title="SCHEMAS" />
           <SchemaList
             {...{ schemas: schemaList, selectedSchema, setSelectedSchema }}
@@ -54,11 +59,16 @@ const TableScreen = ({ session }: { session: DbSession }) => {
               }}
             />
           )}
-        </>
-      </div>
-      <div className="h-full w-full max-h-full">
-        {/* Tabs Section */}
-        {/* <Tabs /> */}
+        </div>
+      )}
+
+      {/* Main Content */}
+      <div
+        className="h-full flex-1 max-h-full"
+        style={{
+          marginRight: isRightSidebarOpen ? '384px' : '0' // 384px = 24rem (w-96)
+        }}
+      >
         <TableComp
           {...{
             session,
@@ -68,7 +78,18 @@ const TableScreen = ({ session }: { session: DbSession }) => {
           }}
         />
       </div>
+
+      {/* Right Sidebar */}
+      <RightSidebar />
     </div>
+  );
+};
+
+const TableScreen = ({ session }: { session: DbSession }) => {
+  return (
+    <SidebarProvider>
+      <TableScreenContent session={session} />
+    </SidebarProvider>
   );
 };
 
