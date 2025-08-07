@@ -30,4 +30,8 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+
+  .height-adjust-25 {
+    height: calc(100% - 25px);
+  }
 }

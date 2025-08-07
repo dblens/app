@@ -23,7 +23,7 @@ export default function Home() {
 
   return (
     <main
-      className="flex flex-col-screen w-full bg-gray-800"
+      className="flex flex-col w-full h-full bg-gray-800"
 
       // className="flex min-h-screen flex-col items-center justify-between p-24">
     >

@@ -46,8 +46,8 @@ const Table: React.FC<TableCompProps> = ({
   };
 
   return (
-    <div className="">
-      <table className="border border-gray-600 h-full w-full overflow-x-scroll">
+    <div className="w-full h-full overflow-auto">
+      <table className="border border-gray-600 w-full" style={{ minWidth: 'max-content' }}>
         <thead>
           <tr className="bg-gray-900">
             {columnNames?.map(

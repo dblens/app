@@ -114,9 +114,9 @@ const TableComp = ({
     setPagination({ currentPage: 1, currentPageSize: pageSize }); // onPageSizeChange => set pageNo to 1
 
   return (
-    <div className="w-full h-full max-h-full max-w-full bg-gray-800 border-l border-gray-600 text-gray-400 text-sm overflow-auto overflow-x-scroll height-adjust-25">
+    <div className="w-full h-full max-h-full max-w-full bg-gray-800 border-l border-gray-600 text-gray-400 text-sm height-adjust-25 flex flex-col">
       {/* PaginationSection */}
-      <div className="w-full bg-gray-800 flex border border-gray-700 header-fixed">
+      <div className="w-full bg-gray-800 flex border border-gray-700 sticky top-0 z-10">
         <div className="flex items-center">
           {/* Sidebar Toggle Button */}
           <button
@@ -205,13 +205,10 @@ const TableComp = ({
         </div>
       </div>
       <div
-        className="table-wrapper"
+        className="flex-1 overflow-auto"
         style={{
-          overflow: "auto",
           // paddingTop: 41,
           minHeight: "100%",
-          height: "calc(100vh - 25px)",
-          width: "calc(100vw - 300px)",
         }}
       >
         <Table

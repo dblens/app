@@ -28,7 +28,7 @@ export default function RootLayout({
             <Titlebar />
             <div className="flex w-full h-full" style={{ paddingTop: 25 }}>
               <Sidebar />
-              <div className="bg-gray-100 w-full max-w-full h-full max-h-full flex flex-row overflow-hidden font-mono">
+              <div className="bg-gray-100 w-full max-w-full h-full max-h-full flex flex-row font-mono">
                 {children}
               </div>
             </div>

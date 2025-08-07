@@ -113,7 +113,7 @@ const SqlScreen = () => {
 
       {/* Main Content */}
       <div
-        className="border-l border-gray-600 sql-dataview-wrapper flex-1"
+        className="border-l border-gray-600 flex-1 overflow-auto h-full"
         style={{
           marginRight: isRightSidebarOpen ? '384px' : '0' // 384px = 24rem (w-96)
         }}

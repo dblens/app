@@ -28,8 +28,8 @@ const TableCell = ({ value, rowId, columnName }: TableCellProps) => {
   }
 
   return (
-    <td className="border-l border-b border-gray-600 px-2 text-white">
-      <div className="break-all truncate" style={{ maxWidth: '200px' }}>
+    <td className="border-l border-b border-gray-600 px-2 text-white" style={{ minWidth: 200 }}>
+      <div className="break-all truncate">
         <span data-tip data-for={`btn-run-${rowId}-${columnName}`}>
           {displaytext}
         </span>
