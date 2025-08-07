@@ -1,19 +1,12 @@
 "use client";
 import { AppProvider } from "../state/AppProvider";
-import { SidebarProvider } from "../contexts/SidebarContext";
 import SqlScreen from "./SqlScreen";
 
 export default function Home() {
   return (
-    <main
-      className="flex flex-col h-screen w-full bg-gray-800"
-
-      // className="flex min-h-screen flex-col items-center justify-between p-24">
-    >
+    <main className="flex flex-col w-full h-full bg-gray-800">
       <AppProvider>
-        <SidebarProvider>
-          <SqlScreen />
-        </SidebarProvider>
+        <SqlScreen />
       </AppProvider>
     </main>
   );

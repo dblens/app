@@ -2,7 +2,7 @@
 import React from "react";
 import Table from "../components/molecules/Table";
 import { ColumnName } from "../sessions/DbSession";
-import { SidebarProvider } from "../contexts/SidebarContext";
+
 import RightSidebar from "../components/organisms/RightSidebar";
 
 function TestTablePageContent() {
@@ -151,9 +151,5 @@ function TestTablePageContent() {
 }
 
 export default function TestTablePage() {
-  return (
-    <SidebarProvider>
-      <TestTablePageContent />
-    </SidebarProvider>
-  );
+  return <TestTablePageContent />;
 }

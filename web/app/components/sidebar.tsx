@@ -76,12 +76,12 @@ npx dblens <postgres_connection_string>`
     selectedTab = "SQL";
   } else if (pathname?.includes("/overview")) {
     selectedTab = "OVERVIEW";
-  } else if (pathname?.includes("/overview")) {
-    selectedTab = "OVERVIEW";
   } else if (pathname?.includes("/explorer")) {
     selectedTab = "EXPLORER";
   } else if (pathname?.includes("/erd")) {
     selectedTab = "ERD";
+  } else if (pathname?.includes("/settings")) {
+    selectedTab = "SETTINGS";
   }
 
   const setSelectedTab = (ss: string) => {
@@ -157,15 +157,7 @@ npx dblens <postgres_connection_string>`
       <SideButton tabName="ERD">
         ER
       </SideButton>
-      <button
-        type="button"
-        className={`text-xs h-20 focus:ring-0 hover:bg-gray-600 ${
-          selectedTab === "SETTINGS" &&
-          "border-l-4 border-green-600 text-green-600 font-bold"
-        }`}
-        onClick={() => setSelectedTab("")}
-        // onClick={() => setSelectedTab("SETTINGS")}
-      >
+      <SideButton tabName="SETTINGS">
         <span
           role="img"
           aria-label="app-icon"
@@ -173,7 +165,7 @@ npx dblens <postgres_connection_string>`
         >
           ⚙️
         </span>
-      </button>
+      </SideButton>
     </div>
   );
 };
