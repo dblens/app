@@ -30,7 +30,7 @@ const Table: React.FC<TableCompProps> = ({
 
   return (
     <div className="">
-      <table className="border border-gray-600 h-full w-full table-fixed overflow-x-scroll">
+      <table className="border border-gray-600 h-full w-full overflow-x-scroll">
         <thead>
           <tr className="bg-gray-900">
             {columnNames?.map(
@@ -43,11 +43,10 @@ const Table: React.FC<TableCompProps> = ({
                     } hover:text-gray-200 cursor-pointer`}
                     style={{
                       minWidth: 200,
-                      width: 200,
                       position: 'sticky',
                       top: 0,
                       zIndex: 10,
-                    }} // Fixed minimum width and sticky position
+                    }} // Minimum width with flexible expansion and sticky position
                     onClick={() => onSortColumn(index)}
                   >
                     <div
@@ -71,6 +70,7 @@ const Table: React.FC<TableCompProps> = ({
             >
               {columnNames?.map(({ visible = true, column_name }) => {
                 const cell = row?.[column_name];
+                const rowId = `${selectedSchema}_${selectedTable}_${ix}`;
                 return (
                   visible && (
                     <TableCell
@@ -80,6 +80,8 @@ const Table: React.FC<TableCompProps> = ({
                           : (cell as string)
                       }`}
                       value={cell}
+                      rowId={rowId}
+                      columnName={column_name}
                     />
                   )
                 );
